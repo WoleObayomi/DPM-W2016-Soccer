@@ -1,6 +1,5 @@
 /* Author: Peter Quinn (260689207) Rony Azrak (260606812)
- * Group: 47
- * 
+ *  
  * Date: Feb 15,2016
  * 
  * Description: A thread that detects if the back button is pressed. If the back button is pressed, 

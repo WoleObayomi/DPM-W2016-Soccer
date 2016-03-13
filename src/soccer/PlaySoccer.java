@@ -40,19 +40,29 @@ public class PlaySoccer {
 			}
 			System.exit(0);
 		}
-		
-		//set up objects we need
-		
-		//exit thread
+
+		// set up objects we need
+
+		// exit thread
 		Exit exit = new Exit();
 		exit.start();
-		
-		//motors object
+
+		// motors object
 		Motors motors = new Motors(masterBrick, slaveBrick);
-		
-		//sensors object
+
+		// sensors object
 		Sensors sensors = new Sensors(masterBrick, slaveBrick);
 
+		// odometer thread
+		Odometer odometer = new Odometer(motors, PhysicalConstants.WHEEL_RADIUS, PhysicalConstants.TRACK_WIDTH);
+		odometer.start();
+
+		// navigation controller
+		Navigation nav = new Navigation(odometer, motors, sensors, PhysicalConstants.WHEEL_RADIUS,
+				PhysicalConstants.WHEEL_RADIUS, PhysicalConstants.TRACK_WIDTH);
+
+		// determine which planner to use from eventual wifi connection
+		// and create the appropriate one
 	}
 
 }
