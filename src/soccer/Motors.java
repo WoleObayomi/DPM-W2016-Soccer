@@ -11,6 +11,7 @@ import lejos.hardware.Brick;
 */
 
 import lejos.hardware.motor.EV3LargeRegulatedMotor;
+import lejos.hardware.port.MotorPort;
 
 public class Motors {
 	
@@ -19,32 +20,38 @@ public class Motors {
 	Brick slaveBrick;
 	
 	//motor variables
-	EV3LargeRegulatedMotor leftmotor;
-		//etc
+	EV3LargeRegulatedMotor leftMotor;
+	EV3LargeRegulatedMotor rightMotor;
+	EV3LargeRegulatedMotor launcherRight;
+	EV3LargeRegulatedMotor launcherLeft;
 	
 	public Motors(Brick masterBrick, Brick slaveBrick){
 		this.masterBrick=masterBrick;
 		this.slaveBrick=slaveBrick;
 		
-		//get ports from bricks and assign the motors the ports
+		//get ports from bricks and assign the motors the arbitrary ports for now
+		leftMotor = new EV3LargeRegulatedMotor(MotorPort.A);
+		rightMotor = new EV3LargeRegulatedMotor(MotorPort.B);
+		launcherLeft = new EV3LargeRegulatedMotor(MotorPort.C);
+		launcherRight = new EV3LargeRegulatedMotor(MotorPort.D);
 	}
 	
 	//getters for motors
 	public EV3LargeRegulatedMotor getLeftMotor(){
-		return null;
+		return leftMotor;
 		
 	}
 	
 	public EV3LargeRegulatedMotor getRightMotor(){
-		return null;
+		return rightMotor;
 	}
 
 	public EV3LargeRegulatedMotor getLauncherRight(){
-		return null;
+		return launcherRight;
 	}
 	
 	public EV3LargeRegulatedMotor getLauncherLeft(){
-		return null;
+		return launcherLeft;
 		
 	}
 }
