@@ -1,5 +1,10 @@
 package soccer;
 
+/**
+ * 
+ * @author Peter Quinn
+ *
+ */
 public class PlannerOffense {
 	
 	
@@ -8,6 +13,13 @@ public class PlannerOffense {
 	private Sensors sensors;
 	private Motors motors;
 
+	/**
+	 * 
+	 * @param odometer
+	 * @param nav
+	 * @param sensors
+	 * @param motors
+	 */
 	public PlannerOffense(Odometer odometer, Navigation nav, Sensors sensors, Motors motors){
 		this.odometer = odometer;
 		this.nav = nav;

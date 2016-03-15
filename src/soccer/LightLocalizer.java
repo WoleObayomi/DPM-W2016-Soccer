@@ -16,6 +16,11 @@
 
 package soccer;
 
+/**
+ * 
+ * @author Peter Quinn
+ *
+ */
 public class LightLocalizer {
 	private Odometer odo;
 	private Sensors sensors;
@@ -28,12 +33,21 @@ public class LightLocalizer {
 										// center of
 										// robot
 
+	/**
+	 * 
+	 * @param odo
+	 * @param sensors
+	 * @param navigation
+	 */
 	public LightLocalizer(Odometer odo, Sensors sensors, Navigation navigation) {
 		this.odo = odo;
 		this.sensors = sensors;
 		this.navigation = navigation;
 	}
 
+	/**
+	 * 
+	 */
 	public void doLocalization() {
 		// drive to location listed in tutorial
 		// start rotating and clock all 4 gridlines

@@ -16,6 +16,12 @@ import lejos.hardware.sensor.SensorModes;
 import lejos.robotics.SampleProvider;
 import lejos.robotics.filter.*;
 
+/**
+ * 
+ * @author Peter Quinn
+ * @author Wole Obayomi Jr
+ *
+ */
 public class Sensors {
 
 	// brick variables
@@ -26,6 +32,7 @@ public class Sensors {
 	
 	//static so all instances of Sensors class share the
 	//same variables for each connected sensor
+	
 	private static SensorModes frontUS;
 	private static SampleProvider frontUSValue;
 	private static float[]frontUSData;
@@ -35,10 +42,20 @@ public class Sensors {
 	private static SensorModes centerLS;
 	private static SampleProvider centerLSValue;
 	private static float[]centerLSData;
+	private static SensorModes sideLS;
+	private static SampleProvider sideLSValue;
+	private static float[]sideLSData;
 	private static Port frontUSPort;
 	private static Port sideUSPort;
 	private static Port centerLSPort;
+	private static Port sideLSPort;
 	private static String sensorMode = "median";
+	
+	/**
+	 * 
+	 * @param masterBrick
+	 * @param slaveBrick
+	 */
 	public Sensors(Brick masterBrick, Brick slaveBrick) {
 		this.masterBrick = masterBrick;
 		this.slaveBrick = slaveBrick;
@@ -50,6 +67,7 @@ public class Sensors {
 		frontUSPort = null;
 		sideUSPort = null;
 		centerLSPort = null;
+		sideLSPort = null;
 		//setting up front ultrasonic sensor
 		frontUS = new EV3UltrasonicSensor(frontUSPort);
 		frontUSValue = frontUS.getMode("Distance");
@@ -64,14 +82,21 @@ public class Sensors {
 		centerLS = new EV3ColorSensor(centerLSPort);
 		centerLSValue = centerLS.getMode("Red");
 		centerLSData = new float[centerLSValue.sampleSize()];
+		
+		//setting up side light sensor
+		sideLS = new EV3ColorSensor(sideLSPort);
+		sideLSValue = centerLS.getMode("Red");
+		sideLSData = new float[sideLSValue.sampleSize()];
 	}
 
 	// add some filters
+	//Implementation might be incorrect
+	//due to poor EV3 filter documentation
 	/**
 	 * 
 	 * @param sp
 	 * @param data
-	 * @return mean filtered data
+	 * @return data[0] mean filtered data
 	 */
 	private float meanFilter(SampleProvider sp, float[]data) {
 		new MeanFilter(sp, sp.sampleSize()).fetchSample(data, 0);
@@ -82,7 +107,7 @@ public class Sensors {
 	 * 
 	 * @param sp
 	 * @param data
-	 * @return median filtered data
+	 * @return data[0] median filtered data
 	 */
 	private float medianFilter(SampleProvider sp, float[]data) {
 		new MedianFilter(sp, sp.sampleSize()).fetchSample(data, 0);
@@ -144,6 +169,11 @@ public class Sensors {
 		return filteredData;
 	}
 	
+	/**
+	 * 
+	 * @param filterType
+	 * @return filteredData
+	 */
 	public float getCenterLSData(String filterType) {
 		String filterTypeLC = filterType.toLowerCase();
 		float filteredData = -666;
@@ -166,16 +196,56 @@ public class Sensors {
 		return filteredData;
 	}
 	
+	/**
+	 * 
+	 * @param filterType
+	 * @return filteredData
+	 */
+	public float getSideLSData(String filterType) {
+		String filterTypeLC = filterType.toLowerCase();
+		float filteredData = -666;
+		//use either median or mean filtering
+		switch(filterTypeLC) {
+			case "median": 
+				filteredData = medianFilter(sideLSValue, sideLSData);
+			break;
+			
+			case "mean":
+				filteredData = meanFilter(sideLSValue, sideLSData);
+			break;
+			
+			default:
+				System.out.println("Invalid option");
+			break;
+		
+		}
+		
+		return filteredData;
+	}
+	
+	//still need to discuss 
+	/**
+	 * 
+	 * @return boolean 
+	 */
 	public boolean isFrontWall() {
 		// TODO Auto-generated method stub
 		return false;
 	}
 
+	/**
+	 * 
+	 * @return distance Distance measured by side ultrasonic sensor
+	 */
 	public float getSideDist() {
 		// TODO Auto-generated method stub
 		return getSideUSData(sensorMode);
 	}
 
+	/**
+	 * 
+	 * @return distance Distance measured by front ultrasonic sensor
+	 */
 	public float getFrontDist() {
 		// TODO Auto-generated method stub
 		return getFrontUSData(sensorMode);
@@ -184,13 +254,21 @@ public class Sensors {
 	// it would be awesome if we could find some way to write a function that
 	// would return a boolean when a line is detected
 	
+	/**
+	 * 
+	 * @return colourValue value measured by center light sensor
+	 */
 	public float getCenterColourValue() {
 		// TODO Auto-generated method stub
 		return getCenterLSData(sensorMode);
 	}
 
+	/**
+	 * 
+	 * @return colourValue value measured by side light sensor
+	 */
 	public float getSideColourValue() {
 		// TODO Auto-generated method stub
-		return 0;
+		return getSideLSData(sensorMode);
 	}
 }

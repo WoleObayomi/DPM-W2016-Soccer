@@ -1,6 +1,11 @@
 package soccer;
 
 //skeleton class that hold all physical about the robot
+/**
+ * 
+ * @author Peter Quinn
+ *
+ */
 public class PhysicalConstants {
 
 	//sensor distances

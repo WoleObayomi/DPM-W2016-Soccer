@@ -2,6 +2,10 @@ package soccer;
 
 import lejos.hardware.motor.EV3LargeRegulatedMotor;
 
+/**
+ * @author Peter Quinn
+ *
+ */
 public class WallFollowController {
 
 	// motors that are passed in through constructor
@@ -18,11 +22,20 @@ public class WallFollowController {
 
 
 	// constructor takes left and right motors, and object to access sensor data
+	/**
+	 * 
+	 * @param leftMotor
+	 * @param rightMotor
+	 */
 	public WallFollowController(EV3LargeRegulatedMotor leftMotor, EV3LargeRegulatedMotor rightMotor) {
 		this.leftMotor = leftMotor;
 		this.rightMotor = rightMotor;
 	}
 
+	/**
+	 * 
+	 * @param distToWall measurement taken to correct robot's trajectory
+	 */
 	public void processData(float distToWall) {
 
 		// if we pass a negative, stop movement

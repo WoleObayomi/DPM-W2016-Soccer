@@ -20,6 +20,12 @@ package soccer;
 //	3. Find some way to put all the data filtering in the sensors class, and just have a 
 //		boolean to check to know if we crossed a line, just for organization sake. It 
 //		won't be the end of the world if we have to do the filtering in the run of this thread.
+
+/**
+ * 
+ * @author Peter Quinn
+ *
+ */
 public class OdometryCorrection extends Thread {
 
 	private static final int CORRECTION_PERIOD = 10;
@@ -39,12 +45,20 @@ public class OdometryCorrection extends Thread {
 	private final double DIST_TO_SENSOR = 0;
 
 	// constructor
+	/**
+	 * 
+	 * @param odometer
+	 * @param sensors
+	 */
 	public OdometryCorrection(Odometer odometer, Sensors sensors) {
 		this.odometer = odometer;
 		this.sensors = sensors;
 	}
 
 	// helper method
+	/**
+	 * 
+	 */
 	private void snapToNearestGridLine() {
 
 		// get current x and y according to odometer (of center of bot)
@@ -102,6 +116,9 @@ public class OdometryCorrection extends Thread {
 	}
 
 	// run method (required for Thread)
+	/**
+	 * 
+	 */
 	public void run() {
 		long correctionStart, correctionEnd;
 

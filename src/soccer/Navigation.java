@@ -14,6 +14,11 @@ package soccer;
 
 import lejos.hardware.motor.EV3LargeRegulatedMotor;
 
+/**
+ * 
+ * @author Peter Quinn
+ *
+ */
 public class Navigation {
 
 	// to be passed in through/generated the constructor
@@ -38,6 +43,15 @@ public class Navigation {
 	private boolean isTurning = false;
 
 	// constructor, needs an odometer to read from, needs motors to access
+	/**
+	 * 
+	 * @param odometer
+	 * @param motors
+	 * @param sensors
+	 * @param leftWheelRadius
+	 * @param rightWheelRadius
+	 * @param trackWidth
+	 */
 	public Navigation(Odometer odometer, Motors motors, Sensors sensors, double leftWheelRadius,
 			double rightWheelRadius, double trackWidth) {
 		this.odometer = odometer;
@@ -53,6 +67,12 @@ public class Navigation {
 
 	// takes x and y of its destination and turns and drives to it, allows
 	// wallfollowing to be on or off
+	/**
+	 * 
+	 * @param x point to travel to on the x axis
+	 * @param y point to travel to on the y axis
+	 * @param wallFollowOn boolean value to indicate whether wall following is operational
+	 */
 	public void travelTo(double x, double y, boolean wallFollowOn) {
 
 		isNavigating = true;
@@ -124,6 +144,10 @@ public class Navigation {
 	}
 
 	// turns a relative angle
+	/**
+	 * 
+	 * @param theta Angle to turn to
+	 */
 	public void turnTo(double theta) {
 
 		isTurning = true;
@@ -138,6 +162,10 @@ public class Navigation {
 	}
 
 	// turns to an absolute angle
+	/**
+	 * 
+	 * @param theta Absolute angle to turn to
+	 */
 	public void turnToAbs(double theta) {
 
 		double deltaTheta = theta - odometer.getTheta();
@@ -152,6 +180,11 @@ public class Navigation {
 
 	// has the robot travel a distance it is passed, forward or backwards
 	// depending on sign
+	/**
+	 * 
+	 * @param distance Distance robot should travel. Forward - positive and Backward - negative
+	 * 
+	 */
 	public void travel(double distance) {
 
 		double x = odometer.getX();
@@ -181,6 +214,10 @@ public class Navigation {
 		}
 	}
 
+	/**
+	 * 
+	 * @return boolean Indicates if robot is currently navigating
+	 */
 	public boolean isNavigating() {
 		// returns true if it is navigating or if it is turning
 		return isNavigating || isTurning;
@@ -189,6 +226,11 @@ public class Navigation {
 
 	// Private helper methods
 
+	/**
+	 * 
+	 * @param x
+	 * @param y
+	 */
 	private void followWall(double x, double y) {
 
 		// turn to the left so our wall following sensor on the right is facing
@@ -235,6 +277,12 @@ public class Navigation {
 	// takes the radius of the wheel and the distance you want to travel and
 	// converts to number of degree the motor must rotate
 
+	/**
+	 * 
+	 * @param radius
+	 * @param distance
+	 * @return int number of wheel rotations
+	 */
 	private int convertDistance(double radius, double distance) {
 		return (int) ((180.0 * distance) / (Math.PI * radius));
 	}
@@ -242,6 +290,13 @@ public class Navigation {
 	// takes an angle to rotate the robot and calculates the into the number of
 	// degrees that each motor must rotate (in opposite directions) to achieve
 	// the rotation
+	/**
+	 * 
+	 * @param radius
+	 * @param width
+	 * @param angle
+	 * @return int number of degrees the wheels must rotate in opposite directions
+	 */
 	private int convertAngle(double radius, double width, double angle) {
 		return convertDistance(radius, Math.PI * width * angle / 360.0);
 	}
