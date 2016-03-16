@@ -21,6 +21,11 @@ package soccer;
 
 import lejos.hardware.motor.EV3LargeRegulatedMotor;
 
+/**
+ * 
+ * @author Peter Quinn
+ *
+ */
 public class Odometer extends Thread {
 	// robot position
 	private double x, y, theta;
@@ -40,6 +45,12 @@ public class Odometer extends Thread {
 	private double wheelRadius, track;
 
 	// constructor takes the motors object to access the left and right motors
+	/**
+	 * 
+	 * @param motors
+	 * @param wheelRadius
+	 * @param track
+	 */
 	public Odometer(Motors motors, double wheelRadius, double track) {
 		x = 0.0;
 		y = 0.0;
@@ -113,6 +124,11 @@ public class Odometer extends Thread {
 	}
 
 	// accessors
+	/**
+	 * 
+	 * @param position array of Doubles containing position variables
+	 * @param update boolean array containing values to indicate whether a position variable should be updated
+	 */
 	public void getPosition(double[] position, boolean[] update) {
 		// ensure that the values don't change while the odometer is running
 		synchronized (lock) {
@@ -125,6 +141,10 @@ public class Odometer extends Thread {
 		}
 	}
 
+	/**
+	 * 
+	 * @return x positional variable
+	 */
 	public double getX() {
 		double result;
 
@@ -135,6 +155,10 @@ public class Odometer extends Thread {
 		return result;
 	}
 
+	/**
+	 * 
+	 * @return y positional variable
+	 */
 	public double getY() {
 		double result;
 
@@ -145,6 +169,10 @@ public class Odometer extends Thread {
 		return result;
 	}
 
+	/**
+	 * 
+	 * @return theta positional variable
+	 */
 	public double getTheta() {
 		double result;
 
@@ -156,6 +184,11 @@ public class Odometer extends Thread {
 	}
 
 	// mutators
+	/**
+	 * 
+	 * @param position array of Doubles containing position variables
+	 * @param update boolean array containing values to indicate whether a position variable should be updated
+	 */
 	public void setPosition(double[] position, boolean[] update) {
 		// ensure that the values don't change while the odometer is running
 		synchronized (lock) {
@@ -168,18 +201,30 @@ public class Odometer extends Thread {
 		}
 	}
 
+	/**
+	 * 
+	 * @param x set positional variable 
+	 */
 	public void setX(double x) {
 		synchronized (lock) {
 			this.x = x;
 		}
 	}
 
+	/**
+	 * 
+	 * @param y set positional variable
+	 */
 	public void setY(double y) {
 		synchronized (lock) {
 			this.y = y;
 		}
 	}
 
+	/**
+	 * 
+	 * @param theta set positional variable
+	 */
 	public void setTheta(double theta) {
 		synchronized (lock) {
 			this.theta = theta;

@@ -2,6 +2,11 @@ package soccer;
 
 import lejos.hardware.motor.EV3LargeRegulatedMotor;
 
+/**
+ * 
+ * @author Peter Quinn
+ *
+ */
 public class USLocalization {
 
 	// constants
@@ -16,6 +21,13 @@ public class USLocalization {
 	private EV3LargeRegulatedMotor rightMotor;
 	private Odometer odo;
 
+	/**
+	 * 
+	 * @param sensors
+	 * @param odometer
+	 * @param leftMotor
+	 * @param rightMotor
+	 */
 	public USLocalization(Sensors sensors, Odometer odometer, EV3LargeRegulatedMotor leftMotor,
 			EV3LargeRegulatedMotor rightMotor) {
 		this.sensors = sensors;
@@ -25,6 +37,9 @@ public class USLocalization {
 	}
 
 	// uses falling edge technique
+	/**
+	 * 
+	 */
 	public void doLocalization() {
 
 		double angleA = 0, angleB = 0;

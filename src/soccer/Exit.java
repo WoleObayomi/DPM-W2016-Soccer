@@ -12,6 +12,11 @@ package soccer;
 
 import lejos.hardware.Button;
 
+/**
+ * 
+ * @author Peter Quinn
+ *
+ */
 public class Exit extends Thread{
 	
 	public void run() {

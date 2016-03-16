@@ -17,8 +17,17 @@ import lejos.hardware.ev3.LocalEV3;
 import lejos.hardware.lcd.TextLCD;
 import lejos.remote.ev3.RemoteEV3;
 
+/**
+ * 
+ * @author Peter Quinn
+ *
+ */
 public class PlaySoccer {
 
+	/**
+	 * 
+	 * @param args
+	 */
 	public static void main(String[] args) {
 
 		// get the second brick
