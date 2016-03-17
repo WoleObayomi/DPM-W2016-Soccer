@@ -133,7 +133,7 @@ public class Navigation {
 
 		}
 		
-		//here are within distError of our destination point, so we stop moving
+		//here we are within distError of our destination point, so we stop moving
 
 		leftMotor.setSpeed(0);
 		rightMotor.setSpeed(0);

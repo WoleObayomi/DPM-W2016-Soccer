@@ -14,6 +14,7 @@
  * March 13 - Peter: modified for use with final project. Made the constructor take in more
  * of the values needed for the class to function
  * 
+ * March 17 - Peter: fixed typo made during last modifications 
  * 
  */
 
@@ -32,16 +33,16 @@ public class Odometer extends Thread {
 
 	// odometer update period, in ms
 	private static final long ODOMETER_PERIOD = 25;
-	
+
 	// lock object for mutual exclusion
 	private Object lock;
 
-	//motors we need to get the tacho count from
+	// motors we need to get the tacho count from
 	private EV3LargeRegulatedMotor rightMotor;
 	private EV3LargeRegulatedMotor leftMotor;
-	
-	//constants we need for calculations
-	//could modify here to have 2 different wheel sizes
+
+	// constants we need for calculations
+	// could modify here to have 2 different wheel sizes
 	private double wheelRadius, track;
 
 	// constructor takes the motors object to access the left and right motors
@@ -57,9 +58,9 @@ public class Odometer extends Thread {
 		theta = 0.0;
 		lock = new Object();
 		rightMotor = motors.getRightMotor();
-		leftMotor=motors.getLeftMotor();
-		this.wheelRadius=wheelRadius;
-		this.track=track;
+		leftMotor = motors.getLeftMotor();
+		this.wheelRadius = wheelRadius;
+		this.track = track;
 	}
 
 	// run method (required for Thread)
@@ -83,11 +84,10 @@ public class Odometer extends Thread {
 			// calculations from slides
 
 			// delta theta in rads
-			deltaTheta = ((rightThetaNow - rightThetaLast) * wheelRadius
-					- (leftThetaNow - leftThetaLast) * wheelRadius) / track;
+			deltaTheta = ((rightThetaNow - rightThetaLast) * wheelRadius - (leftThetaNow - leftThetaLast) * wheelRadius)
+					/ track;
 
-			deltaC = ((rightThetaNow - rightThetaLast) * wheelRadius
-					+ (leftThetaNow - leftThetaLast) * track) / 2;
+			deltaC = ((rightThetaNow - rightThetaLast) * wheelRadius + (leftThetaNow - leftThetaLast) * wheelRadius) / 2;
 
 			rightThetaLast = rightThetaNow;
 			leftThetaLast = leftThetaNow;
@@ -126,8 +126,11 @@ public class Odometer extends Thread {
 	// accessors
 	/**
 	 * 
-	 * @param position array of Doubles containing position variables
-	 * @param update boolean array containing values to indicate whether a position variable should be updated
+	 * @param position
+	 *            array of Doubles containing position variables
+	 * @param update
+	 *            boolean array containing values to indicate whether a position
+	 *            variable should be updated
 	 */
 	public void getPosition(double[] position, boolean[] update) {
 		// ensure that the values don't change while the odometer is running
@@ -186,8 +189,11 @@ public class Odometer extends Thread {
 	// mutators
 	/**
 	 * 
-	 * @param position array of Doubles containing position variables
-	 * @param update boolean array containing values to indicate whether a position variable should be updated
+	 * @param position
+	 *            array of Doubles containing position variables
+	 * @param update
+	 *            boolean array containing values to indicate whether a position
+	 *            variable should be updated
 	 */
 	public void setPosition(double[] position, boolean[] update) {
 		// ensure that the values don't change while the odometer is running
@@ -203,7 +209,8 @@ public class Odometer extends Thread {
 
 	/**
 	 * 
-	 * @param x set positional variable 
+	 * @param x
+	 *            set positional variable
 	 */
 	public void setX(double x) {
 		synchronized (lock) {
@@ -213,7 +220,8 @@ public class Odometer extends Thread {
 
 	/**
 	 * 
-	 * @param y set positional variable
+	 * @param y
+	 *            set positional variable
 	 */
 	public void setY(double y) {
 		synchronized (lock) {
@@ -223,7 +231,8 @@ public class Odometer extends Thread {
 
 	/**
 	 * 
-	 * @param theta set positional variable
+	 * @param theta
+	 *            set positional variable
 	 */
 	public void setTheta(double theta) {
 		synchronized (lock) {
