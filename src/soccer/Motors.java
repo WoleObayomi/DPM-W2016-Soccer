@@ -20,48 +20,50 @@ import lejos.hardware.port.MotorPort;
  *
  */
 public class Motors {
-	
-	//brick variables
+
+	// brick variables
 	Brick masterBrick;
 	Brick slaveBrick;
-	
-	//motor variables
+
+	// motor variables
 	EV3LargeRegulatedMotor leftMotor;
 	EV3LargeRegulatedMotor rightMotor;
 	EV3LargeRegulatedMotor launcherRight;
 	EV3LargeRegulatedMotor launcherLeft;
-	
+
 	/**
 	 * 
 	 * @param masterBrick
 	 * @param slaveBrick
 	 */
-	public Motors(Brick masterBrick, Brick slaveBrick){
-		this.masterBrick=masterBrick;
-		this.slaveBrick=slaveBrick;
-		
-		//get ports from bricks and assign the motors the arbitrary ports for now
-		leftMotor = new EV3LargeRegulatedMotor(MotorPort.A);
-		rightMotor = new EV3LargeRegulatedMotor(MotorPort.B);
-		launcherLeft = new EV3LargeRegulatedMotor(MotorPort.C);
-		launcherRight = new EV3LargeRegulatedMotor(MotorPort.D);
+	public Motors(Brick masterBrick, Brick slaveBrick) {
+		this.masterBrick = masterBrick;
+		this.slaveBrick = slaveBrick;
+
+		// get ports from bricks and assign the motors the arbitrary ports for
+		// now
+		leftMotor = new ReversedEV3LargeMotor(masterBrick.getPort("A"));
+		rightMotor = new ReversedEV3LargeMotor(masterBrick.getPort("D"));
+
+		// launcherLeft = new EV3LargeRegulatedMotor();
+		// launcherRight = new EV3LargeRegulatedMotor();
 	}
-	
-	//getters for motors
+
+	// getters for motors
 	/**
 	 * 
 	 * @return leftMotor instance of the left motor object
 	 */
-	public EV3LargeRegulatedMotor getLeftMotor(){
+	public EV3LargeRegulatedMotor getLeftMotor() {
 		return leftMotor;
-		
+
 	}
-	
+
 	/**
 	 * 
 	 * @return rightMotor instance of the right motor object
 	 */
-	public EV3LargeRegulatedMotor getRightMotor(){
+	public EV3LargeRegulatedMotor getRightMotor() {
 		return rightMotor;
 	}
 
@@ -69,16 +71,15 @@ public class Motors {
 	 * 
 	 * @return launcherRight instance of the right launcher motor
 	 */
-	public EV3LargeRegulatedMotor getLauncherRight(){
+	public EV3LargeRegulatedMotor getLauncherRight() {
 		return launcherRight;
 	}
-	
+
 	/**
 	 * 
 	 * @return launcherLeft instance of the left launcher motor
 	 */
-	public EV3LargeRegulatedMotor getLauncherLeft(){
+	public EV3LargeRegulatedMotor getLauncherLeft() {
 		return launcherLeft;
-		
 	}
 }
