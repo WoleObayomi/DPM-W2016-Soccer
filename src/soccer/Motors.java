@@ -22,14 +22,16 @@ import lejos.hardware.port.MotorPort;
 public class Motors {
 
 	// brick variables
-	Brick masterBrick;
-	Brick slaveBrick;
+	private Brick masterBrick;
+	private Brick slaveBrick;
 
 	// motor variables
-	EV3LargeRegulatedMotor leftMotor;
-	EV3LargeRegulatedMotor rightMotor;
-	EV3LargeRegulatedMotor launcherRight;
-	EV3LargeRegulatedMotor launcherLeft;
+	private static EV3LargeRegulatedMotor leftMotor;
+	private static EV3LargeRegulatedMotor rightMotor;
+	private static EV3LargeRegulatedMotor launcherRight;
+	private static EV3LargeRegulatedMotor launcherLeft;
+	private static EV3LargeRegulatedMotor conveyerRight;
+	private static EV3LargeRegulatedMotor conveyerLeft;
 
 	/**
 	 * 
@@ -45,8 +47,11 @@ public class Motors {
 		leftMotor = new ReversedEV3LargeMotor(masterBrick.getPort("A"));
 		rightMotor = new ReversedEV3LargeMotor(masterBrick.getPort("D"));
 
-		// launcherLeft = new EV3LargeRegulatedMotor();
-		// launcherRight = new EV3LargeRegulatedMotor();
+		//launcher motors
+		launcherLeft = new EV3LargeRegulatedMotor(slaveBrick.getPort("A"));
+		launcherRight = new EV3LargeRegulatedMotor(slaveBrick.getPort("D"));
+		conveyerLeft = new EV3LargeRegulatedMotor(masterBrick.getPort("B"));
+		conveyerRight = new EV3LargeRegulatedMotor(masterBrick.getPort("C"));
 	}
 
 	// getters for motors
@@ -82,4 +87,22 @@ public class Motors {
 	public EV3LargeRegulatedMotor getLauncherLeft() {
 		return launcherLeft;
 	}
+
+	/**
+	 * @return the conveyerRight
+	 */
+	public static EV3LargeRegulatedMotor getConveyerRight() {
+		return conveyerRight;
+	}
+
+	/**
+	 * @return the conveyerLeft
+	 */
+	public static EV3LargeRegulatedMotor getConveyerLeft() {
+		return conveyerLeft;
+	}
+	
+	
+	
+	
 }
