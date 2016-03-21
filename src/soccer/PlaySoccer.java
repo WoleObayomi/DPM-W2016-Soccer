@@ -13,10 +13,13 @@
 package soccer;
 
 import lejos.hardware.Brick;
+import lejos.hardware.BrickFinder;
+import lejos.hardware.Button;
 import lejos.hardware.ev3.LocalEV3;
 import lejos.hardware.lcd.TextLCD;
 import lejos.hardware.sensor.EV3TouchSensor;
 import lejos.remote.ev3.RemoteEV3;
+import lejos.remote.ev3.RemoteRequestEV3;
 import lejos.robotics.SampleProvider;
 
 /**
@@ -34,11 +37,14 @@ public class PlaySoccer {
 
 		// get the second brick
 		Brick masterBrick = LocalEV3.get();
-		Brick slaveBrick = null;
+		RemoteRequestEV3 slaveBrick = null;
 		TextLCD masterLCD = masterBrick.getTextLCD();
+		masterLCD.drawString("Connecting...", 0, 0);
 		try {
-			slaveBrick = new RemoteEV3("10.0.1.2");
-			masterLCD.drawString("Slave connected",0,0);
+			slaveBrick = new RemoteRequestEV3(BrickFinder.discover()[0].getIPAddress());
+			masterLCD.drawString("Slave connected", 0, 0);
+			masterLCD.drawString(BrickFinder.discover()[0].getIPAddress(), 0, 1);
+			Thread.sleep(1000);
 		} catch (Exception e) {
 			// error message if it can't find the second brick
 			masterLCD.clear();
@@ -54,22 +60,27 @@ public class PlaySoccer {
 		}
 
 		// set up objects we need
-
 		// exit thread
-		Exit exit = new Exit();
+		Exit exit = new Exit(slaveBrick);
 		exit.start();
 
 		// motors object
 		Motors motors = new Motors(masterBrick, slaveBrick);
 
 		// sensors object
-		// Sensors sensors = new Sensors(masterBrick, slaveBrick);
-		Sensors sensors = null;
+		Sensors sensors = new Sensors(masterBrick, slaveBrick);
+		
+
 		// odometer thread
 		Odometer odometer = new Odometer(motors, PhysicalConstants.WHEEL_RADIUS, PhysicalConstants.TRACK_WIDTH);
 		odometer.start();
+
+		//odometery correction thread
 		
-		//odometry display for debugging
+		OdometryCorrection odometryCorrection = new OdometryCorrection(odometer, sensors);
+		odometryCorrection.start();
+		
+		// odometry display for debugging
 		OdometryDisplay odoDisp = new OdometryDisplay(odometer, masterLCD);
 		odoDisp.start();
 
@@ -78,32 +89,25 @@ public class PlaySoccer {
 				PhysicalConstants.WHEEL_RADIUS, PhysicalConstants.TRACK_WIDTH);
 
 		
-		masterLCD.drawString("Navigating...", 0, 4);
-		
-		EV3TouchSensor touch = new EV3TouchSensor(masterBrick.getPort("S1"));
-		SampleProvider touchSensor = touch.getMode("Touch");
-		float[] touchData =  new float[touchSensor.sampleSize()];
-		
-		while (true){
-			touchSensor.fetchSample(touchData, 0);
-			
-			if (touchData[0]==1){
-				motors.getLeftMotor().setSpeed(150);
-				motors.getLeftMotor().forward();
-				motors.getRightMotor().setSpeed(150);
-				motors.getRightMotor().forward();
-				
-			} else {
-				motors.getLeftMotor().stop(true);
-				motors.getRightMotor().stop(false);
-				motors.getLeftMotor().flt(true);
-				motors.getRightMotor().flt(false);
-			}
-		}
-		
+
+		LauncherController launcher = new LauncherController(motors.getLauncherRight(), motors.getLauncherLeft(),
+				motors.getConveyerRight(), motors.getConveyerLeft(), PhysicalConstants.LAUNCHER_WHEEL_RADIUS,
+				PhysicalConstants.CONVEYER_WHEEL_RADIUS, PhysicalConstants.BALL_DIAMTER);
+
+		launcher.setToIntakeSpeed();
+		Button.waitForAnyPress();
+		launcher.stopLauncher();
+		launcher.conveyerBackOneBall();
+		Button.waitForAnyPress();
+		launcher.setToFiringSpeed();
+		Button.waitForAnyPress();
+		launcher.conveyerForwardOneBall();
+		Button.waitForAnyPress();
+		launcher.conveyerForwardOneBall();
+
 		// determine which planner to use from eventual wifi connection
-		// and create the appropriate one
-		
+		// and create the appropriate one below
+
 	}
 
 }

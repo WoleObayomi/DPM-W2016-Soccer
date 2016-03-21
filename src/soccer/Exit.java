@@ -7,26 +7,32 @@
  * 
  */
 
-
 package soccer;
 
 import lejos.hardware.Button;
+import lejos.remote.ev3.RemoteRequestEV3;
 
 /**
  * 
  * @author Peter Quinn
  *
  */
-public class Exit extends Thread{
-	
+public class Exit extends Thread {
+
+	private RemoteRequestEV3 slaveBrick;
+
 	public void run() {
-		
-		
+
 		while (Button.waitForAnyPress() != Button.ID_ESCAPE)
 			;
+		slaveBrick.disConnect();
 		System.exit(0);
 	}
 
-	
+	public Exit(RemoteRequestEV3 slaveBrick) {
+
+		this.slaveBrick = slaveBrick;
+
+	}
 
 }

@@ -38,7 +38,7 @@ public class OdometryCorrection extends Thread {
 	private final int ERROR_THRESHOLD = 6;
 
 	// the spacing of the grid lines
-	private final double GRID_SPACING = 30.48;
+	private final double GRID_SPACING = PhysicalConstants.TILE_SPACING;
 
 	// distance the sensor is in front of the center of the axle
 	// we moved this to zero after doing the code

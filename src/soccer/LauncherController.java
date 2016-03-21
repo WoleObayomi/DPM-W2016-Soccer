@@ -12,12 +12,13 @@ package soccer;
 
 import lejos.hardware.ev3.EV3;
 import lejos.hardware.motor.EV3LargeRegulatedMotor;
+import lejos.robotics.RegulatedMotor;
 
 public class LauncherController {
 
 	// motors
-	private EV3LargeRegulatedMotor launcherRight;
-	private EV3LargeRegulatedMotor launcherLeft;
+	private RegulatedMotor launcherRight;
+	private RegulatedMotor launcherLeft;
 	private EV3LargeRegulatedMotor conveyerRight;
 	private EV3LargeRegulatedMotor conveyerLeft;
 
@@ -27,18 +28,18 @@ public class LauncherController {
 	private double ballDiameter;
 
 	// launcher speeds and accelerations
-	private final int FIRING_SPEED = 150;
+	private final int FIRING_SPEED = 180;
 	private final int LAUNCHER_ACCELERATION = 2000;
 	private final int INTAKE_SPEED = 50;
 	private final int REJECT_SPEED = 50;
-	private final int CONVEYER_SPEED = 50;
+	private final int CONVEYER_SPEED = 70;
 	private final int CONVEYER_OFFSET = 10; //conveyer rotates this extra amount
 
-	public LauncherController(EV3LargeRegulatedMotor launcherRight, EV3LargeRegulatedMotor launcherLeft,
+	public LauncherController(RegulatedMotor launherRight, RegulatedMotor launcherLeft,
 			EV3LargeRegulatedMotor conveyerRight, EV3LargeRegulatedMotor conveyerLeft, double launcherWheelRadius,
 			double conveyerWheelRadius, double ballDiameter) {
 		super();
-		this.launcherRight = launcherRight;
+		this.launcherRight = launherRight;
 		this.launcherLeft = launcherLeft;
 		this.conveyerRight = conveyerRight;
 		this.conveyerLeft = conveyerLeft;

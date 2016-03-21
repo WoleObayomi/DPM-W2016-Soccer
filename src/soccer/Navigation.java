@@ -32,11 +32,12 @@ public class Navigation {
 	private double trackWidth;
 
 	// navigation constants
-	private final double distError = .75;
+	private final double distError = 2;
 	private final double thetaTolerance = 1.5;
 	private final int NAV_SLEEP = 50;
 	private static final int FORWARD_SPEED = 200;
 	private static final int ROTATE_SPEED = 150;
+	private final int ACCELERATION = 2000;
 
 	// additional variables
 	private boolean isNavigating = false;
@@ -62,6 +63,9 @@ public class Navigation {
 		this.trackWidth = trackWidth;
 		this.sensors = sensors;
 		this.wallFollowController = new WallFollowController(leftMotor, rightMotor);
+		
+		leftMotor.setAcceleration(ACCELERATION);
+		rightMotor.setAcceleration(ACCELERATION);
 
 	}
 
@@ -244,6 +248,7 @@ public class Navigation {
 		if (sensors.isFrontWall()) { // if we do, call this method again to
 										// follow the new wall
 			followWall(x, y);
+			return;
 		}
 
 		// check to see if we have gotten around the wall

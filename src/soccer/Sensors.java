@@ -13,6 +13,7 @@ import lejos.hardware.port.Port;
 import lejos.hardware.sensor.EV3ColorSensor;
 import lejos.hardware.sensor.EV3UltrasonicSensor;
 import lejos.hardware.sensor.SensorModes;
+import lejos.remote.ev3.RemoteRequestEV3;
 import lejos.robotics.SampleProvider;
 import lejos.robotics.filter.*;
 
@@ -26,7 +27,7 @@ public class Sensors {
 
 	// brick variables
 	Brick masterBrick;
-	Brick slaveBrick;
+	RemoteRequestEV3 slaveBrick;
 
 	// sensor variables
 	
@@ -56,7 +57,7 @@ public class Sensors {
 	 * @param masterBrick
 	 * @param slaveBrick
 	 */
-	public Sensors(Brick masterBrick, Brick slaveBrick) {
+	public Sensors(Brick masterBrick, RemoteRequestEV3 slaveBrick) {
 		this.masterBrick = masterBrick;
 		this.slaveBrick = slaveBrick;
 		
@@ -66,27 +67,27 @@ public class Sensors {
 		//not sure what ports to assign
 		frontUSPort = null;
 		sideUSPort = null;
-		centerLSPort = null;
+		centerLSPort = masterBrick.getPort("S1");
 		sideLSPort = null;
 		//setting up front ultrasonic sensor
-		frontUS = new EV3UltrasonicSensor(frontUSPort);
-		frontUSValue = frontUS.getMode("Distance");
-		frontUSData = new float[frontUSValue.sampleSize()];
-		
+//		frontUS = new EV3UltrasonicSensor(frontUSPort);
+//		frontUSValue = frontUS.getMode("Distance");
+//		frontUSData = new float[frontUSValue.sampleSize()];
+//		
 		//setting up side ultrasonic sensor
-		sideUS = new EV3UltrasonicSensor(sideUSPort);
-		sideUSValue = sideUS.getMode("Distance");
-		sideUSData = new float[sideUSValue.sampleSize()];
-		
+//		sideUS = new EV3UltrasonicSensor(sideUSPort);
+//		sideUSValue = sideUS.getMode("Distance");
+//		sideUSData = new float[sideUSValue.sampleSize()];
+//		
 		//setting up center light sensor
 		centerLS = new EV3ColorSensor(centerLSPort);
 		centerLSValue = centerLS.getMode("Red");
 		centerLSData = new float[centerLSValue.sampleSize()];
 		
 		//setting up side light sensor
-		sideLS = new EV3ColorSensor(sideLSPort);
-		sideLSValue = centerLS.getMode("Red");
-		sideLSData = new float[sideLSValue.sampleSize()];
+//		sideLS = new EV3ColorSensor(sideLSPort);
+//		sideLSValue = centerLS.getMode("Red");
+//		sideLSData = new float[sideLSValue.sampleSize()];
 	}
 
 	// add some filters
@@ -260,7 +261,8 @@ public class Sensors {
 	 */
 	public float getCenterColourValue() {
 		// TODO Auto-generated method stub
-		return getCenterLSData(sensorMode);
+		centerLSValue.fetchSample(centerLSData, 0);
+		return centerLSData[0];
 	}
 
 	/**

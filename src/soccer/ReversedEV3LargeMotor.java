@@ -21,4 +21,13 @@ public class ReversedEV3LargeMotor extends EV3LargeRegulatedMotor{
 	public int getTachoCount(){
 		return -super.getTachoCount();
 	}
+	
+	public void rotate(int angle){
+		super.rotate(-angle);
+	}
+	
+	public void rotate(int angle, boolean immediateReturn){
+		super.rotate(-angle, immediateReturn);
+	}
+	
 }

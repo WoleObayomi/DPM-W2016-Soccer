@@ -12,6 +12,11 @@ import lejos.hardware.Brick;
 
 import lejos.hardware.motor.EV3LargeRegulatedMotor;
 import lejos.hardware.port.MotorPort;
+import lejos.remote.ev3.RMIRegulatedMotor;
+import lejos.remote.ev3.RemoteEV3;
+import lejos.remote.ev3.RemoteRequestEV3;
+import lejos.remote.ev3.RemoteRequestRegulatedMotor;
+import lejos.robotics.RegulatedMotor;
 
 /**
  * 
@@ -23,13 +28,13 @@ public class Motors {
 
 	// brick variables
 	private Brick masterBrick;
-	private Brick slaveBrick;
+	private RemoteRequestEV3 slaveBrick;
 
 	// motor variables
 	private static EV3LargeRegulatedMotor leftMotor;
 	private static EV3LargeRegulatedMotor rightMotor;
-	private static EV3LargeRegulatedMotor launcherRight;
-	private static EV3LargeRegulatedMotor launcherLeft;
+	private static RegulatedMotor launcherRight;
+	private static RegulatedMotor launcherLeft;
 	private static EV3LargeRegulatedMotor conveyerRight;
 	private static EV3LargeRegulatedMotor conveyerLeft;
 
@@ -38,7 +43,7 @@ public class Motors {
 	 * @param masterBrick
 	 * @param slaveBrick
 	 */
-	public Motors(Brick masterBrick, Brick slaveBrick) {
+	public Motors(Brick masterBrick, RemoteRequestEV3 slaveBrick) {
 		this.masterBrick = masterBrick;
 		this.slaveBrick = slaveBrick;
 
@@ -47,9 +52,11 @@ public class Motors {
 		leftMotor = new ReversedEV3LargeMotor(masterBrick.getPort("A"));
 		rightMotor = new ReversedEV3LargeMotor(masterBrick.getPort("D"));
 
-		//launcher motors
-		launcherLeft = new EV3LargeRegulatedMotor(slaveBrick.getPort("A"));
-		launcherRight = new EV3LargeRegulatedMotor(slaveBrick.getPort("D"));
+		// launcher motors
+		
+		launcherLeft = slaveBrick.createRegulatedMotor("A", 'L');
+		launcherRight = slaveBrick.createRegulatedMotor("D", 'L');
+		
 		conveyerLeft = new EV3LargeRegulatedMotor(masterBrick.getPort("B"));
 		conveyerRight = new EV3LargeRegulatedMotor(masterBrick.getPort("C"));
 	}
@@ -60,6 +67,7 @@ public class Motors {
 	 * @return leftMotor instance of the left motor object
 	 */
 	public EV3LargeRegulatedMotor getLeftMotor() {
+
 		return leftMotor;
 
 	}
@@ -76,7 +84,7 @@ public class Motors {
 	 * 
 	 * @return launcherRight instance of the right launcher motor
 	 */
-	public EV3LargeRegulatedMotor getLauncherRight() {
+	public RegulatedMotor getLauncherRight() {
 		return launcherRight;
 	}
 
@@ -84,25 +92,22 @@ public class Motors {
 	 * 
 	 * @return launcherLeft instance of the left launcher motor
 	 */
-	public EV3LargeRegulatedMotor getLauncherLeft() {
+	public RegulatedMotor getLauncherLeft() {
 		return launcherLeft;
 	}
 
 	/**
 	 * @return the conveyerRight
 	 */
-	public static EV3LargeRegulatedMotor getConveyerRight() {
+	public EV3LargeRegulatedMotor getConveyerRight() {
 		return conveyerRight;
 	}
 
 	/**
 	 * @return the conveyerLeft
 	 */
-	public static EV3LargeRegulatedMotor getConveyerLeft() {
+	public EV3LargeRegulatedMotor getConveyerLeft() {
 		return conveyerLeft;
 	}
-	
-	
-	
-	
+
 }
