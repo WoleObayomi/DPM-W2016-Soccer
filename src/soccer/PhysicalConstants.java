@@ -13,7 +13,7 @@ public class PhysicalConstants {
 
 	// wheel and track dimensions
 	public static final double WHEEL_RADIUS = 2.15; // cm
-	public static final double TRACK_WIDTH = 16.4; // cm, overturning --> decrease, underturning --> increase
+	public static final double TRACK_WIDTH = 16.25; // cm, overturning --> decrease, underturning --> increase
 	
 	//launcher data
 	public static final double LAUNCHER_WHEEL_RADIUS = 2.3; //cm

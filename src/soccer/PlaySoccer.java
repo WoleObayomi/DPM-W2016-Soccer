@@ -43,7 +43,6 @@ public class PlaySoccer {
 		try {
 			slaveBrick = new RemoteRequestEV3(BrickFinder.discover()[0].getIPAddress());
 			masterLCD.drawString("Slave connected", 0, 0);
-			masterLCD.drawString(BrickFinder.discover()[0].getIPAddress(), 0, 1);
 			Thread.sleep(1000);
 		} catch (Exception e) {
 			// error message if it can't find the second brick
@@ -68,17 +67,13 @@ public class PlaySoccer {
 		Motors motors = new Motors(masterBrick, slaveBrick);
 
 		// sensors object
-		Sensors sensors = new Sensors(masterBrick, slaveBrick);
+		Sensors sensors = null;
 		
 
 		// odometer thread
 		Odometer odometer = new Odometer(motors, PhysicalConstants.WHEEL_RADIUS, PhysicalConstants.TRACK_WIDTH);
 		odometer.start();
 
-		//odometery correction thread
-		
-		OdometryCorrection odometryCorrection = new OdometryCorrection(odometer, sensors);
-		odometryCorrection.start();
 		
 		// odometry display for debugging
 		OdometryDisplay odoDisp = new OdometryDisplay(odometer, masterLCD);
@@ -90,20 +85,25 @@ public class PlaySoccer {
 
 		
 
-		LauncherController launcher = new LauncherController(motors.getLauncherRight(), motors.getLauncherLeft(),
+		LauncherController launcher = new LauncherController(motors.getLauncherRight(), motors.getLauncherLeft(), motors.getAngleAdjustMotor(),
 				motors.getConveyerRight(), motors.getConveyerLeft(), PhysicalConstants.LAUNCHER_WHEEL_RADIUS,
 				PhysicalConstants.CONVEYER_WHEEL_RADIUS, PhysicalConstants.BALL_DIAMTER);
 
 		launcher.setToIntakeSpeed();
-		Button.waitForAnyPress();
-		launcher.stopLauncher();
+		nav.travel(15);
 		launcher.conveyerBackOneBall();
-		Button.waitForAnyPress();
+		launcher.stopLauncher();
+		nav.travel(-4);
+		nav.turnTo(90);
+		launcher.raiseAngle();
 		launcher.setToFiringSpeed();
-		Button.waitForAnyPress();
 		launcher.conveyerForwardOneBall();
-		Button.waitForAnyPress();
 		launcher.conveyerForwardOneBall();
+		launcher.lowerAngle();
+		launcher.stopLauncher();
+		
+		
+		System.exit(0);
 
 		// determine which planner to use from eventual wifi connection
 		// and create the appropriate one below
