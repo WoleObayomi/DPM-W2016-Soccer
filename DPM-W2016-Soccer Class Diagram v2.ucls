@@ -1,81 +1,81 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<class-diagram version="1.1.9" icons="true" automaticImage="PNG" always-add-relationships="true" generalizations="true" 
-  realizations="true" associations="true" dependencies="true" nesting-relationships="true" router="FAN">  
+<class-diagram version="1.1.9" icons="true" automaticImage="PNG" always-add-relationships="false" generalizations="true" 
+  realizations="true" associations="true" dependencies="false" nesting-relationships="true" router="FAN">  
   <class id="1" language="java" name="soccer.PlannerDefense" project="DPM-W2016-Soccer" 
     file="/DPM-W2016-Soccer/src/soccer/PlannerDefense.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="81" width="115" x="312" y="28"/>    
+    <position height="81" width="115" x="195" y="-114"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="2" language="java" name="soccer.Odometer" project="DPM-W2016-Soccer" 
+  <class id="2" language="java" name="soccer.ReversedEV3LargeMotor" project="DPM-W2016-Soccer" 
+    file="/DPM-W2016-Soccer/src/soccer/ReversedEV3LargeMotor.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="171" width="175" x="350" y="-114"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="3" language="java" name="soccer.Odometer" project="DPM-W2016-Soccer" 
     file="/DPM-W2016-Soccer/src/soccer/Odometer.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="405" width="203" x="833" y="738"/>    
+    <position height="405" width="203" x="1121" y="992"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="3" language="java" name="soccer.USLocalization" project="DPM-W2016-Soccer" 
+  <class id="4" language="java" name="soccer.USLocalization" project="DPM-W2016-Soccer" 
     file="/DPM-W2016-Soccer/src/soccer/USLocalization.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="207" width="446" x="873" y="257"/>    
+    <position height="207" width="446" x="1710" y="493"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="4" language="java" name="soccer.DataLogger" project="DPM-W2016-Soccer" 
+  <class id="5" language="java" name="soccer.DataLogger" project="DPM-W2016-Soccer" 
     file="/DPM-W2016-Soccer/src/soccer/DataLogger.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="189" width="201" x="519" y="28"/>    
+    <position height="189" width="201" x="565" y="-114"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="5" language="java" name="soccer.Exit" project="DPM-W2016-Soccer" 
+  <class id="6" language="java" name="soccer.Exit" project="DPM-W2016-Soccer" 
     file="/DPM-W2016-Soccer/src/soccer/Exit.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="99" width="87" x="2049" y="257"/>    
+    <position height="117" width="178" x="806" y="-114"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="6" language="java" name="soccer.ColourDataGetter" project="DPM-W2016-Soccer" 
+  <class id="7" language="java" name="soccer.ColourDataGetter" project="DPM-W2016-Soccer" 
     file="/DPM-W2016-Soccer/src/soccer/ColourDataGetter.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="153" width="248" x="543" y="257"/>    
+    <position height="153" width="248" x="1422" y="493"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="7" language="java" name="soccer.WallFollowController" project="DPM-W2016-Soccer" 
+  <class id="8" language="java" name="soccer.WallFollowController" project="DPM-W2016-Soccer" 
     file="/DPM-W2016-Soccer/src/soccer/WallFollowController.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="207" width="380" x="1357" y="738"/>    
+    <position height="207" width="380" x="2436" y="992"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="8" language="java" name="soccer.OdometryCorrection" project="DPM-W2016-Soccer" 
+  <class id="9" language="java" name="soccer.OdometryCorrection" project="DPM-W2016-Soccer" 
     file="/DPM-W2016-Soccer/src/soccer/OdometryCorrection.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="189" width="221" x="282" y="257"/>    
-    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
-      sort-features="false" accessors="true" visibility="true">      
-      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
-      <operations public="true" package="true" protected="true" private="true" static="true"/>    
-    </display>  
-  </class>  
-  <class id="9" language="java" name="soccer.LightLocalizer" project="DPM-W2016-Soccer" 
-    file="/DPM-W2016-Soccer/src/soccer/LightLocalizer.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="153" width="244" x="812" y="28"/>    
+    <position height="189" width="221" x="1161" y="493"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
@@ -84,241 +84,225 @@
   </class>  
   <class id="10" language="java" name="soccer.PlaySoccer" project="DPM-W2016-Soccer" 
     file="/DPM-W2016-Soccer/src/soccer/PlaySoccer.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="99" width="113" x="1737" y="28"/>    
+    <position height="99" width="113" x="1024" y="-114"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="11" language="java" name="soccer.PhysicalConstants" project="DPM-W2016-Soccer" 
+  <class id="11" language="java" name="soccer.LightLocalizer" project="DPM-W2016-Soccer" 
+    file="/DPM-W2016-Soccer/src/soccer/LightLocalizer.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="153" width="244" x="2177" y="-114"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="12" language="java" name="soccer.PhysicalConstants" project="DPM-W2016-Soccer" 
     file="/DPM-W2016-Soccer/src/soccer/PhysicalConstants.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="135" width="211" x="1798" y="257"/>    
+    <position height="207" width="211" x="1177" y="-114"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="12" language="java" name="soccer.Motors" project="DPM-W2016-Soccer" 
+  <class id="13" language="java" name="soccer.LauncherController" project="DPM-W2016-Soccer" 
+    file="/DPM-W2016-Soccer/src/soccer/LauncherController.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="567" width="709" x="1428" y="-114"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="14" language="java" name="soccer.Motors" project="DPM-W2016-Soccer" 
     file="/DPM-W2016-Soccer/src/soccer/Motors.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="261" width="245" x="1758" y="1399"/>    
+    <position height="369" width="246" x="2593" y="493"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="13" language="java" name="soccer.Navigation" project="DPM-W2016-Soccer" 
+  <class id="15" language="java" name="soccer.OdometryDisplay" project="DPM-W2016-Soccer" 
+    file="/DPM-W2016-Soccer/src/soccer/OdometryDisplay.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="153" width="229" x="850" y="493"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="16" language="java" name="soccer.Navigation" project="DPM-W2016-Soccer" 
     file="/DPM-W2016-Soccer/src/soccer/Navigation.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="441" width="315" x="1401" y="257"/>    
+    <position height="459" width="315" x="2217" y="493"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="14" language="java" name="soccer.Sensors" project="DPM-W2016-Soccer" 
+  <class id="17" language="java" name="soccer.Sensors" project="DPM-W2016-Soccer" 
     file="/DPM-W2016-Soccer/src/soccer/Sensors.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="621" width="219" x="1077" y="738"/>    
+    <position height="621" width="219" x="2177" y="992"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="15" language="java" name="soccer.PlannerOffense" project="DPM-W2016-Soccer" 
+  <class id="18" language="java" name="soccer.PlannerOffense" project="DPM-W2016-Soccer" 
     file="/DPM-W2016-Soccer/src/soccer/PlannerOffense.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="99" width="289" x="1340" y="28"/>    
+    <position height="99" width="289" x="2461" y="-114"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <association id="16">    
-    <end type="SOURCE" refId="15" navigable="false">      
-      <attribute id="17" name="nav"/>      
-      <multiplicity id="18" minimum="0" maximum="1"/>    
-    </end>    
-    <end type="TARGET" refId="13" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
   <association id="19">    
-    <end type="SOURCE" refId="6" navigable="false">      
-      <attribute id="20" name="odometer"/>      
+    <end type="SOURCE" refId="18" navigable="false">      
+      <attribute id="20" name="motors"/>      
       <multiplicity id="21" minimum="0" maximum="1"/>    
     </end>    
-    <end type="TARGET" refId="2" navigable="true"/>    
+    <end type="TARGET" refId="14" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
   <association id="22">    
-    <end type="SOURCE" refId="13" navigable="false">      
-      <attribute id="23" name="odometer"/>      
+    <end type="SOURCE" refId="4" navigable="false">      
+      <attribute id="23" name="odo"/>      
       <multiplicity id="24" minimum="0" maximum="1"/>    
     </end>    
-    <end type="TARGET" refId="2" navigable="true"/>    
+    <end type="TARGET" refId="3" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
   <association id="25">    
-    <end type="SOURCE" refId="8" navigable="false">      
-      <attribute id="26" name="odometer"/>      
+    <end type="SOURCE" refId="7" navigable="false">      
+      <attribute id="26" name="sensors"/>      
       <multiplicity id="27" minimum="0" maximum="1"/>    
     </end>    
-    <end type="TARGET" refId="2" navigable="true"/>    
+    <end type="TARGET" refId="17" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
   <association id="28">    
-    <end type="SOURCE" refId="3" navigable="false">      
-      <attribute id="29" name="odo"/>      
+    <end type="SOURCE" refId="15" navigable="false">      
+      <attribute id="29" name="odometer"/>      
       <multiplicity id="30" minimum="0" maximum="1"/>    
     </end>    
-    <end type="TARGET" refId="2" navigable="true"/>    
+    <end type="TARGET" refId="3" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <dependency id="31">    
-    <bendpoint x="2166" y="257"/>    
-    <bendpoint x="2166" y="738"/>    
-    <end type="SOURCE" refId="10"/>    
-    <end type="TARGET" refId="12"/>  
-  </dependency>  
-  <dependency id="32">    
-    <end type="SOURCE" refId="2"/>    
-    <end type="TARGET" refId="12"/>  
-  </dependency>  
-  <dependency id="33">    
-    <end type="SOURCE" refId="10"/>    
-    <end type="TARGET" refId="5"/>  
-  </dependency>  
-  <dependency id="34">    
-    <bendpoint x="1370" y="257"/>    
-    <end type="SOURCE" refId="10"/>    
-    <end type="TARGET" refId="2"/>  
-  </dependency>  
-  <dependency id="35">    
-    <bendpoint x="1746" y="257"/>    
-    <end type="SOURCE" refId="10"/>    
-    <end type="TARGET" refId="14"/>  
-  </dependency>  
-  <association id="36">    
-    <bendpoint x="842" y="257"/>    
-    <end type="SOURCE" refId="15" navigable="false">      
-      <attribute id="37" name="odometer"/>      
-      <multiplicity id="38" minimum="0" maximum="1"/>    
+  <association id="31">    
+    <bendpoint x="2562" y="493"/>    
+    <end type="SOURCE" refId="18" navigable="false">      
+      <attribute id="32" name="sensors"/>      
+      <multiplicity id="33" minimum="0" maximum="1"/>    
     </end>    
-    <end type="TARGET" refId="2" navigable="true"/>    
+    <end type="TARGET" refId="17" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <association id="39">    
+  <association id="34">    
     <end type="SOURCE" refId="9" navigable="false">      
-      <attribute id="40" name="navigation"/>      
-      <multiplicity id="41" minimum="0" maximum="1"/>    
+      <attribute id="35" name="odometer"/>      
+      <multiplicity id="36" minimum="0" maximum="1"/>    
     </end>    
-    <end type="TARGET" refId="13" navigable="true"/>    
+    <end type="TARGET" refId="3" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <association id="42">    
-    <bendpoint x="1767" y="257"/>    
-    <bendpoint x="1767" y="738"/>    
-    <end type="SOURCE" refId="15" navigable="false">      
-      <attribute id="43" name="motors"/>      
-      <multiplicity id="44" minimum="0" maximum="1"/>    
+  <association id="37">    
+    <bendpoint x="1109" y="493"/>    
+    <end type="SOURCE" refId="11" navigable="false">      
+      <attribute id="38" name="odo"/>      
+      <multiplicity id="39" minimum="0" maximum="1"/>    
     </end>    
-    <end type="TARGET" refId="12" navigable="true"/>    
+    <end type="TARGET" refId="3" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <association id="45">    
-    <bendpoint x="251" y="257"/>    
+  <association id="40">    
+    <bendpoint x="1130" y="493"/>    
+    <end type="SOURCE" refId="18" navigable="false">      
+      <attribute id="41" name="odometer"/>      
+      <multiplicity id="42" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="3" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="43">    
+    <end type="SOURCE" refId="4" navigable="false">      
+      <attribute id="44" name="sensors"/>      
+      <multiplicity id="45" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="17" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="46">    
     <end type="SOURCE" refId="9" navigable="false">      
-      <attribute id="46" name="odo"/>      
-      <multiplicity id="47" minimum="0" maximum="1"/>    
+      <attribute id="47" name="sensors"/>      
+      <multiplicity id="48" minimum="0" maximum="1"/>    
     </end>    
-    <end type="TARGET" refId="2" navigable="true"/>    
+    <end type="TARGET" refId="17" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <dependency id="48">    
-    <end type="SOURCE" refId="9"/>    
-    <end type="TARGET" refId="11"/>  
-  </dependency>  
   <association id="49">    
-    <end type="SOURCE" refId="6" navigable="false">      
-      <attribute id="50" name="sensors"/>      
+    <end type="SOURCE" refId="11" navigable="false">      
+      <attribute id="50" name="navigation"/>      
       <multiplicity id="51" minimum="0" maximum="1"/>    
     </end>    
-    <end type="TARGET" refId="14" navigable="true"/>    
+    <end type="TARGET" refId="16" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
   <association id="52">    
-    <bendpoint x="821" y="257"/>    
-    <end type="SOURCE" refId="9" navigable="false">      
-      <attribute id="53" name="sensors"/>      
+    <end type="SOURCE" refId="18" navigable="false">      
+      <attribute id="53" name="nav"/>      
       <multiplicity id="54" minimum="0" maximum="1"/>    
     </end>    
-    <end type="TARGET" refId="14" navigable="true"/>    
+    <end type="TARGET" refId="16" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
   <association id="55">    
-    <bendpoint x="1349" y="257"/>    
-    <end type="SOURCE" refId="15" navigable="false">      
-      <attribute id="56" name="sensors"/>      
+    <end type="SOURCE" refId="7" navigable="false">      
+      <attribute id="56" name="odometer"/>      
       <multiplicity id="57" minimum="0" maximum="1"/>    
     </end>    
-    <end type="TARGET" refId="14" navigable="true"/>    
+    <end type="TARGET" refId="3" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <dependency id="58">    
-    <end type="SOURCE" refId="9"/>    
-    <end type="TARGET" refId="6"/>  
-  </dependency>  
-  <dependency id="59">    
-    <end type="SOURCE" refId="10"/>    
-    <end type="TARGET" refId="11"/>  
-  </dependency>  
-  <association id="60">    
-    <end type="SOURCE" refId="8" navigable="false">      
-      <attribute id="61" name="sensors"/>      
-      <multiplicity id="62" minimum="0" maximum="1"/>    
+  <association id="58">    
+    <end type="SOURCE" refId="16" navigable="false">      
+      <attribute id="59" name="odometer"/>      
+      <multiplicity id="60" minimum="0" maximum="1"/>    
     </end>    
-    <end type="TARGET" refId="14" navigable="true"/>    
+    <end type="TARGET" refId="3" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <association id="63">    
-    <end type="SOURCE" refId="13" navigable="false">      
-      <attribute id="64" name="sensors"/>      
-      <multiplicity id="65" minimum="0" maximum="1"/>    
+  <association id="61">    
+    <end type="SOURCE" refId="16" navigable="false">      
+      <attribute id="62" name="wallFollowController"/>      
+      <multiplicity id="63" minimum="0" maximum="1"/>    
     </end>    
-    <end type="TARGET" refId="14" navigable="true"/>    
+    <end type="TARGET" refId="8" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <dependency id="66">    
-    <end type="SOURCE" refId="15"/>    
-    <end type="TARGET" refId="3"/>  
-  </dependency>  
-  <dependency id="67">    
-    <bendpoint x="1326" y="738"/>    
-    <end type="SOURCE" refId="13"/>    
-    <end type="TARGET" refId="12"/>  
-  </dependency>  
-  <association id="68">    
-    <end type="SOURCE" refId="3" navigable="false">      
-      <attribute id="69" name="sensors"/>      
-      <multiplicity id="70" minimum="0" maximum="1"/>    
+  <association id="64">    
+    <bendpoint x="2186" y="493"/>    
+    <end type="SOURCE" refId="11" navigable="false">      
+      <attribute id="65" name="sensors"/>      
+      <multiplicity id="66" minimum="0" maximum="1"/>    
     </end>    
-    <end type="TARGET" refId="14" navigable="true"/>    
+    <end type="TARGET" refId="17" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <association id="71">    
-    <end type="SOURCE" refId="13" navigable="false">      
-      <attribute id="72" name="wallFollowController"/>      
-      <multiplicity id="73" minimum="0" maximum="1"/>    
+  <association id="67">    
+    <end type="SOURCE" refId="16" navigable="false">      
+      <attribute id="68" name="sensors"/>      
+      <multiplicity id="69" minimum="0" maximum="1"/>    
     </end>    
-    <end type="TARGET" refId="7" navigable="true"/>    
+    <end type="TARGET" refId="17" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <dependency id="74">    
-    <end type="SOURCE" refId="10"/>    
-    <end type="TARGET" refId="13"/>  
-  </dependency>  
   <classifier-display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
     sort-features="false" accessors="true" visibility="true">    
     <attributes public="true" package="true" protected="true" private="true" static="true"/>    
