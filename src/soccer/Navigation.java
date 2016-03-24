@@ -38,7 +38,7 @@ public class Navigation {
 	private static final int FORWARD_SPEED = 200;
 	private static final int ROTATE_SPEED = 150;
 	private final int ACCELERATION = 2000;
-
+	private final int WALL_DETECTED_RANGE = 30; //cm
 	// additional variables
 	private boolean isNavigating = false;
 	private boolean isTurning = false;
@@ -86,7 +86,7 @@ public class Navigation {
 
 			// check for a wall in front if wallfollowing is on
 			if (wallFollowOn) {
-				if (sensors.isFrontWall()) {
+				if (sensors.getFrontDist()<WALL_DETECTED_RANGE) {
 					followWall(x, y);
 					continue;
 				}
@@ -245,7 +245,7 @@ public class Navigation {
 		wallFollowController.processData(distToWall);
 
 		// check if we see another wall in front
-		if (sensors.isFrontWall()) { // if we do, call this method again to
+		if (sensors.getFrontDist()<WALL_DETECTED_RANGE) { // if we do, call this method again to
 										// follow the new wall
 			followWall(x, y);
 			return;
