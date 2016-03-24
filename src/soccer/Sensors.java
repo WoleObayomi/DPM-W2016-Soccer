@@ -222,9 +222,17 @@ public class Sensors {
 		
 	}
 	
+	public SampleProvider getCenterLSSampleProvider(){
+		return centerLSValue;
+	}
 	
+	public SampleProvider getSideLSSampleProvider(){
+		return sideLSValue;
+	}
 	//TODO complete this based on how we decide to detect ball colour
 	public float getBallColourID(){
 		return 0;
 	}
+	
+	
 }

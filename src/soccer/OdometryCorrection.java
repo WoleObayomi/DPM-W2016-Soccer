@@ -10,16 +10,15 @@
  * 
  * Edit History:
  * March 13 - Peter: modified for final robot 
+ * March 24 - Peter: modified to use the new LineListener class for detecting
+ *  the lines, removed some things off the todo list since they were implemented
  * 
  */
 package soccer;
 
 //NOTE: this class can use quite a bit of cleaning up if we have time. 
 //	1. Implement code so it this works even if the DIST_TO_SENSOR is not 0
-//	2. Find some way to use mods instead of loops to make the code more efficient
-//	3. Find some way to put all the data filtering in the sensors class, and just have a 
-//		boolean to check to know if we crossed a line, just for organization sake. It 
-//		won't be the end of the world if we have to do the filtering in the run of this thread.
+
 
 /**
  * 
@@ -31,6 +30,7 @@ public class OdometryCorrection extends Thread {
 	private static final int CORRECTION_PERIOD = 10;
 	private Odometer odometer;
 	private Sensors sensors;
+	private LineListener lineListener;
 
 	// constants we need
 
@@ -65,7 +65,6 @@ public class OdometryCorrection extends Thread {
 		double x = odometer.getX();
 		double y = odometer.getY();
 
-		// subtract off 15 from starting in the middle of a tile
 		// add the distance from the odometer to the sensor to find the location
 		// of the sensor
 		x = x + DIST_TO_SENSOR;
@@ -120,40 +119,20 @@ public class OdometryCorrection extends Thread {
 	 * 
 	 */
 	public void run() {
-		long correctionStart, correctionEnd;
-
-		float lastColor = sensors.getCenterColourValue();
-		float color;
-		while (true) {
-			correctionStart = System.currentTimeMillis();
-
-			// get the value of the ambient light under the sensor
-			color = sensors.getCenterColourValue();
-
-			// tweak this to find black lines
-			// if we see a difference of at least .12, its a black line
-			if (lastColor - color >= .12) {
-
+		
+		lineListener = new LineListener(sensors.getCenterLSSampleProvider());		
+		
+		while (true){
+			
+		long correctionEnd,correctionStart;
+		correctionStart = System.currentTimeMillis();
+		
+			if (lineListener.lineDetected()) {
 				// execute correction method
 				snapToNearestGridLine();
-
-				// sleep for a longer time because we don't want to read the
-				// same black line several times
-				correctionEnd = System.currentTimeMillis();
-				if (correctionEnd - correctionStart < CORRECTION_PERIOD) {
-					try {
-						Thread.sleep(CORRECTION_PERIOD - (correctionEnd - correctionStart));
-					} catch (InterruptedException e) {
-						// there is nothing to be done here because it is not
-						// expected that the odometry correction will be
-						// interrupted by another thread
-					}
-				}
-
+				lineListener.reset();
 			}
 
-			// update last colour
-			lastColor = sensors.getCenterColourValue();
 
 			// this ensure the odometry correction occurs only once every period
 			correctionEnd = System.currentTimeMillis();
