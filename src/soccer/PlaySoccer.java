@@ -43,7 +43,7 @@ public class PlaySoccer {
 		try {
 			slaveBrick = new RemoteRequestEV3(BrickFinder.discover()[0].getIPAddress());
 			masterLCD.drawString("Slave connected", 0, 0);
-			Thread.sleep(1000);
+	
 		} catch (Exception e) {
 			// error message if it can't find the second brick
 			masterLCD.clear();
@@ -71,7 +71,7 @@ public class PlaySoccer {
 		
 
 		// odometer thread
-		Odometer odometer = new Odometer(motors, PhysicalConstants.WHEEL_RADIUS, PhysicalConstants.TRACK_WIDTH);
+		Odometer odometer = new Odometer(motors, PhysicalConstants.LEFT_WHEEL_RADIUS, PhysicalConstants.RIGHT_WHEEL_RADIUS, PhysicalConstants.TRACK_WIDTH);
 		odometer.start();
 
 		
@@ -80,30 +80,24 @@ public class PlaySoccer {
 		odoDisp.start();
 
 		// navigation controller
-		Navigation nav = new Navigation(odometer, motors, sensors, PhysicalConstants.WHEEL_RADIUS,
-				PhysicalConstants.WHEEL_RADIUS, PhysicalConstants.TRACK_WIDTH);
+		Navigation nav = new Navigation(odometer, motors, sensors, PhysicalConstants.LEFT_WHEEL_RADIUS,
+				PhysicalConstants.RIGHT_WHEEL_RADIUS, PhysicalConstants.TRACK_WIDTH);
 
 		
-
+		//launcher controller
 		LauncherController launcher = new LauncherController(motors.getLauncherRight(), motors.getLauncherLeft(), motors.getAngleAdjustMotor(),
 				motors.getConveyerRight(), motors.getConveyerLeft(), PhysicalConstants.LAUNCHER_WHEEL_RADIUS,
 				PhysicalConstants.CONVEYER_WHEEL_RADIUS, PhysicalConstants.BALL_DIAMTER);
 
-		launcher.setToIntakeSpeed();
-		nav.travel(15);
-		launcher.conveyerBackOneBall();
-		launcher.stopLauncher();
-		nav.travel(-4);
-		nav.turnTo(90);
-		launcher.raiseAngle();
-		launcher.setToFiringSpeed();
-		launcher.conveyerForwardOneBall();
-		launcher.conveyerForwardOneBall();
-		launcher.lowerAngle();
-		launcher.stopLauncher();
 		
 		
-		System.exit(0);
+		//PUT TESTING CODE HERE
+		
+		//examples
+		//nav.travel(2*PhysicalConstants.TILE_SPACING);
+		
+		
+		
 
 		// determine which planner to use from eventual wifi connection
 		// and create the appropriate one below

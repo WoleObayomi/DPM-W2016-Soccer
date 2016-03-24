@@ -43,7 +43,7 @@ public class Odometer extends Thread {
 
 	// constants we need for calculations
 	// could modify here to have 2 different wheel sizes
-	private double wheelRadius, track;
+	private double LeftWheelRadius,RightWheelRadius, track;
 
 	// constructor takes the motors object to access the left and right motors
 	/**
@@ -52,14 +52,15 @@ public class Odometer extends Thread {
 	 * @param wheelRadius
 	 * @param track
 	 */
-	public Odometer(Motors motors, double wheelRadius, double track) {
+	public Odometer(Motors motors, double LeftWheelRadius, double RightWheelRadius, double track) {
 		x = 0.0;
 		y = 0.0;
 		theta = 0.0;
 		lock = new Object();
 		rightMotor = motors.getRightMotor();
 		leftMotor = motors.getLeftMotor();
-		this.wheelRadius = wheelRadius;
+		this.LeftWheelRadius = LeftWheelRadius;
+		this.RightWheelRadius  = RightWheelRadius;
 		this.track = track;
 	}
 
@@ -84,10 +85,10 @@ public class Odometer extends Thread {
 			// calculations from slides
 
 			// delta theta in rads
-			deltaTheta = ((rightThetaNow - rightThetaLast) * wheelRadius - (leftThetaNow - leftThetaLast) * wheelRadius)
+			deltaTheta = ((rightThetaNow - rightThetaLast) * RightWheelRadius - (leftThetaNow - leftThetaLast) * LeftWheelRadius)
 					/ track;
 
-			deltaC = ((rightThetaNow - rightThetaLast) * wheelRadius + (leftThetaNow - leftThetaLast) * wheelRadius) / 2;
+			deltaC = ((rightThetaNow - rightThetaLast) * RightWheelRadius + (leftThetaNow - leftThetaLast) * LeftWheelRadius) / 2;
 
 			rightThetaLast = rightThetaNow;
 			leftThetaLast = leftThetaNow;

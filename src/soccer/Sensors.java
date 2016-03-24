@@ -14,6 +14,7 @@ import lejos.hardware.sensor.EV3ColorSensor;
 import lejos.hardware.sensor.EV3UltrasonicSensor;
 import lejos.hardware.sensor.SensorModes;
 import lejos.remote.ev3.RemoteRequestEV3;
+import lejos.remote.ev3.RemoteRequestSampleProvider;
 import lejos.robotics.SampleProvider;
 import lejos.robotics.filter.*;
 
@@ -29,29 +30,48 @@ public class Sensors {
 	Brick masterBrick;
 	RemoteRequestEV3 slaveBrick;
 
-	// sensor variables
-	
-	//static so all instances of Sensors class share the
-	//same variables for each connected sensor
-	
+	// PORT ASSIGNMENTS
+	// master
+	private static String frontUSPort = "S1";
+	private static String sideUSPort = "S2";
+	private static String centerLSPort = "S3";
+	private static String sideLSPort = "S4";
+
+	// slave
+	private static String ballColourIDPort = "S1";
+	private static String ballUSPort = "S2";
+
+	private static final int FILTER_MAX = 3;
+	// static so all instances of Sensors class share the
+	// same variables for each connected sensor
+
 	private static SensorModes frontUS;
 	private static SampleProvider frontUSValue;
-	private static float[]frontUSData;
+	private static float[] frontUSData;
+	private static int frontUSFilterCount = 0;
+
 	private static SensorModes sideUS;
 	private static SampleProvider sideUSValue;
-	private static float[]sideUSData;
+	private static float[] sideUSData;
+	private static int sideUSFilterCount = 0;
+
 	private static SensorModes centerLS;
 	private static SampleProvider centerLSValue;
-	private static float[]centerLSData;
+	private static float[] centerLSData;
+
 	private static SensorModes sideLS;
 	private static SampleProvider sideLSValue;
-	private static float[]sideLSData;
-	private static Port frontUSPort;
-	private static Port sideUSPort;
-	private static Port centerLSPort;
-	private static Port sideLSPort;
-	private static String sensorMode = "median";
-	
+	private static float[] sideLSData;
+
+	private static SensorModes ballUS;
+	private static SampleProvider ballUSValue;
+	private static float[] ballUSData;
+	private static int ballUSFilterCount = 0;
+
+	private static SensorModes ballColourID;
+	private static SampleProvider ballColourIDValue;
+	private static float[] ballColourIDData;
+
 	/**
 	 * 
 	 * @param masterBrick
@@ -60,217 +80,151 @@ public class Sensors {
 	public Sensors(Brick masterBrick, RemoteRequestEV3 slaveBrick) {
 		this.masterBrick = masterBrick;
 		this.slaveBrick = slaveBrick;
-		
+
 		// set up sensors below
-		// for now we'll need: front US, side US, center light sensor
-		
-		//not sure what ports to assign
-		frontUSPort = null;
-		sideUSPort = null;
-		centerLSPort = masterBrick.getPort("S1");
-		sideLSPort = null;
-		//setting up front ultrasonic sensor
-//		frontUS = new EV3UltrasonicSensor(frontUSPort);
-//		frontUSValue = frontUS.getMode("Distance");
-//		frontUSData = new float[frontUSValue.sampleSize()];
-//		
-		//setting up side ultrasonic sensor
-//		sideUS = new EV3UltrasonicSensor(sideUSPort);
-//		sideUSValue = sideUS.getMode("Distance");
-//		sideUSData = new float[sideUSValue.sampleSize()];
-//		
-		//setting up center light sensor
-		centerLS = new EV3ColorSensor(centerLSPort);
+
+		// masterBrick Sensors
+
+		// front ultrasonic sensor
+		frontUS = new EV3UltrasonicSensor(masterBrick.getPort(frontUSPort));
+		frontUSValue = frontUS.getMode("Distance");
+		frontUSData = new float[frontUSValue.sampleSize()];
+
+		// side ultrasonic sensor
+		sideUS = new EV3UltrasonicSensor(masterBrick.getPort(sideUSPort));
+		sideUSValue = sideUS.getMode("Distance");
+		sideUSData = new float[sideUSValue.sampleSize()];
+
+		// setting up center light sensor
+		centerLS = new EV3ColorSensor(masterBrick.getPort(centerLSPort));
 		centerLSValue = centerLS.getMode("Red");
 		centerLSData = new float[centerLSValue.sampleSize()];
-		
-		//setting up side light sensor
-//		sideLS = new EV3ColorSensor(sideLSPort);
-//		sideLSValue = centerLS.getMode("Red");
-//		sideLSData = new float[sideLSValue.sampleSize()];
+
+		// setting up side light sensor
+		sideLS = new EV3ColorSensor(masterBrick.getPort(sideLSPort));
+		sideLSValue = centerLS.getMode("Red");
+		sideLSData = new float[sideLSValue.sampleSize()];
+
+		// slaveBrick
+
+		ballUSValue = slaveBrick.createSampleProvider(ballUSPort, "EV3UltrasonicSensor", "Distance");
+		ballUSData = new float[ballUSValue.sampleSize()];
+
+		ballColourIDValue = slaveBrick.createSampleProvider(ballColourIDPort, "EV3ColorSensor", "Red");
+		ballColourIDData = new float [ballColourIDValue.sampleSize()];
 	}
 
-	// add some filters
-	//Implementation might be incorrect
-	//due to poor EV3 filter documentation
-	/**
-	 * 
-	 * @param sp
-	 * @param data
-	 * @return data[0] mean filtered data
-	 */
-	private float meanFilter(SampleProvider sp, float[]data) {
-		new MeanFilter(sp, sp.sampleSize()).fetchSample(data, 0);
-		return data[0];
-	}
-	
-	/**
-	 * 
-	 * @param sp
-	 * @param data
-	 * @return data[0] median filtered data
-	 */
-	private float medianFilter(SampleProvider sp, float[]data) {
-		new MedianFilter(sp, sp.sampleSize()).fetchSample(data, 0);
-		return data[0];
-	}
-	
 	// add getters for sensor data
 	/**
 	 * 
-	 * @param filterType
-	 * @return filteredData
-	 */
-	public float getFrontUSData(String filterType) {
-		String filterTypeLC = filterType.toLowerCase();
-		float filteredData = -666;
-		//use either median or mean filtering
-		switch(filterTypeLC) {
-			case "median": 
-				filteredData = medianFilter(frontUSValue, frontUSData);
-			break;
-			
-			case "mean":
-				filteredData = meanFilter(frontUSValue, frontUSData);
-			break;
-			
-			default:
-				System.out.println("Invalid option");
-			break;
-		
-		}
-		
-		return filteredData;
-	}
-	
-	/**
 	 * 
-	 * @param filterType
-	 * @return filteredData
-	 */
-	public float getSideUSData(String filterType) {
-		String filterTypeLC = filterType.toLowerCase();
-		float filteredData = -666;
-		//use either median or mean filtering
-		switch(filterTypeLC) {
-			case "median": 
-				filteredData = medianFilter(sideUSValue, sideUSData);
-			break;
-			
-			case "mean":
-				filteredData = meanFilter(sideUSValue, sideUSData);
-			break;
-			
-			default:
-				System.out.println("Invalid option");
-			break;
-		
-		}
-		
-		return filteredData;
-	}
-	
-	/**
-	 * 
-	 * @param filterType
-	 * @return filteredData
-	 */
-	public float getCenterLSData(String filterType) {
-		String filterTypeLC = filterType.toLowerCase();
-		float filteredData = -666;
-		//use either median or mean filtering
-		switch(filterTypeLC) {
-			case "median": 
-				filteredData = medianFilter(centerLSValue, centerLSData);
-			break;
-			
-			case "mean":
-				filteredData = meanFilter(centerLSValue, centerLSData);
-			break;
-			
-			default:
-				System.out.println("Invalid option");
-			break;
-		
-		}
-		
-		return filteredData;
-	}
-	
-	/**
-	 * 
-	 * @param filterType
-	 * @return filteredData
-	 */
-	public float getSideLSData(String filterType) {
-		String filterTypeLC = filterType.toLowerCase();
-		float filteredData = -666;
-		//use either median or mean filtering
-		switch(filterTypeLC) {
-			case "median": 
-				filteredData = medianFilter(sideLSValue, sideLSData);
-			break;
-			
-			case "mean":
-				filteredData = meanFilter(sideLSValue, sideLSData);
-			break;
-			
-			default:
-				System.out.println("Invalid option");
-			break;
-		
-		}
-		
-		return filteredData;
-	}
-	
-	//still need to discuss 
-	/**
-	 * 
-	 * @return boolean 
-	 */
-	public boolean isFrontWall() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	/**
-	 * 
-	 * @return distance Distance measured by side ultrasonic sensor
-	 */
-	public float getSideDist() {
-		// TODO Auto-generated method stub
-		return getSideUSData(sensorMode);
-	}
-
-	/**
-	 * 
-	 * @return distance Distance measured by front ultrasonic sensor
+	 * @return data or 254
 	 */
 	public float getFrontDist() {
-		// TODO Auto-generated method stub
-		return getFrontUSData(sensorMode);
+
+		frontUSValue.fetchSample(frontUSData, 0);
+		float data = frontUSData[0];
+		// convert to cm
+		data *= 100;
+
+		if (data < 254) {
+			// good value, set filter counter to 0 and return the data
+			frontUSFilterCount = 0;
+			return data;
+		} else if (frontUSFilterCount < FILTER_MAX) {
+			// could be noise, so increment the counter and try getting a new
+			// value
+			frontUSFilterCount++;
+			return getFrontDist();
+
+		} else {
+			// got 254 multiple times, so its probably true
+			return 254;
+		}
+
 	}
 
-	// it would be awesome if we could find some way to write a function that
-	// would return a boolean when a line is detected
-	
 	/**
 	 * 
-	 * @return colourValue value measured by center light sensor
+	 * 
+	 * @return data or 254
+	 */
+	public float getSideDist() {
+
+		sideUSValue.fetchSample(sideUSData, 0);
+		float data = sideUSData[0];
+		// convert to cm
+		data *= 100;
+
+		if (data < 254) {
+			// good value, set filter counter to 0 and return the data
+			sideUSFilterCount = 0;
+			return data;
+		} else if (sideUSFilterCount < FILTER_MAX) {
+			// could be noise, so increment the counter and try getting a new
+			// value
+			sideUSFilterCount++;
+			return getSideDist();
+
+		} else {
+			// got 254 multiple times, so its the true value
+			return 254;
+		}
+
+	}
+
+	/**
+	 * 
+	 * @return data value measured by center light sensor
 	 */
 	public float getCenterColourValue() {
-		// TODO Auto-generated method stub
+
 		centerLSValue.fetchSample(centerLSData, 0);
-		return centerLSData[0];
+		float data = centerLSData[0];
+
+		return data;
+
 	}
 
 	/**
 	 * 
-	 * @return colourValue value measured by side light sensor
+	 * @return data value measured by side light sensor
 	 */
 	public float getSideColourValue() {
-		// TODO Auto-generated method stub
-		return getSideLSData(sensorMode);
+
+		sideLSValue.fetchSample(sideLSData, 0);
+		float data = sideLSData[0];
+
+		return data;
+
+	}
+	
+	public float getBallDist(){
+		ballUSValue.fetchSample(ballUSData, 0);
+		float data = ballUSData[0];
+		// convert to cm
+		data *= 100;
+
+		if (data < 254) {
+			// good value, set filter counter to 0 and return the data
+			ballUSFilterCount = 0;
+			return data;
+		} else if (sideUSFilterCount < FILTER_MAX) {
+			// could be noise, so increment the counter and try getting a new
+			// value
+			ballUSFilterCount++;
+			return getBallDist();
+
+		} else {
+			// got 254 multiple times, so its the true value
+			return 254;
+		}
+		
+	}
+	
+	
+	//TODO complete this based on how we decide to detect ball colour
+	public float getBallColourID(){
+		return 0;
 	}
 }

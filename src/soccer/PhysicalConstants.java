@@ -1,6 +1,6 @@
 package soccer;
 
-//skeleton class that hold all static physical values of the robot
+//skeleton class that hold all static physical values of the robot and arena
 /**
  * 
  * @author Peter Quinn
@@ -12,7 +12,8 @@ public class PhysicalConstants {
 	public static final double DIST_TO_SIDE_LIGHTSENSOR = 0;
 
 	// wheel and track dimensions
-	public static final double WHEEL_RADIUS = 2.15; // cm
+	public static final double LEFT_WHEEL_RADIUS = 2.17; // cm
+	public static final double RIGHT_WHEEL_RADIUS = 2.16; // cm
 	public static final double TRACK_WIDTH = 16.25; // cm, overturning --> decrease, underturning --> increase
 	
 	//launcher data

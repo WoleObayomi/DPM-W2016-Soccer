@@ -194,8 +194,8 @@ public class Navigation {
 		double x = odometer.getX();
 		double y = odometer.getY();
 
-		rightMotor.setSpeed(100);
-		leftMotor.setSpeed(100);
+		rightMotor.setSpeed(150);
+		leftMotor.setSpeed(150);
 
 		if (distance == 0) {
 			return;

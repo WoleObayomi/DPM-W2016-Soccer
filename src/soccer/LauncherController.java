@@ -37,9 +37,8 @@ public class LauncherController {
 	private final int CONVEYER_OFFSET = 10; // conveyer rotates this extra
 											// amount (degrees)
 	private final int SPINUP_DELAY = 500; // time allowed for motors to speed up
-	private final int FIRE_ANGLE = 7;
-	private final int ANGLE_SPEED = 50;
-	private final int NUDGE_SPEED = 250;
+	private final int FIRE_ANGLE = 10; //angle to aim the ball basket at
+	private final int ANGLE_SPEED = 50; 
 
 	public LauncherController(RegulatedMotor launcherRight, RegulatedMotor launcherLeft, RegulatedMotor angleAdjustMotor,
 			EV3LargeRegulatedMotor conveyerRight, EV3LargeRegulatedMotor conveyerLeft, double launcherWheelRadius,
@@ -131,12 +130,5 @@ public class LauncherController {
 		angleAdjustMotor.rotate(-FIRE_ANGLE);
 	}
 	
-	public void nudgeBallOut(){
-		
-		conveyerLeft.setSpeed(NUDGE_SPEED);
-		conveyerRight.setSpeed(NUDGE_SPEED);
-		conveyerLeft.rotate(45);
-		conveyerRight.rotate(45);
-		
-	}
+
 }
