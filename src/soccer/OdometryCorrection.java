@@ -120,7 +120,8 @@ public class OdometryCorrection extends Thread {
 	 */
 	public void run() {
 		
-		lineListener = new LineListener(sensors.getCenterLSSampleProvider());		
+		lineListener = new LineListener(sensors.getCenterLSSampleProvider());	
+		lineListener.start();
 		
 		while (true){
 			

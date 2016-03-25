@@ -38,7 +38,7 @@ public class Navigation {
 	private static final int FORWARD_SPEED = 200;
 	private static final int ROTATE_SPEED = 150;
 	private final int ACCELERATION = 2000;
-	private final int WALL_DETECTED_RANGE = 30; //cm
+	private final int WALL_DETECTED_RANGE = 30; // cm
 	// additional variables
 	private boolean isNavigating = false;
 	private boolean isTurning = false;
@@ -63,7 +63,7 @@ public class Navigation {
 		this.trackWidth = trackWidth;
 		this.sensors = sensors;
 		this.wallFollowController = new WallFollowController(leftMotor, rightMotor);
-		
+
 		leftMotor.setAcceleration(ACCELERATION);
 		rightMotor.setAcceleration(ACCELERATION);
 
@@ -73,9 +73,13 @@ public class Navigation {
 	// wallfollowing to be on or off
 	/**
 	 * 
-	 * @param x point to travel to on the x axis
-	 * @param y point to travel to on the y axis
-	 * @param wallFollowOn boolean value to indicate whether wall following is operational
+	 * @param x
+	 *            point to travel to on the x axis
+	 * @param y
+	 *            point to travel to on the y axis
+	 * @param wallFollowOn
+	 *            boolean value to indicate whether wall following is
+	 *            operational
 	 */
 	public void travelTo(double x, double y, boolean wallFollowOn) {
 
@@ -86,7 +90,7 @@ public class Navigation {
 
 			// check for a wall in front if wallfollowing is on
 			if (wallFollowOn) {
-				if (sensors.getFrontDist()<WALL_DETECTED_RANGE) {
+				if (sensors.getFrontDist() < WALL_DETECTED_RANGE) {
 					followWall(x, y);
 					continue;
 				}
@@ -136,8 +140,9 @@ public class Navigation {
 			}
 
 		}
-		
-		//here we are within distError of our destination point, so we stop moving
+
+		// here we are within distError of our destination point, so we stop
+		// moving
 
 		leftMotor.setSpeed(0);
 		rightMotor.setSpeed(0);
@@ -150,7 +155,8 @@ public class Navigation {
 	// turns a relative angle
 	/**
 	 * 
-	 * @param theta Angle to turn to
+	 * @param theta
+	 *            Angle to turn to
 	 */
 	public void turnTo(double theta) {
 
@@ -168,7 +174,8 @@ public class Navigation {
 	// turns to an absolute angle
 	/**
 	 * 
-	 * @param theta Absolute angle to turn to
+	 * @param theta
+	 *            Absolute angle to turn to
 	 */
 	public void turnToAbs(double theta) {
 
@@ -186,7 +193,9 @@ public class Navigation {
 	// depending on sign
 	/**
 	 * 
-	 * @param distance Distance robot should travel. Forward - positive and Backward - negative
+	 * @param distance
+	 *            Distance robot should travel. Forward - positive and Backward
+	 *            - negative
 	 * 
 	 */
 	public void travel(double distance) {
@@ -194,24 +203,38 @@ public class Navigation {
 		double x = odometer.getX();
 		double y = odometer.getY();
 
-		rightMotor.setSpeed(150);
-		leftMotor.setSpeed(150);
+		rightMotor.setSpeed(FORWARD_SPEED);
+		leftMotor.setSpeed(FORWARD_SPEED);
 
 		if (distance == 0) {
 			return;
 		} else if (distance > 0) {
-			leftMotor.forward();
-			rightMotor.forward();
-			while (Math.sqrt(Math.pow(x - odometer.getX(), 2) + Math.pow(y - odometer.getY(), 2)) < Math.abs(distance))
-				;
+
+			synchronized (this) {
+				leftMotor.forward();
+				rightMotor.forward();
+			}
+
+			while (Math.sqrt(Math.pow(x - odometer.getX(), 2) + Math.pow(y - odometer.getY(), 2)) < Math
+					.abs(distance)) {
+				try {
+					Thread.sleep(NAV_SLEEP);
+				} catch (InterruptedException e) {
+				}
+			}
 			leftMotor.stop(true);
 			rightMotor.stop(false);
 			return;
 		} else {
 			leftMotor.backward();
 			rightMotor.backward();
-			while (Math.sqrt(Math.pow(x - odometer.getX(), 2) + Math.pow(y - odometer.getY(), 2)) < Math.abs(distance))
-				;
+			while (Math.sqrt(Math.pow(x - odometer.getX(), 2) + Math.pow(y - odometer.getY(), 2)) < Math
+					.abs(distance)) {
+				try {
+					Thread.sleep(NAV_SLEEP);
+				} catch (InterruptedException e) {
+				}
+			}
 			leftMotor.stop(true);
 			rightMotor.stop(false);
 			return;
@@ -226,6 +249,10 @@ public class Navigation {
 		// returns true if it is navigating or if it is turning
 		return isNavigating || isTurning;
 
+	}
+
+	public boolean isStraight() {
+		return leftMotor.getSpeed() == FORWARD_SPEED && rightMotor.getSpeed() == FORWARD_SPEED;
 	}
 
 	// Private helper methods
@@ -245,8 +272,10 @@ public class Navigation {
 		wallFollowController.processData(distToWall);
 
 		// check if we see another wall in front
-		if (sensors.getFrontDist()<WALL_DETECTED_RANGE) { // if we do, call this method again to
-										// follow the new wall
+		if (sensors.getFrontDist() < WALL_DETECTED_RANGE) { // if we do, call
+															// this method again
+															// to
+			// follow the new wall
 			followWall(x, y);
 			return;
 		}
@@ -300,7 +329,8 @@ public class Navigation {
 	 * @param radius
 	 * @param width
 	 * @param angle
-	 * @return int number of degrees the wheels must rotate in opposite directions
+	 * @return int number of degrees the wheels must rotate in opposite
+	 *         directions
 	 */
 	private int convertAngle(double radius, double width, double angle) {
 		return convertDistance(radius, Math.PI * width * angle / 360.0);
