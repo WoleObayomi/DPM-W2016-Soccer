@@ -67,7 +67,7 @@ public class PlaySoccer {
 		Motors motors = new Motors(masterBrick, slaveBrick);
 
 		// sensors object
-		Sensors sensors = null;
+		Sensors sensors = new Sensors(masterBrick, slaveBrick);
 		
 
 		// odometer thread
@@ -91,7 +91,7 @@ public class PlaySoccer {
 
 		
 		
-		//PUT TESTING CODE HERE
+		//PUT TESTING CODE HERE (
 		
 		//examples
 		//nav.travel(2*PhysicalConstants.TILE_SPACING);
