@@ -210,10 +210,8 @@ public class Navigation {
 			return;
 		} else if (distance > 0) {
 
-			synchronized (this) {
-				leftMotor.forward();
-				rightMotor.forward();
-			}
+			leftMotor.forward();
+			rightMotor.forward();
 
 			while (Math.sqrt(Math.pow(x - odometer.getX(), 2) + Math.pow(y - odometer.getY(), 2)) < Math
 					.abs(distance)) {
