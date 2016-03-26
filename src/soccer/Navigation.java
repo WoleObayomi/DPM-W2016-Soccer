@@ -1,14 +1,21 @@
-/* Author: Peter Quinn (260689207) Rony Azrak (260606812)
+/*
+ * Title: Navigation
  * 
- *  
+ * Author: Peter Quinn (260689207) Rony Azrak (260606812)
+ *   
  *Date created: 8/2/2016
  * 
  * Description: Contains methods that allow the robot to travel to a point given an x and y coordinate.
- * If it sees and obstacle, it will follow it until it is back on track
+ * If it sees and obstacle, it will follow it until it is back on track. Contains other methods for
+ * turning the robot, making it face a point, and travelling in straight line
  * 
  * Edit Log:
  * 15/2/2016 - Peter: wall follow / obstacle avoidance procedures disabled for lab 4
  * March 13 - Peter: modified for use with final project
+ * March 24 - Peter: added isStraight() to be able to know if the robot is travelling in a 
+ * straight line
+ * March 26 - Peter: added face(double x, double y) which will turn the robot to face the 
+ * point x, y; updated class description
 */
 package soccer;
 
@@ -32,13 +39,14 @@ public class Navigation {
 	private double trackWidth;
 
 	// navigation constants
-	private final double distError = 2;
-	private final double thetaTolerance = 1.5;
+	private final double distError = 1.5;
+	private final double thetaTolerance =2;
 	private final int NAV_SLEEP = 50;
 	private static final int FORWARD_SPEED = 200;
 	private static final int ROTATE_SPEED = 150;
 	private final int ACCELERATION = 2000;
 	private final int WALL_DETECTED_RANGE = 30; // cm
+	private final int WALL_FOLLOW_EXIT_ANGLE = 5;
 	// additional variables
 	private boolean isNavigating = false;
 	private boolean isTurning = false;
@@ -238,6 +246,44 @@ public class Navigation {
 			return;
 		}
 	}
+	/**
+	 * 
+	 * @param x
+	 * @param y
+	 * 
+	 * Turns robot to face x, y
+	 */
+	
+	public void face(double x, double y){
+		//makes the robot face a point x,y
+		double xNow = odometer.getX();
+		double yNow = odometer.getY();
+
+		// this function moves the angle to regular cartesian orientation
+		double thetaNow = 360 - odometer.getTheta() + 90;
+		double theta = Math.toDegrees(Math.atan2(y - yNow, x - xNow));
+
+		// process the angles so the robot doesn't get confused
+		if (theta < 0)
+			theta += 360;
+
+		if (thetaNow > 360)
+			thetaNow -= 360;
+
+		// find min turn
+
+		if (Math.abs(thetaNow - theta) > thetaTolerance) {
+			// find and turn the min angle
+			if (thetaNow - theta < -180) {
+				turnTo(thetaNow - theta + 360);
+			} else if (thetaNow - theta > 180) {
+				turnTo(thetaNow - theta - 360);
+			} else {
+				turnTo(thetaNow - theta);
+			}
+
+		}
+	}
 
 	/**
 	 * 
@@ -248,6 +294,10 @@ public class Navigation {
 		return isNavigating || isTurning;
 
 	}
+	
+	/**
+	 * 
+	 */
 
 	public boolean isStraight() {
 		return leftMotor.getSpeed() == FORWARD_SPEED && rightMotor.getSpeed() == FORWARD_SPEED;
@@ -296,7 +346,7 @@ public class Navigation {
 
 		// check our heading is 90 degrees to the correct
 		// direction, this will be true when we have gone around the wall
-		if (Math.abs(theta - (thetaNow + 90)) < 5) {
+		if (Math.abs(theta - (thetaNow + 90)) < WALL_FOLLOW_EXIT_ANGLE) {
 			// send the stop code to the motor controller
 			wallFollowController.processData(-1);
 			return;

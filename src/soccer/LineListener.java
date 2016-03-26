@@ -17,8 +17,8 @@ import lejos.robotics.SampleProvider;
 
 public class LineListener extends Thread {
 
-
-	private final float THRESHOLD = (float) .12; //tweak this to set the sensitivity of the filer
+	private final float THRESHOLD = .12F; // tweak this to set the sensitivity
+											// of the filer
 	private final int SLEEP_TIME = 10; // ms
 
 	private SampleProvider colourSensor;
@@ -76,6 +76,7 @@ public class LineListener extends Thread {
 		lineDetected = false;
 	}
 
+	// moving window/buffer of three points
 	private void updatePoints() {
 		pointData[0] = pointData[1];
 		pointData[1] = pointData[2];
@@ -83,6 +84,8 @@ public class LineListener extends Thread {
 		pointData[2] = colourData[0];
 	}
 
+	// use a simple derivative filter to check if our values are dropping
+	// rapidly ie detecting a line
 	private boolean detectLine() {
 
 		updatePoints();
@@ -94,7 +97,6 @@ public class LineListener extends Thread {
 		// we are dropping rapidly, so hopefully seeing a line
 		if (Math.abs(d2) - Math.abs(d1) > THRESHOLD) {
 			return true;
-
 		} else {
 			return false;
 		}

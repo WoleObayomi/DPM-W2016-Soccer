@@ -7,6 +7,9 @@
  * Description: A thread that save the angle of the odometer to an array passed to it 
  * when it sees a gridline. Holds 4 gridlines 
  * 
+ * 
+ * Edit Log:
+ * March 26 - Peter: modifed to take advantage of the new LineListener class
  */
 
 package soccer;
@@ -40,13 +43,15 @@ public class ColourDataGetter extends Thread {
 		while (true) {
 			correctionStart = System.currentTimeMillis();
 
-			// get the value of the ambient light under the sensor
-			currentColor =  sensors.getSideColourValue();
+			// create a line listener to detect lines
+			LineListener line = new LineListener(sensors.getSideLSSampleProvider());
+			line.start();
 
-			// tweak this to find black lines
-			// if we see a difference (drop) of at least .12, its a black line
-			if (lastColor - currentColor >= .12) {
-
+			//check if we find a line
+			if (line.lineDetected()) {
+				
+				line.reset(); //reset the boolean
+				
 				Sound.setVolume(85);
 				Sound.beep();
 
@@ -69,11 +74,7 @@ public class ColourDataGetter extends Thread {
 						// there is nothing to be done here
 					}
 				}
-
 			}
-
-			// update last colour (only updates to white)
-			lastColor = currentColor;
 
 			// this ensure the odometry correction occurs only once every period
 			correctionEnd = System.currentTimeMillis();

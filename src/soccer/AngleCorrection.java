@@ -1,3 +1,16 @@
+/*
+ * Title: Angle Correction
+ * Author: Peter Quinn
+ * Created: Marhc 24, 2016
+ * 
+ * Description: Uses LineListeners to detect when the two gridline sensing colour
+ * sensors detect lines and saves the x and y from odometer when they are detected. This
+ * data is then used to calculate and correct the angle of the robot.
+ * 
+ * Edit Log:
+ * 
+ */
+
 package soccer;
 
 public class AngleCorrection extends Thread {
