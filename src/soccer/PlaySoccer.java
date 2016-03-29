@@ -113,26 +113,21 @@ public class PlaySoccer {
 				PhysicalConstants.RIGHT_WHEEL_RADIUS, PhysicalConstants.TRACK_WIDTH);
 
 		// odometry correction
-		
+
+		OdometryCorrection odoCorrection = new OdometryCorrection(odometer, sensors);
+		odoCorrection.start();
 
 		// PUT TESTING CODE HERE
 
-		nav.travelTo(60, 60, true);
-		nav.travelTo(60, 0, true);
-		nav.travelTo(0, 0, true);
-		nav.turnToAbs(0);
-		
-		
-		
 		// create USLocalization obj and use the method in it
-		
-		//new USLocalization(sensors, odometer, motors.getLeftMotor(), motors.getRightMotor()).doLocalization();
+
+		new USLocalization(sensors, odometer, motors.getLeftMotor(), motors.getRightMotor()).doLocalization();
 
 		// do light localization
-		//new LightLocalizer(odometer, sensors, nav).doLocalization();
-		
-		//nav.travelTo(0, 0, false);
-		//nav.turnToAbs(0);
+		new LightLocalizer(odometer, sensors, nav).doLocalization();
+
+		nav.travelTo(0, 0, false);
+		nav.turnToAbs(0);
 
 		// determine which planner to use from eventual wifi connection
 		// and create the appropriate one below

@@ -86,8 +86,7 @@ public class Navigation {
 	 * @param y
 	 *            point to travel to on the y axis
 	 * @param wallFollowOn
-	 *            boolean value to indicate whether wall following is
-	 *            operational
+	 *            boolean value to indicate whether wall following is to be used
 	 */
 	public void travelTo(double x, double y, boolean wallFollowOn) {
 
@@ -99,9 +98,8 @@ public class Navigation {
 			// check for a wall in front if wallfollowing is on
 			if (wallFollowOn) {
 				if (sensors.getFrontDist() < WALL_DETECTED_RANGE) {
-					
-					followWall(x, y);
-					continue;
+
+					followWall(x, y, odometer);
 				}
 			}
 
@@ -315,31 +313,32 @@ public class Navigation {
 	 * @param x
 	 * @param y
 	 */
-	private void followWall(double x, double y) {
+	private void followWall(double x, double y, Odometer odometer) {
 
 		// turn to the left so our wall following sensor on the right is facing
 		// the
 		// wall we saw with the front sensor
-		
+
 		leftMotor.stop(true);
 		rightMotor.stop(false);
 		turnTo(-90);
 		float distToWall;
 		while (true) {
+
 			distToWall = sensors.getSideDist();
 			wallFollowController.processData(distToWall);
 
 			// check if we see another wall in front
-			if (sensors.getFrontDist() < WALL_DETECTED_RANGE) { // if we do,
-																// call
-																// this method
-																// again
-																// to
-				// follow the new wall, then return when we are done with that
-				// one
-				followWall(x, y);
-				return;
-			}
+			// if (sensors.getFrontDist() < WALL_DETECTED_RANGE) { // if we do,
+			// // call
+			// // this method
+			// // again
+			// // to
+			// // follow the new wall, then return when we are done with that
+			// // one
+			// followWall(x, y);
+			// return;
+			// }
 
 			// check to see if we have gotten around the wall
 			double xNow = odometer.getX();
@@ -357,7 +356,7 @@ public class Navigation {
 				thetaNow -= 360;
 			}
 
-			// check our heading is 90 degrees to the correct
+			// check our heading is ~90 degrees to the correct
 			// direction, this will be true when we have gone around the wall
 			if (Math.abs(theta - (thetaNow + 90)) < WALL_FOLLOW_EXIT_ANGLE) {
 				// send the stop code to the motor controller
@@ -366,7 +365,7 @@ public class Navigation {
 			}
 			// wait a bit before starting again
 			try {
-				Thread.sleep(20);
+				Thread.sleep(NAV_SLEEP);
 			} catch (Exception e) {
 				// don't expect any interruptions
 			}
