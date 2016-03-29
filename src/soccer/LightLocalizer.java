@@ -27,11 +27,15 @@ public class LightLocalizer {
 	private Navigation navigation;
 
 	// constants
-	final int STARTING_DIST_FROM_WALL = 17;
-	final int MOTOR_SPEED = 100;
-	final double DIST_TO_LIGHT = PhysicalConstants.DIST_TO_SIDE_LIGHTSENSOR; // distance between color sensor and
-										// center of
-										// robot
+	final double STARTING_DIST_FROM_WALL = 4;
+	final int MOTOR_SPEED = 200;
+	final double DIST_TO_LIGHT = PhysicalConstants.DIST_TO_SIDE_LIGHTSENSOR; // distance
+																				// between
+																				// color
+																				// sensor
+																				// and
+	// center of
+	// robot
 
 	/**
 	 * 
@@ -68,21 +72,25 @@ public class LightLocalizer {
 		if (distance < STARTING_DIST_FROM_WALL)
 			navigation.travel(distance - STARTING_DIST_FROM_WALL);
 
-		// set orientation of robot to 45 degrees to make sure it starts in a
+		// set orientation of robot to -15 degrees to make sure it starts in a
 		// good position to detect lines
-		navigation.turnToAbs(45);
+		navigation.turnToAbs(-15);
 
 		// array to hold the angles of the lines
 		double[] angleData = new double[4];
 
-		// have a thread that watches for the gridlines and saves the angle of
-		// the robot when they are detected to an array
-		ColourDataGetter colourDataGetter = new ColourDataGetter(angleData, odo, sensors);
-		colourDataGetter.start();
+		// make sure the array gets filled with angles
+		while (angleData[0] == 0 || angleData[1] == 0 || angleData[2] == 0 || angleData[3] == 0) {
+			// have a thread that watches for the gridlines and saves the angle
+			// of
+			// the robot when they are detected to an array
+			ColourDataGetter colourDataGetter = new ColourDataGetter(angleData, odo, sensors);
+			colourDataGetter.start();
 
-		// turn 360 degrees to see all the lines
-		navigation.turnTo(360);
-
+			// turn 360 degrees to see all the lines
+			navigation.turnTo(360);
+			colourDataGetter.end();
+		}
 		// get angle data that was collected
 		// account for the sensor being behind the robot by adding 180 and then
 		// subtracting 360 if it over 360
@@ -127,16 +135,11 @@ public class LightLocalizer {
 		// we tried to use this extra calculation to improve the angle
 		// adjustment, but it made things worse
 		// may try using it in the future
-		double deltaTheta2 = 90 - (thetaXNeg - 180) + deltaThetaX / 2;
-		double aveDeltaTheta = (deltaTheta1 + deltaTheta2) / 2;
+		// double deltaTheta2 = 90 - (thetaXNeg - 180) + deltaThetaX / 2;
+		// double aveDeltaTheta = (deltaTheta1 + deltaTheta2) / 2;
 
 		// update position
-		odo.setPosition(new double[] { x, y, odo.getTheta() + deltaTheta2 }, new boolean[] { true, true, true });
-
-		// proceed to 0,0,0
-
-		navigation.travelTo(0, 0, true);
-		navigation.turnToAbs(0);
+		odo.setPosition(new double[] { x, y, odo.getTheta() + deltaTheta1 }, new boolean[] { true, true, true });
 
 	}
 

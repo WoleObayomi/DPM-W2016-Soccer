@@ -12,6 +12,8 @@
 
 package soccer;
 
+import java.util.concurrent.Callable;
+
 import lejos.hardware.Brick;
 import lejos.hardware.BrickFinder;
 import lejos.hardware.Button;
@@ -43,7 +45,7 @@ public class PlaySoccer {
 		try {
 			slaveBrick = new RemoteRequestEV3(BrickFinder.discover()[0].getIPAddress());
 			masterLCD.drawString("Slave connected", 0, 0);
-	
+
 		} catch (Exception e) {
 			// error message if it can't find the second brick
 			masterLCD.clear();
@@ -67,14 +69,13 @@ public class PlaySoccer {
 		Motors motors = new Motors(masterBrick, slaveBrick);
 
 		// sensors object
-		Sensors sensors = new Sensors(masterBrick, slaveBrick);
-		
+		final Sensors sensors = new Sensors(masterBrick, slaveBrick);
 
 		// odometer thread
-		Odometer odometer = new Odometer(motors, PhysicalConstants.LEFT_WHEEL_RADIUS, PhysicalConstants.RIGHT_WHEEL_RADIUS, PhysicalConstants.TRACK_WIDTH);
+		Odometer odometer = new Odometer(motors, PhysicalConstants.LEFT_WHEEL_RADIUS,
+				PhysicalConstants.RIGHT_WHEEL_RADIUS, PhysicalConstants.TRACK_WIDTH);
 		odometer.start();
 
-		
 		// odometry display for debugging
 		OdometryDisplay odoDisp = new OdometryDisplay(odometer, masterLCD);
 		odoDisp.start();
@@ -83,21 +84,27 @@ public class PlaySoccer {
 		Navigation nav = new Navigation(odometer, motors, sensors, PhysicalConstants.LEFT_WHEEL_RADIUS,
 				PhysicalConstants.RIGHT_WHEEL_RADIUS, PhysicalConstants.TRACK_WIDTH);
 
+		// odometry correction
 		
-		//launcher controller
-		LauncherController launcher = new LauncherController(motors.getLauncherRight(), motors.getLauncherLeft(), motors.getAngleAdjustMotor(),
-				motors.getConveyerRight(), motors.getConveyerLeft(), PhysicalConstants.LAUNCHER_WHEEL_RADIUS,
-				PhysicalConstants.CONVEYER_WHEEL_RADIUS, PhysicalConstants.BALL_DIAMTER);
 
+		// PUT TESTING CODE HERE
+
+		nav.travelTo(60, 60, true);
+		nav.travelTo(60, 0, true);
+		nav.travelTo(0, 0, true);
+		nav.turnToAbs(0);
 		
 		
-		//PUT TESTING CODE HERE (
 		
-		//examples
-		//nav.travel(2*PhysicalConstants.TILE_SPACING);
+		// create USLocalization obj and use the method in it
 		
+		//new USLocalization(sensors, odometer, motors.getLeftMotor(), motors.getRightMotor()).doLocalization();
+
+		// do light localization
+		//new LightLocalizer(odometer, sensors, nav).doLocalization();
 		
-		
+		//nav.travelTo(0, 0, false);
+		//nav.turnToAbs(0);
 
 		// determine which planner to use from eventual wifi connection
 		// and create the appropriate one below

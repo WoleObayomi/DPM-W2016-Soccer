@@ -13,12 +13,12 @@ public class WallFollowController {
 	private EV3LargeRegulatedMotor leftMotor;
 
 	// wallfollowing controller constants (P-Type controller)
-	private final int bandCenter = 10;
+	private final int bandCenter = 7;
 	private final int bandWidth = 2;
 	// correct based on the magnitude of the error
 	// can be tuned by changing k (gain)
-	private final int k = 10;
-	private final int motorStraight = 100;
+	private final int k = 8;
+	private final int motorStraight = 140;
 
 
 	// constructor takes left and right motors, and object to access sensor data
@@ -30,6 +30,8 @@ public class WallFollowController {
 	public WallFollowController(EV3LargeRegulatedMotor leftMotor, EV3LargeRegulatedMotor rightMotor) {
 		this.leftMotor = leftMotor;
 		this.rightMotor = rightMotor;
+		this.leftMotor.setAcceleration(2000);
+		this.rightMotor.setAcceleration(2000);
 	}
 
 	/**
@@ -38,7 +40,7 @@ public class WallFollowController {
 	 */
 	public void processData(float distToWall) {
 
-		// if we pass a negative, stop movement
+		// if we pass a negative 1, stop movement
 		if (distToWall == -1) {
 			leftMotor.setSpeed(0);
 			rightMotor.setSpeed(0);
@@ -52,6 +54,7 @@ public class WallFollowController {
 
 		int correction = k * Math.abs(error);
 
+		//sets a max speed
 		if (correction > 18 * k) {
 			correction = 18 * k;
 		}
@@ -63,6 +66,7 @@ public class WallFollowController {
 			rightMotor.setSpeed(motorStraight);
 			leftMotor.forward();
 			rightMotor.forward();
+			return;
 
 		} else if (error < 0) {
 			// robot is too close to wall, move the right motor
@@ -71,7 +75,7 @@ public class WallFollowController {
 			rightMotor.setSpeed(correction + motorStraight);
 			leftMotor.forward();
 			rightMotor.forward();
-
+			return;
 		} else {
 
 			// robot is too far from the wall, move the left motor
@@ -81,7 +85,10 @@ public class WallFollowController {
 			rightMotor.setSpeed(motorStraight);
 			leftMotor.forward();
 			rightMotor.forward();
+			return;
 		}
+		
+		
 
 	}
 

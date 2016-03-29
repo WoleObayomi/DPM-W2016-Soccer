@@ -27,8 +27,10 @@ public class AngleCorrection extends Thread {
 
 	private double x1, x2, y1, y2;
 
-	public AngleCorrection() {
-
+	public AngleCorrection(Odometer odometer, Navigation nav, Sensors sensors) {
+		this.sensors = sensors;
+		this.nav=nav;
+		this.odometer=odometer;
 	}
 
 	@Override

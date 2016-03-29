@@ -16,6 +16,8 @@
  */
 package soccer;
 
+import lejos.hardware.Sound;
+
 //NOTE: this class can use quite a bit of cleaning up if we have time. 
 //	1. Implement code so it this works even if the DIST_TO_SENSOR is not 0
 
@@ -131,7 +133,11 @@ public class OdometryCorrection extends Thread {
 			if (lineListener.lineDetected()) {
 				// execute correction method
 				snapToNearestGridLine();
+				
+				//reset the lineListener
 				lineListener.reset();
+				
+				
 			}
 
 

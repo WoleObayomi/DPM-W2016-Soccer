@@ -21,46 +21,41 @@ public class ColourDataGetter extends Thread {
 	private double[] angleData;
 	private final int CORRECTION_PERIOD = 50;
 	private final int LONG_SLEEP = 200;
-
+	private boolean on = true;
 	private Odometer odometer;
 	private Sensors sensors;
 
 	public ColourDataGetter(double[] angleData, Odometer odometer, Sensors sensors) {
 		this.angleData = angleData;
 		this.odometer = odometer;
-		this.sensors=sensors;
+		this.sensors = sensors;
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public void run() {
 
 		long correctionStart, correctionEnd;
 
-		float lastColor = sensors.getSideColourValue();
-		float currentColor;
 		int lineCounter = 0;
+		// create a line listener to detect lines
+		LineListener line = new LineListener(sensors.getSideLSSampleProvider());
+		line.start();
 
-		while (true) {
+		while (on) {
 			correctionStart = System.currentTimeMillis();
 
-			// create a line listener to detect lines
-			LineListener line = new LineListener(sensors.getSideLSSampleProvider());
-			line.start();
-
-			//check if we find a line
+			// check if we find a line
 			if (line.lineDetected()) {
-				
-				line.reset(); //reset the boolean
-				
-				Sound.setVolume(85);
-				Sound.beep();
+
+				line.reset(); // reset the boolean
 
 				angleData[lineCounter] = odometer.getTheta();
 				lineCounter++;
 
 				// return when we see all 4 lines
 				if (lineCounter == 4) {
-					Sound.setVolume(0);
+					line.end();
 					return;
 				}
 
@@ -88,6 +83,10 @@ public class ColourDataGetter extends Thread {
 
 		}
 
+	}
+
+	public void end() {
+		on = false;
 	}
 
 }

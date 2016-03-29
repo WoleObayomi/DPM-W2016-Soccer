@@ -40,13 +40,13 @@ public class Navigation {
 
 	// navigation constants
 	private final double distError = 1.5;
-	private final double thetaTolerance =2;
+	private final double thetaTolerance = 2;
 	private final int NAV_SLEEP = 50;
-	private static final int FORWARD_SPEED = 200;
-	private static final int ROTATE_SPEED = 150;
+	private static final int FORWARD_SPEED = 240;
+	private static final int ROTATE_SPEED = 200;
 	private final int ACCELERATION = 2000;
-	private final int WALL_DETECTED_RANGE = 30; // cm
-	private final int WALL_FOLLOW_EXIT_ANGLE = 5;
+	private final int WALL_DETECTED_RANGE = 8; // cm
+	private final int WALL_FOLLOW_EXIT_ANGLE = 10;
 	// additional variables
 	private boolean isNavigating = false;
 	private boolean isTurning = false;
@@ -99,6 +99,7 @@ public class Navigation {
 			// check for a wall in front if wallfollowing is on
 			if (wallFollowOn) {
 				if (sensors.getFrontDist() < WALL_DETECTED_RANGE) {
+					
 					followWall(x, y);
 					continue;
 				}
@@ -116,12 +117,12 @@ public class Navigation {
 			if (theta < 0)
 				theta += 360;
 
-			if (thetaNow > 360)
+			if (thetaNow >= 360)
 				thetaNow -= 360;
 
 			// find min turn
 
-			if (Math.abs(thetaNow - theta) > thetaTolerance) {
+			if (Math.abs(thetaNow - theta) > thetaTolerance && Math.abs(y - yNow) > .1) {
 				// find and turn the min angle
 				if (thetaNow - theta < -180) {
 					turnTo(thetaNow - theta + 360);
@@ -170,6 +171,8 @@ public class Navigation {
 
 		isTurning = true;
 
+		leftMotor.setAcceleration(1000);
+		rightMotor.setAcceleration(1000);
 		leftMotor.setSpeed(ROTATE_SPEED);
 		rightMotor.setSpeed(ROTATE_SPEED);
 
@@ -246,16 +249,17 @@ public class Navigation {
 			return;
 		}
 	}
+
 	/**
 	 * 
 	 * @param x
 	 * @param y
 	 * 
-	 * Turns robot to face x, y
+	 *            Turns robot to face x, y
 	 */
-	
-	public void face(double x, double y){
-		//makes the robot face a point x,y
+
+	public void face(double x, double y) {
+		// makes the robot face a point x,y
 		double xNow = odometer.getX();
 		double yNow = odometer.getY();
 
@@ -267,7 +271,7 @@ public class Navigation {
 		if (theta < 0)
 			theta += 360;
 
-		if (thetaNow > 360)
+		if (thetaNow >= 360)
 			thetaNow -= 360;
 
 		// find min turn
@@ -294,7 +298,7 @@ public class Navigation {
 		return isNavigating || isTurning;
 
 	}
-	
+
 	/**
 	 * 
 	 */
@@ -315,43 +319,58 @@ public class Navigation {
 		// turn to the left so our wall following sensor on the right is facing
 		// the
 		// wall we saw with the front sensor
+		
+		leftMotor.stop(true);
+		rightMotor.stop(false);
 		turnTo(-90);
-		float distToWall = sensors.getSideDist();
-		wallFollowController.processData(distToWall);
+		float distToWall;
+		while (true) {
+			distToWall = sensors.getSideDist();
+			wallFollowController.processData(distToWall);
 
-		// check if we see another wall in front
-		if (sensors.getFrontDist() < WALL_DETECTED_RANGE) { // if we do, call
-															// this method again
-															// to
-			// follow the new wall
-			followWall(x, y);
-			return;
+			// check if we see another wall in front
+			if (sensors.getFrontDist() < WALL_DETECTED_RANGE) { // if we do,
+																// call
+																// this method
+																// again
+																// to
+				// follow the new wall, then return when we are done with that
+				// one
+				followWall(x, y);
+				return;
+			}
+
+			// check to see if we have gotten around the wall
+			double xNow = odometer.getX();
+			double yNow = odometer.getY();
+
+			// this function moves the angle to regular cartesian orientation
+			double thetaNow = 360 - odometer.getTheta() + 90;
+			double theta = Math.toDegrees(Math.atan2(y - yNow, x - xNow));
+
+			// process the angles
+			if (theta < 0) {
+				theta += 360;
+			}
+			if (thetaNow > 360) {
+				thetaNow -= 360;
+			}
+
+			// check our heading is 90 degrees to the correct
+			// direction, this will be true when we have gone around the wall
+			if (Math.abs(theta - (thetaNow + 90)) < WALL_FOLLOW_EXIT_ANGLE) {
+				// send the stop code to the motor controller
+				wallFollowController.processData(-1);
+				return;
+			}
+			// wait a bit before starting again
+			try {
+				Thread.sleep(20);
+			} catch (Exception e) {
+				// don't expect any interruptions
+			}
+
 		}
-
-		// check to see if we have gotten around the wall
-		double xNow = odometer.getX();
-		double yNow = odometer.getY();
-
-		// this function moves the angle to regular cartesian orientation
-		double thetaNow = 360 - odometer.getTheta() + 90;
-		double theta = Math.toDegrees(Math.atan2(y - yNow, x - xNow));
-
-		// process the angles
-		if (theta < 0) {
-			theta += 360;
-		}
-		if (thetaNow > 360) {
-			thetaNow -= 360;
-		}
-
-		// check our heading is 90 degrees to the correct
-		// direction, this will be true when we have gone around the wall
-		if (Math.abs(theta - (thetaNow + 90)) < WALL_FOLLOW_EXIT_ANGLE) {
-			// send the stop code to the motor controller
-			wallFollowController.processData(-1);
-			return;
-		}
-
 	}
 
 	// from the square driver class from lab 2

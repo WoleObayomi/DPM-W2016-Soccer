@@ -102,16 +102,16 @@ public class Sensors {
 
 		// setting up side light sensor
 		sideLS = new EV3ColorSensor(masterBrick.getPort(sideLSPort));
-		sideLSValue = centerLS.getMode("Red");
+		sideLSValue = sideLS.getMode("Red");
 		sideLSData = new float[sideLSValue.sampleSize()];
 
 		// slaveBrick
 
-		ballUSValue = slaveBrick.createSampleProvider(ballUSPort, "EV3UltrasonicSensor", "Distance");
-		ballUSData = new float[ballUSValue.sampleSize()];
-
-		ballColourIDValue = slaveBrick.createSampleProvider(ballColourIDPort, "EV3ColorSensor", "Red");
-		ballColourIDData = new float [ballColourIDValue.sampleSize()];
+//		ballUSValue = slaveBrick.createSampleProvider(ballUSPort, "EV3UltrasonicSensor", "Distance");
+//		ballUSData = new float[ballUSValue.sampleSize()];
+//
+//		ballColourIDValue = slaveBrick.createSampleProvider(ballColourIDPort, "EV3ColorSensor", "Red");
+//		ballColourIDData = new float [ballColourIDValue.sampleSize()];
 	}
 
 	// add getters for sensor data

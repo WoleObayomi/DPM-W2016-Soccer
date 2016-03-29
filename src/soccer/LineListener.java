@@ -13,11 +13,14 @@
 
 package soccer;
 
+import lejos.hardware.Sound;
+import lejos.hardware.lcd.LCD;
 import lejos.robotics.SampleProvider;
 
 public class LineListener extends Thread {
 
-	private final float THRESHOLD = .12F; // tweak this to set the sensitivity
+	private static final double BLACK_LINE_DIFF = .07;
+	private final double THRESHOLD = .05; // tweak this to set the sensitivity
 											// of the filer
 	private final int SLEEP_TIME = 10; // ms
 
@@ -25,6 +28,7 @@ public class LineListener extends Thread {
 	private float[] colourData;
 	private boolean lineDetected;
 	private float[] pointData;
+	private boolean on = true;
 
 	// pass a colour sensor sampleProvider to the constructor
 	public LineListener(SampleProvider colourSensor) {
@@ -47,11 +51,13 @@ public class LineListener extends Thread {
 
 		colourSensor.fetchSample(colourData, 0);
 
-		while (true) {
+		while (on) {
 			correctionStart = System.currentTimeMillis();
 
 			if (detectLine()) {
+
 				lineDetected = true;
+
 			}
 			// this ensure that the line is looked for only once every period
 			correctionEnd = System.currentTimeMillis();
@@ -68,6 +74,11 @@ public class LineListener extends Thread {
 	// reports if a line has been detected
 	public boolean lineDetected() {
 		return lineDetected;
+	}
+
+	public void end() {
+		on = false;
+
 	}
 
 	// reset the line detected boolean, must always be done after a line is
@@ -89,17 +100,47 @@ public class LineListener extends Thread {
 	private boolean detectLine() {
 
 		updatePoints();
-		// take the slope (linear derivative)
-		float d1 = pointData[1] - pointData[0];
-		float d2 = pointData[2] - pointData[1];
 
-		// compare magnitudes of slope, if d2 is significantly bigger than d1,
-		// we are dropping rapidly, so hopefully seeing a line
-		if (Math.abs(d2) - Math.abs(d1) > THRESHOLD) {
+		// // check current point against last point, if diff is significant,
+		// its a
+		// // line
+		double last = pointData[1];
+		double now = pointData[2];
+
+		if (last - now > BLACK_LINE_DIFF) {
+
+			Sound.setVolume(85);
+			Sound.beep();
+			Sound.setVolume(0);
 			return true;
 		} else {
 			return false;
 		}
+
+		// this isn't working
+
+		// take the slope (linear derivative)
+
+		// float d1 = pointData[1] - pointData[0];
+		// float d2 = pointData[2] - pointData[1];
+		//
+		// // debug
+		// LCD.drawString("d1 " + d1, 0, 4);
+		// LCD.drawString("d2 " + d2, 0, 5);
+		//
+		// // compare magnitudes of slope, if d2 is significantly bigger than
+		// d1,
+		// // we are dropping rapidly, so hopefully seeing a line
+		// // also check if both d1 and d2 were dropping
+		// if (Math.abs(d2) - Math.abs(d1) > THRESHOLD) {
+		// Sound.setVolume(85);
+		// Sound.beep();
+		// Sound.setVolume(0);
+		// return true;
+		// } else {
+		// return false;
+		// }
+
 	}
 
 }

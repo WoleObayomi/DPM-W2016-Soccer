@@ -32,7 +32,7 @@ public class Odometer extends Thread {
 	private double x, y, theta;
 
 	// odometer update period, in ms
-	private static final long ODOMETER_PERIOD = 25;
+	private static final long ODOMETER_PERIOD = 20;
 
 	// lock object for mutual exclusion
 	private Object lock;

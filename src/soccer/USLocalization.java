@@ -10,7 +10,7 @@ import lejos.hardware.motor.EV3LargeRegulatedMotor;
 public class USLocalization {
 
 	// constants
-	private final int ROTATE_SPEED = 120;
+	private final int ROTATE_SPEED = 200;
 	private final int DISTANCE_TO_WALL = 35;
 	private final int NOISE_MARGIN = 2;
 	private final int REFRESH_RATE = 50;

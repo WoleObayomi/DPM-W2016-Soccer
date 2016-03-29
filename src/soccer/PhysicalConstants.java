@@ -9,17 +9,19 @@ package soccer;
 public class PhysicalConstants {
 
 	// sensor distances
-	public static final double DIST_TO_SIDE_LIGHTSENSOR = 0;
+	public static final double DIST_TO_SIDE_LIGHTSENSOR = 12.9;// cm
+	public static final double DIST_TO_FRONT_US = 12.5;// cm
 
 	// wheel and track dimensions
-	public static final double LEFT_WHEEL_RADIUS = 2.17; // cm
-	public static final double RIGHT_WHEEL_RADIUS = 2.16; // cm
-	public static final double TRACK_WIDTH = 16.25; // cm, overturning --> decrease, underturning --> increase
-	
-	//launcher data
-	public static final double LAUNCHER_WHEEL_RADIUS = 2.3; //cm
-	public static final double CONVEYER_WHEEL_RADIUS = 2.1; //cm
-	
+	public static final double LEFT_WHEEL_RADIUS = 2.145; // cm
+	public static final double RIGHT_WHEEL_RADIUS = 2.155; // cm
+	public static final double TRACK_WIDTH = 18.4; // cm, overturning -->
+													// decrease, underturning
+													// --> increase
+
+	// launcher data
+	public static final double LAUNCHER_WHEEL_RADIUS = 2.3; // cm
+	public static final double CONVEYER_WHEEL_RADIUS = 2.1; // cm
 
 	// arena constants
 	public static final double TILE_SPACING = 30.48; // cm
