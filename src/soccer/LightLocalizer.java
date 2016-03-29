@@ -92,26 +92,27 @@ public class LightLocalizer {
 			colourDataGetter.end();
 		}
 		// get angle data that was collected
-		// account for the sensor being behind the robot by adding 180 and then
-		// subtracting 360 if it over 360
+		// account for the sensor being to the left of the robot by subtracting
+		// 90 and then
+		// adding 360 if it is less than 0
 		double thetaYNeg, thetaYPos, thetaXNeg, thetaXPos;
 
-		thetaXNeg = angleData[0] + 180;
-		if (thetaXNeg > 360) {
-			thetaXNeg -= 360;
+		thetaXNeg = angleData[0] - 90;
+		if (thetaXNeg < 0) {
+			thetaXNeg += 360;
 		}
-		thetaYPos = angleData[1] + 180;
-		if (thetaYPos > 360) {
-			thetaYPos -= 360;
+		thetaYPos = angleData[1] - 90;
+		if (thetaYPos < 0) {
+			thetaYPos += 360;
 		}
 
-		thetaXPos = angleData[2] + 180;
-		if (thetaXPos > 360) {
-			thetaXPos -= 360;
+		thetaXPos = angleData[2] - 90;
+		if (thetaXPos < 0) {
+			thetaXPos += 360;
 		}
-		thetaYNeg = angleData[3] + 180;
-		if (thetaYNeg > 360) {
-			thetaYNeg -= 360;
+		thetaYNeg = angleData[3] - 90;
+		if (thetaYNeg < 0) {
+			thetaYNeg += 360;
 		}
 
 		// calculations of angle
@@ -139,7 +140,7 @@ public class LightLocalizer {
 		// double aveDeltaTheta = (deltaTheta1 + deltaTheta2) / 2;
 
 		// update position
-		odo.setPosition(new double[] { x, y, odo.getTheta() + deltaTheta1 }, new boolean[] { true, true, true });
+		odo.setPosition(new double[] { x, y, odo.getTheta() + deltaTheta1 + 45 }, new boolean[] { true, true, true });
 
 	}
 

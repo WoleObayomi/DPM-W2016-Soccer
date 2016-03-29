@@ -92,4 +92,17 @@ public class WallFollowController {
 
 	}
 
+	public void forward(int time) {
+		leftMotor.setSpeed(motorStraight);
+		rightMotor.setSpeed(motorStraight);
+		leftMotor.forward();
+		rightMotor.forward();
+		try {
+			Thread.sleep(time);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
 }

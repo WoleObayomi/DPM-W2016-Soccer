@@ -31,7 +31,7 @@ public class ColourDataGetter extends Thread {
 		this.sensors = sensors;
 	}
 
-	@SuppressWarnings("deprecation")
+	
 	@Override
 	public void run() {
 

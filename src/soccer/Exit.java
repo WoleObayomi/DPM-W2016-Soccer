@@ -20,11 +20,20 @@ import lejos.remote.ev3.RemoteRequestEV3;
 public class Exit extends Thread {
 
 	private RemoteRequestEV3 slaveBrick;
+	private final int SLEEP_TIME = 250;
 
 	public void run() {
 
-		while (Button.waitForAnyPress() != Button.ID_ESCAPE)
-			;
+		while (Button.waitForAnyPress() != Button.ID_ESCAPE){
+			
+			try {
+				sleep(SLEEP_TIME);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+
 		slaveBrick.disConnect();
 		System.exit(0);
 	}
