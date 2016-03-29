@@ -1,5 +1,11 @@
 package soccer;
 
+/**
+ * 
+ * @author Wole Obayomi Jr
+ *
+ */
+
 public class BallPickupController {
 	
 	private static int ballColorID;
@@ -14,6 +20,15 @@ public class BallPickupController {
 	private static final float APPROACH_DIST = 2; //each approach to the ball. the bot should 'inch' closer by the specified value
 	private static final double DIST_TO_NEXT_BALL = PhysicalConstants.BALL_DIAMTER + BALL_GAP;
 	
+	/**
+	 * 
+	 * @param ballColorID
+	 * @param odometer
+	 * @param navigation
+	 * @param launcher
+	 * @param sensors
+	 * @param motors
+	 */
 	public BallPickupController(int ballColorID, Odometer odometer, Navigation navigation, LauncherController launcher, 
 			Sensors sensors, Motors motors) {
 		
@@ -26,6 +41,10 @@ public class BallPickupController {
 		
 	}
 	
+	/**
+	 * 
+	 * @return true when measured distance to ball is less than or equal to optimal distance for initiating pickup
+	 */
 	private boolean closeEnoughToBall() {
 		/*
 		  might need a range
@@ -35,6 +54,10 @@ public class BallPickupController {
 		return sensors.getBallDist() <= MIN_DIST_TO_BALL;
 	}
 	
+	/**
+	 * <p>
+	 * causes the robot to move a certain distance as it approaches the ball platform
+	 */
 	private void slowlyApproachPlatform() {
 		
 		/*
@@ -46,6 +69,10 @@ public class BallPickupController {
 		
 	}
 	
+	/**
+	 * <p>
+	 * initiates ball pickup routine
+	 */
 	public void pickBall() {
 		
 		while( !closeEnoughToBall() ) {
@@ -65,6 +92,10 @@ public class BallPickupController {
 		}
 	}
 	
+	/**
+	 * <p>
+	 * ball rejection routine
+	 */
 	private void rejectBall() {
 		
 		launcher.setToRejectSpeed();
@@ -73,6 +104,9 @@ public class BallPickupController {
 		
 	}
 	
+	/**
+	 * moves the robot to the next ball
+	 */
 	private void moveToNextBall() {
 		
 		navigation.travelTo(odometer.getX(), odometer.getY() + DIST_TO_NEXT_BALL, true);

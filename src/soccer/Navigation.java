@@ -300,7 +300,8 @@ public class Navigation {
 	}
 
 	/**
-	 * 
+	 * <p>
+	 * true if both motors are moving at the same speed
 	 */
 
 	public boolean isStraight() {

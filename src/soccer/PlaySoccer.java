@@ -32,10 +32,13 @@ import lejos.robotics.SampleProvider;
 public class PlaySoccer {
 
 	/**
+	 * @param sensors
+	 * @param nav
 	 * 
-	 * @param args
+	 * <p>
+	 * prevents the robot from colliding with the wall when initially placed in the field
+	 * and prior to localization
 	 */
-	
 	private void moveTowardTileIntersection(Sensors sensors, Navigation nav) {
 		double distFromSideUS = sensors.getSideDist();
 		double distFromFrontUS = sensors.getFrontDist();
