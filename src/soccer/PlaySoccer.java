@@ -35,6 +35,31 @@ public class PlaySoccer {
 	 * 
 	 * @param args
 	 */
+	
+	private void moveTowardTileIntersection(Sensors sensors, Navigation nav) {
+		double distFromSideUS = sensors.getSideDist();
+		double distFromFrontUS = sensors.getFrontDist();
+		
+		/* 
+		 * assuming robot starts in orientation such that
+		 * the front US sensor sees nothing and the side US
+		 * sensor is close to the wall on the right
+		 */
+		if(distFromSideUS < 15) {
+			nav.turnTo(90); //turn to face the left (assuming counterclockwise measurement for angles)
+			nav.travel(4);	//keep moving to the left until desired distance from wall
+			nav.turnTo(0);	//return to original orientation
+		}
+		
+		/*
+		 * if front facing ultrasonic sensor is too close to a wall
+		 * then rotate the robot by 180 degrees so it no longer faces a wall
+		 */
+		if(distFromFrontUS < 15) {
+			nav.turnTo(180); 
+		}
+	}
+	
 	public static void main(String[] args) {
 
 		// get the second brick
