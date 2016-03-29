@@ -1,6 +1,14 @@
 package soccer;
 
+
 import lejos.hardware.motor.EV3LargeRegulatedMotor;
+
+/**
+ * 
+ * @author Wole Obayomi Jr
+ *
+ */
+
 
 public class BallPickupController {
 
@@ -20,11 +28,23 @@ public class BallPickupController {
 													// closer by the specified
 													// value
 	private static final double DIST_TO_NEXT_BALL = PhysicalConstants.BALL_DIAMTER + BALL_GAP;
+
 	private final float BALL_HEIGHT = 3; // cm,
 	private double llXBallZone;
 	private double llYBallZone;
 
-	public BallPickupController(int ballColorID, Odometer odometer, Navigation navigation, LauncherController launcher,
+	
+	/**
+	 * 
+	 * @param ballColorID
+	 * @param odometer
+	 * @param navigation
+	 * @param launcher
+	 * @param sensors
+	 * @param motors
+	 */
+	public BallPickupController(int ballColorID, Odometer odometer, Navigation navigation, LauncherController launcher, 
+
 			Sensors sensors, Motors motors) {
 
 		this.ballColorID = ballColorID;
@@ -36,6 +56,11 @@ public class BallPickupController {
 
 	}
 
+	/**
+	 * 
+	 * @return true when measured distance to ball is less than or equal to optimal distance for initiating pickup
+	 */
+
 	private boolean closeEnoughToBall() {
 		/*
 		 * might need a range since we don't want to climb over the platform
@@ -43,6 +68,12 @@ public class BallPickupController {
 		 */
 		return sensors.getBallDist() <= MIN_DIST_TO_BALL;
 	}
+
+	
+	/**
+	 * <p>
+	 * causes the robot to move a certain distance as it approaches the ball platform
+	 */
 
 	private void slowlyApproachPlatform() {
 
@@ -70,11 +101,17 @@ public class BallPickupController {
 		leftMotor.stop();
 	}
 	
+
 	public BallPickupController(double llXBallZone, double llYBallZone) {
 		this.llXBallZone = llXBallZone;
 		this.llYBallZone = llYBallZone;
 	}
 
+
+	/**
+	 * <p>
+	 * initiates ball pickup routine
+	 */
 	public void pickBall() {
 		
 		//navigate to the ball pickup place
@@ -112,6 +149,11 @@ public class BallPickupController {
 //			// do nothing for now
 //		}
 	}
+	
+	/**
+	 * <p>
+	 * ball rejection routine
+	 */
 
 	private void rejectBall() {
 
@@ -120,6 +162,13 @@ public class BallPickupController {
 		launcher.stopLauncher();
 
 	}
+
+
+
+	
+	/**
+	 * moves the robot to the next ball
+	 */
 
 	private void moveToNextBall() {
 

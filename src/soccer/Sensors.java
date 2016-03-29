@@ -199,6 +199,10 @@ public class Sensors {
 
 	}
 	
+	/**
+	 * 
+	 * @return measured distance to ball or 254 
+	 */
 	public float getBallDist(){
 		ballUSValue.fetchSample(ballUSData, 0);
 		float data = ballUSData[0];
@@ -222,14 +226,26 @@ public class Sensors {
 		
 	}
 	
+	/**
+	 * 
+	 * @return centered light sensor sample provider
+	 */
 	public SampleProvider getCenterLSSampleProvider(){
 		return centerLSValue;
 	}
 	
+	/**
+	 * 
+	 * @return side light sensor sample provider
+	 */
 	public SampleProvider getSideLSSampleProvider(){
 		return sideLSValue;
 	}
 	//TODO complete this based on how we decide to detect ball colour
+	/**
+	 * 
+	 * @return color measured by light sensor
+	 */
 	public float getBallColourID(){
 		return 0;
 	}

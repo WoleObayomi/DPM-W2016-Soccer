@@ -13,6 +13,11 @@
 
 package soccer;
 
+/**
+ * 
+ * @author Peter Quinn
+ *
+ */
 public class AngleCorrection extends Thread {
 
 	private final int CORRECTION_PERIOD = 10; // ms
@@ -27,6 +32,12 @@ public class AngleCorrection extends Thread {
 
 	private double x1, x2, y1, y2;
 
+	/**
+	 * 
+	 * @param odometer
+	 * @param nav
+	 * @param sensors
+	 */
 	public AngleCorrection(Odometer odometer, Navigation nav, Sensors sensors) {
 		this.sensors = sensors;
 		this.nav=nav;
@@ -111,6 +122,11 @@ public class AngleCorrection extends Thread {
 	}
 
 	// gets the Cartesian angle the robot cross the line at, in a relative frame
+	/**
+	 * 
+	 * @param centerFirst
+	 * @return angle
+	 */
 	private double calculateAngle(boolean centerFirst) {
 		double posDelta = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
 
@@ -123,6 +139,11 @@ public class AngleCorrection extends Thread {
 	}
 
 	// gets the appropriate value to pass to the odometer
+	/**
+	 * 
+	 * @param angle
+	 * @return correctedAngle
+	 */
 	private double correctedAngle(double angle) {
 
 		double currentAngle = odometer.getTheta();
