@@ -10,16 +10,19 @@ import lejos.hardware.motor.EV3LargeRegulatedMotor;
 public class USLocalization {
 
 	// constants
-	private final int ROTATE_SPEED = 200;
-	private final int DISTANCE_TO_WALL = 35;
+	private final int ROTATE_SPEED = 240;
+	private final int DISTANCE_TO_WALL = 30;
 	private final int NOISE_MARGIN = 2;
 	private final int REFRESH_RATE = 50;
+	private final int MIN_DIST = 6;
+	private final int CORRECTION_DIST = 6;
 
 	// to be passed in by constructor
 	private Sensors sensors;
 	private EV3LargeRegulatedMotor leftMotor;
 	private EV3LargeRegulatedMotor rightMotor;
 	private Odometer odo;
+	private Navigation nav;
 
 	/**
 	 * 
@@ -29,11 +32,12 @@ public class USLocalization {
 	 * @param rightMotor
 	 */
 	public USLocalization(Sensors sensors, Odometer odometer, EV3LargeRegulatedMotor leftMotor,
-			EV3LargeRegulatedMotor rightMotor) {
+			EV3LargeRegulatedMotor rightMotor, Navigation nav) {
 		this.sensors = sensors;
 		this.leftMotor = leftMotor;
 		this.rightMotor = rightMotor;
 		this.odo = odometer;
+		this.nav = nav;
 	}
 
 	// uses falling edge technique
@@ -48,6 +52,11 @@ public class USLocalization {
 		float distance = sensors.getFrontDist();
 
 		while (distance < DISTANCE_TO_WALL + NOISE_MARGIN) {
+
+			if (distance < MIN_DIST) {
+				nav.travel(-(CORRECTION_DIST - distance));
+				distance = sensors.getFrontDist();
+			}
 
 			// rotate clockwise
 			leftMotor.setSpeed(ROTATE_SPEED);

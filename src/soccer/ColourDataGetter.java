@@ -14,18 +14,20 @@
 
 package soccer;
 
+import java.util.ArrayList;
+
 import lejos.hardware.Sound;
 
 public class ColourDataGetter extends Thread {
 
-	private double[] angleData;
+	private ArrayList<Double> angleData;
 	private final int CORRECTION_PERIOD = 50;
 	private final int LONG_SLEEP = 200;
 	private boolean on = true;
 	private Odometer odometer;
 	private Sensors sensors;
 
-	public ColourDataGetter(double[] angleData, Odometer odometer, Sensors sensors) {
+	public ColourDataGetter(ArrayList<Double> angleData, Odometer odometer, Sensors sensors) {
 		this.angleData = angleData;
 		this.odometer = odometer;
 		this.sensors = sensors;
@@ -50,15 +52,10 @@ public class ColourDataGetter extends Thread {
 
 				line.reset(); // reset the boolean
 
-				angleData[lineCounter] = odometer.getTheta();
+				angleData.add(odometer.getTheta());
 				lineCounter++;
 
-				// return when we see all 4 lines
-				if (lineCounter == 4) {
-					line.end();
-					return;
-				}
-
+	
 				// sleep for a longer time because we don't want to read the
 				// same black line several times
 				correctionEnd = System.currentTimeMillis();
@@ -82,6 +79,8 @@ public class ColourDataGetter extends Thread {
 			}
 
 		}
+		//end line thread when this thread is turned off
+		line.end();
 
 	}
 

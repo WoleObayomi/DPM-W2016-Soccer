@@ -35,6 +35,7 @@ public class Exit extends Thread {
 		}
 
 		slaveBrick.disConnect();
+		
 		System.exit(0);
 	}
 

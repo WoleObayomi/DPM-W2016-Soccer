@@ -6,6 +6,9 @@ import lejos.hardware.motor.EV3LargeRegulatedMotor;
  * @author Peter Quinn
  *
  */
+
+
+//sensor is on the left
 public class WallFollowController {
 
 	// motors that are passed in through constructor
@@ -18,8 +21,7 @@ public class WallFollowController {
 	// correct based on the magnitude of the error
 	// can be tuned by changing k (gain)
 	private final int k = 8;
-	private final int motorStraight = 140;
-
+	private final int motorStraight = 80;
 
 	// constructor takes left and right motors, and object to access sensor data
 	/**
@@ -30,13 +32,14 @@ public class WallFollowController {
 	public WallFollowController(EV3LargeRegulatedMotor leftMotor, EV3LargeRegulatedMotor rightMotor) {
 		this.leftMotor = leftMotor;
 		this.rightMotor = rightMotor;
-		this.leftMotor.setAcceleration(2000);
-		this.rightMotor.setAcceleration(2000);
+		this.leftMotor.setAcceleration(1000);
+		this.rightMotor.setAcceleration(1000);
 	}
 
 	/**
 	 * 
-	 * @param distToWall measurement taken to correct robot's trajectory
+	 * @param distToWall
+	 *            measurement taken to correct robot's trajectory
 	 */
 	public void processData(float distToWall) {
 
@@ -54,7 +57,7 @@ public class WallFollowController {
 
 		int correction = k * Math.abs(error);
 
-		//sets a max speed
+		// sets a max speed
 		if (correction > 18 * k) {
 			correction = 18 * k;
 		}
@@ -71,8 +74,8 @@ public class WallFollowController {
 		} else if (error < 0) {
 			// robot is too close to wall, move the right motor
 			// faster and the left motor slower
-			leftMotor.setSpeed(motorStraight);
-			rightMotor.setSpeed(correction + motorStraight);
+			leftMotor.setSpeed(correction + motorStraight);
+			rightMotor.setSpeed(motorStraight);
 			leftMotor.forward();
 			rightMotor.forward();
 			return;
@@ -81,14 +84,12 @@ public class WallFollowController {
 			// robot is too far from the wall, move the left motor
 			// faster and the right motor slower
 
-			leftMotor.setSpeed(motorStraight + correction);
-			rightMotor.setSpeed(motorStraight);
+			leftMotor.setSpeed(motorStraight);
+			rightMotor.setSpeed(motorStraight + correction);
 			leftMotor.forward();
 			rightMotor.forward();
 			return;
 		}
-		
-		
 
 	}
 

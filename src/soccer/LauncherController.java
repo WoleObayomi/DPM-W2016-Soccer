@@ -57,17 +57,14 @@ public class LauncherController {
 	 * @param conveyerWheelRadius
 	 * @param ballDiameter
 	 */
-	public LauncherController(RegulatedMotor launcherRight, RegulatedMotor launcherLeft, RegulatedMotor angleAdjustMotor,
-			EV3LargeRegulatedMotor conveyerRight, EV3LargeRegulatedMotor conveyerLeft, double launcherWheelRadius,
-			double conveyerWheelRadius, double ballDiameter) {
-		this.launcherRight = launcherRight;
-		this.launcherLeft = launcherLeft;
-		this.conveyerRight = conveyerRight;
-		this.conveyerLeft = conveyerLeft;
-		this.launcherWheelRadius = launcherWheelRadius;
-		this.conveyerWheelRadius = conveyerWheelRadius;
-		this.ballDiameter = ballDiameter;
-		this.angleAdjustMotor = angleAdjustMotor;
+	public LauncherController(Motors motors) {
+		this.launcherRight = motors.getLauncherRight();
+		this.launcherLeft = motors.getLauncherLeft();
+		this.conveyerRight = motors.getConveyerRight();
+		this.conveyerLeft = motors.getConveyerLeft();
+		this.ballDiameter = PhysicalConstants.BALL_DIAMTER;
+		this.conveyerWheelRadius=PhysicalConstants.CONVEYER_WHEEL_RADIUS;
+		this.angleAdjustMotor = motors.getAngleAdjustMotor();
 	}
 
 	// stops launcher motors
@@ -165,11 +162,13 @@ public class LauncherController {
 	public void raiseAngle() {
 		angleAdjustMotor.setSpeed(ANGLE_SPEED);
 		angleAdjustMotor.rotate(FIRE_ANGLE);
+		
 	}
 
 	public void lowerAngle() {
 		angleAdjustMotor.setSpeed(ANGLE_SPEED);
 		angleAdjustMotor.rotate(-FIRE_ANGLE);
+		angleAdjustMotor.flt();
 	}
 
 }

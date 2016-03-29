@@ -16,6 +16,8 @@
 
 package soccer;
 
+import java.util.ArrayList;
+
 /**
  * 
  * @author Peter Quinn
@@ -28,7 +30,7 @@ public class LightLocalizer {
 
 	// constants
 	final double STARTING_DIST_FROM_WALL = 4;
-	final int MOTOR_SPEED = 200;
+	final int MOTOR_SPEED = 220;
 	final double DIST_TO_LIGHT = PhysicalConstants.DIST_TO_SIDE_LIGHTSENSOR; // distance
 																				// between
 																				// color
@@ -77,10 +79,10 @@ public class LightLocalizer {
 		navigation.turnToAbs(-15);
 
 		// array to hold the angles of the lines
-		double[] angleData = new double[4];
+		ArrayList<Double> angleData = new ArrayList<Double>();
 
 		// make sure the array gets filled with angles
-		while (angleData[0] == 0 || angleData[1] == 0 || angleData[2] == 0 || angleData[3] == 0) {
+		while (angleData.size() != 4) {
 			// have a thread that watches for the gridlines and saves the angle
 			// of
 			// the robot when they are detected to an array
@@ -97,20 +99,20 @@ public class LightLocalizer {
 		// adding 360 if it is less than 0
 		double thetaYNeg, thetaYPos, thetaXNeg, thetaXPos;
 
-		thetaXNeg = angleData[0] - 90;
+		thetaXNeg = angleData.get(0) - 90;
 		if (thetaXNeg < 0) {
 			thetaXNeg += 360;
 		}
-		thetaYPos = angleData[1] - 90;
+		thetaYPos = angleData.get(1) - 90;
 		if (thetaYPos < 0) {
 			thetaYPos += 360;
 		}
 
-		thetaXPos = angleData[2] - 90;
+		thetaXPos = angleData.get(2) - 90;
 		if (thetaXPos < 0) {
 			thetaXPos += 360;
 		}
-		thetaYNeg = angleData[3] - 90;
+		thetaYNeg = angleData.get(3) - 90;
 		if (thetaYNeg < 0) {
 			thetaYNeg += 360;
 		}

@@ -42,8 +42,8 @@ public class Navigation {
 	private final double distError = 1.5;
 	private final double thetaTolerance = 2;
 	private final int NAV_SLEEP = 50;
-	private static final int FORWARD_SPEED = 240;
-	private static final int ROTATE_SPEED = 200;
+	private static final int FORWARD_SPEED = 250;
+	private static final int ROTATE_SPEED = 240;
 	private final int ACCELERATION = 2000;
 	private final int WALL_DETECTED_RANGE = 8; // cm
 	private final int WALL_FOLLOW_EXIT_ANGLE = 10;
@@ -320,7 +320,7 @@ public class Navigation {
 
 		leftMotor.stop(true);
 		rightMotor.stop(false);
-		turnTo(-90);
+		turnTo(90);
 		float distToWall;
 		while (true) {
 

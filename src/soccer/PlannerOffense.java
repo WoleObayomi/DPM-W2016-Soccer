@@ -30,9 +30,7 @@ public class PlannerOffense {
 	//have the robot execute its offense procedure
 	public void run(){
 		
-		//localize first using 
-		USLocalization USLocalizer = new USLocalization(sensors, odometer, motors.getLeftMotor(), motors.getRightMotor());
-		USLocalizer.doLocalization();
+		
 		
 	}
 
