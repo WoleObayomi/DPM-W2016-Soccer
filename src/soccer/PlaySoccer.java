@@ -7,6 +7,9 @@
  * 
  *  March 12 - Peter: added the main with code for getting second brick and 
  *  setting up motors and sensors objects
+ *  
+ *  March 30 - Peter: added code to determine how to adjust odometer based on starting
+ *  corner 
  * 
  */
 
@@ -42,29 +45,7 @@ public class PlaySoccer {
 	 * and prior to localization
 	 */
 
-	private void moveTowardTileIntersection(Sensors sensors, Navigation nav) {
-		double distFromSideUS = sensors.getSideDist();
-		double distFromFrontUS = sensors.getFrontDist();
-		
-		/* 
-		 * assuming robot starts in orientation such that
-		 * the front US sensor sees nothing and the side US
-		 * sensor is close to the wall on the right
-		 */
-		if(distFromSideUS < 15) {
-			nav.turnTo(90); //turn to face the left (assuming counterclockwise measurement for angles)
-			nav.travel(4);	//keep moving to the left until desired distance from wall
-			nav.turnTo(0);	//return to original orientation
-		}
-		
-		/*
-		 * if front facing ultrasonic sensor is too close to a wall
-		 * then rotate the robot by 180 degrees so it no longer faces a wall
-		 */
-		if(distFromFrontUS < 15) {
-			nav.turnTo(180); 
-		}
-	}
+	
 	
 
 	public static void main(String[] args) {
@@ -130,7 +111,7 @@ public class PlaySoccer {
 		nav.turnToAbs(0);
 
 		
-
+		//start odometry correction
 		OdometryCorrection odoCorrection = new OdometryCorrection(odometer, sensors);
 		odoCorrection.start();
 		
@@ -168,6 +149,32 @@ public class PlaySoccer {
 		if (distFromFrontUS < 15) {
 			nav.turnTo(180);
 		}
+	}
+	
+	
+	private void applyStartingCorner(int SC, Odometer odometer){
+		switch (SC) {
+		case 1:
+			//do nothing
+			break;
+		case 2:
+			odometer.setX(odometer.getX()+10*PhysicalConstants.TILE_SPACING);
+			odometer.setTheta(odometer.getTheta()-90);
+			break;
+		case 3:
+			odometer.setX(odometer.getX()+10*PhysicalConstants.TILE_SPACING);
+			odometer.setY(odometer.getY()+10*PhysicalConstants.TILE_SPACING);
+			odometer.setTheta(odometer.getTheta()+180);
+			break;
+			
+		case 4:
+			odometer.setY(odometer.getY()+10*PhysicalConstants.TILE_SPACING);
+			odometer.setTheta(odometer.getTheta()+90);
+			break;
+		default:
+			break;
+		}
+		
 	}
 
 	// not going to use

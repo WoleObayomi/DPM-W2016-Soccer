@@ -12,6 +12,8 @@
  * Edit Log:
  * 
  * March 13 - Peter: modified for final robot
+ * March 29 - Peter: used an array list instead of an array to be able to check for 
+ * errors from ColourDataGetter and repeat if necessary
  */
 
 package soccer;

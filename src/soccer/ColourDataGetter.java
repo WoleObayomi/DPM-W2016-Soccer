@@ -39,11 +39,12 @@ public class ColourDataGetter extends Thread {
 
 		long correctionStart, correctionEnd;
 
-		int lineCounter = 0;
+		
 		// create a line listener to detect lines
 		LineListener line = new LineListener(sensors.getSideLSSampleProvider());
 		line.start();
 
+		angleData.clear();
 		while (on) {
 			correctionStart = System.currentTimeMillis();
 
@@ -53,7 +54,7 @@ public class ColourDataGetter extends Thread {
 				line.reset(); // reset the boolean
 
 				angleData.add(odometer.getTheta());
-				lineCounter++;
+				
 
 	
 				// sleep for a longer time because we don't want to read the

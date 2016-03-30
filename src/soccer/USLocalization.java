@@ -1,3 +1,20 @@
+/*
+ * Title: USLocalization
+ * Date: Feb 15 2016
+ * 
+ * Author: Peter Quinn
+ * 
+ * Desc: Rotates the robot and uses the US sensor to detect walls and determine its
+ * angle orientation
+ * 
+ * Edit Hist:
+ * 
+ * March 13 - Peter: Modified for use with final robot
+ * 
+ * March 29 - Peter: Tweaked values to improve performance
+ */
+
+
 package soccer;
 
 import lejos.hardware.motor.EV3LargeRegulatedMotor;
@@ -11,8 +28,8 @@ public class USLocalization {
 
 	// constants
 	private final int ROTATE_SPEED = 240;
-	private final int DISTANCE_TO_WALL = 30;
-	private final int NOISE_MARGIN = 2;
+	private final int DISTANCE_TO_WALL = 35;
+	private final int NOISE_MARGIN = 1;
 	private final int REFRESH_RATE = 50;
 	private final int MIN_DIST = 6;
 	private final int CORRECTION_DIST = 6;
