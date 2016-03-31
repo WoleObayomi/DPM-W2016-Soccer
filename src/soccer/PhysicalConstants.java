@@ -9,13 +9,13 @@ package soccer;
 public class PhysicalConstants {
 
 	// sensor distances
-	public static final double DIST_TO_SIDE_LIGHTSENSOR = 13.5;// cm
+	public static final double DIST_TO_SIDE_LIGHTSENSOR = 13.75;// cm
 	public static final double DIST_TO_FRONT_US = 13.;// cm
 
 	// wheel and track dimensions
 	public static final double LEFT_WHEEL_RADIUS = 2.145; // cm
 	public static final double RIGHT_WHEEL_RADIUS = 2.155; // cm
-	public static final double TRACK_WIDTH = 19.6; // cm, overturning -->
+	public static final double TRACK_WIDTH = 20.3; // cm, overturning -->
 													// decrease, underturning
 													// --> increase
 

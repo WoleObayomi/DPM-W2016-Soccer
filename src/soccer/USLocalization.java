@@ -28,11 +28,11 @@ public class USLocalization {
 
 	// constants
 	private final int ROTATE_SPEED = 240;
-	private final int DISTANCE_TO_WALL = 35;
-	private final int NOISE_MARGIN = 1;
-	private final int REFRESH_RATE = 50;
-	private final int MIN_DIST = 6;
-	private final int CORRECTION_DIST = 6;
+	private final int DISTANCE_TO_WALL = 30;
+	private final int NOISE_MARGIN = 2;
+	private final int REFRESH_RATE = 30;
+	private final int MIN_DIST = 3;
+	private final int CORRECTION_DIST = 3;
 
 	// to be passed in by constructor
 	private Sensors sensors;

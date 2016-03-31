@@ -20,6 +20,8 @@ import java.util.concurrent.Callable;
 import lejos.hardware.Brick;
 import lejos.hardware.BrickFinder;
 import lejos.hardware.Button;
+import lejos.hardware.Sound;
+import lejos.hardware.Sounds;
 import lejos.hardware.ev3.LocalEV3;
 import lejos.hardware.lcd.TextLCD;
 import lejos.hardware.motor.EV3LargeRegulatedMotor;
@@ -40,15 +42,18 @@ public class PlaySoccer {
 	 * @param sensors
 	 * @param nav
 	 * 
-	 * <p>
-	 * prevents the robot from colliding with the wall when initially placed in the field
-	 * and prior to localization
+	 *            <p>
+	 *            prevents the robot from colliding with the wall when initially
+	 *            placed in the field and prior to localization
 	 */
 
-	
-	
-
 	public static void main(String[] args) {
+
+		int llX = 6;
+		int llY = 5;
+		int urX = 7;
+		int urY = 6;
+		int SC = 2;
 
 		// get the second brick
 		Brick masterBrick = LocalEV3.get();
@@ -97,29 +102,44 @@ public class PlaySoccer {
 		Navigation nav = new Navigation(odometer, motors, sensors, PhysicalConstants.LEFT_WHEEL_RADIUS,
 				PhysicalConstants.RIGHT_WHEEL_RADIUS, PhysicalConstants.TRACK_WIDTH);
 
-	
-		
+		// launcher
+		LauncherController launcher = new LauncherController(motors);
 
 		// create USLocalization obj and use the method in it
 
+		Sound.setVolume(85);
+		Sound.beepSequence();
+
 		new USLocalization(sensors, odometer, motors.getLeftMotor(), motors.getRightMotor(), nav).doLocalization();
 
-		
+		// localize with light
 		new LightLocalizer(odometer, sensors, nav).doLocalization();
+		Sound.beepSequence();
+		Sound.setVolume(0);
 
 		nav.travelTo(0, 0, false);
 		nav.turnToAbs(0);
 
-		
-		//start odometry correction
+		// start odometry correction
 		OdometryCorrection odoCorrection = new OdometryCorrection(odometer, sensors);
 		odoCorrection.start();
-		
 
-		//TESTING
-		
-		
+		nav.travelTo(llX * PhysicalConstants.TILE_SPACING - 1, llY * PhysicalConstants.TILE_SPACING, true);
 
+		nav.turnToAbs(80);
+		launcher.setToIntakeSpeed();
+		nav.travel(10);
+		launcher.conveyerBackOneBall();
+		launcher.stopLauncher();
+
+		nav.face(0, SC * PhysicalConstants.TILE_SPACING);
+
+		launcher.setToFiringSpeed();
+		launcher.conveyerForwardOneBall();
+		launcher.conveyerForwardOneBall();
+		launcher.raiseAngle();
+		launcher.lowerAngle();
+		launcher.stopLauncher();
 		// determine which planner to use from eventual wifi connection
 		// and create the appropriate one below
 
@@ -135,8 +155,8 @@ public class PlaySoccer {
 		 * sees nothing and the side US sensor is close to the wall on the right
 		 */
 		if (distFromSideUS < 15) {
-			nav.turnTo(90); // turn to face the left (assuming counterclockwise
-							// measurement for angles)
+			nav.turnTo(-90); // turn to face the left (assuming counterclockwise
+								// measurement for angles)
 			nav.travel(4); // keep moving to the left until desired distance
 							// from wall
 			nav.turnTo(0); // return to original orientation
@@ -150,31 +170,82 @@ public class PlaySoccer {
 			nav.turnTo(180);
 		}
 	}
-	
-	
-	private void applyStartingCorner(int SC, Odometer odometer){
+
+	// not used
+
+	private static void moveAwayFromCorner(Sensors sensors, Navigation nav, Motors motors) {
+		int largeDist = 100;
+		int travelDist = 13;
+		int safeDist = 3;
+		EV3LargeRegulatedMotor left = motors.getLeftMotor();
+		EV3LargeRegulatedMotor right = motors.getRightMotor();
+		left.setAcceleration(2000);
+		right.setAcceleration(2000);
+		left.setSpeed(200);
+		right.setSpeed(200);
+		// check if forward or right
+		if (sensors.getFrontDist() > largeDist) {
+
+			// forward
+			if (sensors.getSideDist() < largeDist) {
+				nav.turnTo(45);
+				nav.travel(travelDist);
+			}
+			// right
+			else {
+				nav.turnTo(-45);
+				nav.travel(travelDist);
+			}
+		} else {
+
+			// close to a wall, move back
+			while (sensors.getFrontDist() < safeDist) {
+
+				left.backward();
+				right.backward();
+
+			}
+			left.stop(true);
+			left.stop(false);
+
+			// wall on left, facing left
+			if (sensors.getSideDist() < largeDist) {
+				nav.turnTo(125);
+				nav.travel(travelDist);
+			}
+
+			// no wall on left, facing down
+			else {
+				nav.turnTo(-90 - 30);
+				nav.travel(travelDist);
+			}
+
+		}
+	}
+
+	private void applyStartingCorner(int SC, Odometer odometer) {
 		switch (SC) {
 		case 1:
-			//do nothing
+			// do nothing
 			break;
 		case 2:
-			odometer.setX(odometer.getX()+10*PhysicalConstants.TILE_SPACING);
-			odometer.setTheta(odometer.getTheta()-90);
+			odometer.setX(odometer.getX() + 10 * PhysicalConstants.TILE_SPACING);
+			odometer.setTheta(odometer.getTheta() - 90);
 			break;
 		case 3:
-			odometer.setX(odometer.getX()+10*PhysicalConstants.TILE_SPACING);
-			odometer.setY(odometer.getY()+10*PhysicalConstants.TILE_SPACING);
-			odometer.setTheta(odometer.getTheta()+180);
+			odometer.setX(odometer.getX() + 10 * PhysicalConstants.TILE_SPACING);
+			odometer.setY(odometer.getY() + 10 * PhysicalConstants.TILE_SPACING);
+			odometer.setTheta(odometer.getTheta() + 180);
 			break;
-			
+
 		case 4:
-			odometer.setY(odometer.getY()+10*PhysicalConstants.TILE_SPACING);
-			odometer.setTheta(odometer.getTheta()+90);
+			odometer.setY(odometer.getY() + 10 * PhysicalConstants.TILE_SPACING);
+			odometer.setTheta(odometer.getTheta() + 90);
 			break;
 		default:
 			break;
 		}
-		
+
 	}
 
 	// not going to use

@@ -76,9 +76,9 @@ public class LightLocalizer {
 		if (distance < STARTING_DIST_FROM_WALL)
 			navigation.travel(distance - STARTING_DIST_FROM_WALL);
 
-		// set orientation of robot to -15 degrees to make sure it starts in a
+		// set orientation of robot to -30 degrees to make sure it starts in a
 		// good position to detect lines
-		navigation.turnToAbs(-15);
+		navigation.turnToAbs(-30);
 
 		// array to hold the angles of the lines
 		ArrayList<Double> angleData = new ArrayList<Double>();
@@ -88,6 +88,7 @@ public class LightLocalizer {
 			// have a thread that watches for the gridlines and saves the angle
 			// of
 			// the robot when they are detected to an array
+			angleData.clear();
 			ColourDataGetter colourDataGetter = new ColourDataGetter(angleData, odo, sensors);
 			colourDataGetter.start();
 

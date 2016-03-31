@@ -99,7 +99,7 @@ public class Navigation {
 			if (wallFollowOn) {
 				if (sensors.getFrontDist() < WALL_DETECTED_RANGE) {
 
-					followWall(x, y, odometer);
+					superEasyWallFollow();
 				}
 			}
 
@@ -313,6 +313,110 @@ public class Navigation {
 	 * @param x
 	 * @param y
 	 */
+
+	private void easyFollowWall() {
+
+		// left side
+		if (odometer.getX() < 3 * PhysicalConstants.TILE_SPACING) {
+			// top
+			if (odometer.getY() < 3 * PhysicalConstants.TILE_SPACING) {
+
+				if (odometer.getTheta() < 180) {
+
+					// turn right
+					this.turnTo(90);
+					travel(PhysicalConstants.TILE_SPACING);
+					this.turnTo(-90);
+					travel(PhysicalConstants.TILE_SPACING);
+
+				} else {
+					// turn left
+					this.turnTo(-90);
+					travel(PhysicalConstants.TILE_SPACING);
+					this.turnTo(90);
+					travel(PhysicalConstants.TILE_SPACING);
+
+				}
+			}
+			// bottom
+			else {
+
+				if (odometer.getTheta() < 180) {
+
+					// turn left
+					this.turnTo(-90);
+					travel(PhysicalConstants.TILE_SPACING);
+					this.turnTo(90);
+					travel(PhysicalConstants.TILE_SPACING);
+
+				} else {
+					// turn right
+					this.turnTo(90);
+					travel(PhysicalConstants.TILE_SPACING);
+					this.turnTo(-90);
+					travel(PhysicalConstants.TILE_SPACING);
+
+				}
+			}
+		}
+
+		// right side
+		else {
+
+			// top
+			if (odometer.getY() < 3 * PhysicalConstants.TILE_SPACING) {
+				
+				if (odometer.getTheta() < 180) {
+
+					// turn right
+					this.turnTo(90);
+					travel(PhysicalConstants.TILE_SPACING);
+					this.turnTo(-90);
+					travel(PhysicalConstants.TILE_SPACING);
+
+				} else {
+					// turn left
+					this.turnTo(-90);
+					travel(PhysicalConstants.TILE_SPACING);
+					this.turnTo(90);
+					travel(PhysicalConstants.TILE_SPACING);
+
+				}
+				
+
+			}
+			// bottom
+			else {
+				
+				if (odometer.getTheta() < 180) {
+
+					// turn right
+					this.turnTo(90);
+					travel(PhysicalConstants.TILE_SPACING);
+					this.turnTo(-90);
+					travel(PhysicalConstants.TILE_SPACING);
+
+				} else {
+					// turn left
+					this.turnTo(-90);
+					travel(PhysicalConstants.TILE_SPACING);
+					this.turnTo(90);
+					travel(PhysicalConstants.TILE_SPACING);
+
+				}
+
+			}
+
+		}
+	}
+	
+	private void superEasyWallFollow(){
+		turnTo(90);
+		travel(PhysicalConstants.TILE_SPACING);
+		turnTo(-90);
+		travel(PhysicalConstants.TILE_SPACING);
+	}
+
 	private void followWall(double x, double y, Odometer odometer) {
 
 		// turn to the left so our wall following sensor on the right is facing
