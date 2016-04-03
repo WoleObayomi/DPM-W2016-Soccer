@@ -19,6 +19,8 @@
 */
 package soccer;
 
+import com.sun.org.apache.bcel.internal.generic.GOTO;
+
 import lejos.hardware.motor.EV3LargeRegulatedMotor;
 
 /**
@@ -41,12 +43,15 @@ public class Navigation {
 	// navigation constants
 	private final double distError = 1.5;
 	private final double thetaTolerance = 2;
-	private final int NAV_SLEEP = 50;
+	private final int NAV_SLEEP = 50;//ms
+	private final int RELOCALAIZE_DELAY = 15000;//ms, max time between relocalizations
+	private final int RELOCALIZE_COUNTER_MAX = RELOCALAIZE_DELAY/NAV_SLEEP;
 	private static final int FORWARD_SPEED = 250;
 	private static final int ROTATE_SPEED = 240;
 	private final int ACCELERATION = 2000;
-	private final int WALL_DETECTED_RANGE = 8; // cm
+	private final int WALL_DETECTED_RANGE = 10; // cm
 	private final int WALL_FOLLOW_EXIT_ANGLE = 10;
+	private final int WALL_TRAVEL_PAST_MARGIN = 20;
 	// additional variables
 	private boolean isNavigating = false;
 	private boolean isTurning = false;
@@ -89,17 +94,25 @@ public class Navigation {
 	 *            boolean value to indicate whether wall following is to be used
 	 */
 	public void travelTo(double x, double y, boolean wallFollowOn) {
-
+		int relocalizerCounter = 0;
 		isNavigating = true;
 
 		// get within a circle of radius distError to point we want
 		while (Math.sqrt(Math.pow(x - odometer.getX(), 2) + Math.pow(y - odometer.getY(), 2)) > distError) {
 
+			//check if we need to relocalize
+			if (relocalizerCounter==RELOCALIZE_COUNTER_MAX){
+				relocalize();
+				relocalizerCounter=0;
+			}
+			relocalizerCounter++;
 			// check for a wall in front if wallfollowing is on
 			if (wallFollowOn) {
 				if (sensors.getFrontDist() < WALL_DETECTED_RANGE) {
+					simplfiedFollowWall();
+					relocalize();
+					relocalizerCounter=0;
 
-					superEasyWallFollow();
 				}
 			}
 
@@ -365,7 +378,7 @@ public class Navigation {
 
 			// top
 			if (odometer.getY() < 3 * PhysicalConstants.TILE_SPACING) {
-				
+
 				if (odometer.getTheta() < 180) {
 
 					// turn right
@@ -382,12 +395,11 @@ public class Navigation {
 					travel(PhysicalConstants.TILE_SPACING);
 
 				}
-				
 
 			}
 			// bottom
 			else {
-				
+
 				if (odometer.getTheta() < 180) {
 
 					// turn right
@@ -409,12 +421,48 @@ public class Navigation {
 
 		}
 	}
-	
-	private void superEasyWallFollow(){
+
+	private void superEasyWallFollow() {
 		turnTo(90);
 		travel(PhysicalConstants.TILE_SPACING);
 		turnTo(-90);
 		travel(PhysicalConstants.TILE_SPACING);
+	}
+
+	private void simplfiedFollowWall() {
+		leftMotor.stop(true);
+		rightMotor.stop(false);
+		turnTo(90);
+		float distToWall;
+		boolean firstSide = true;
+
+		while (true) {
+
+			distToWall = sensors.getSideDist();
+
+			// past side of obstacle
+			if (distToWall > 100) {
+
+				if (firstSide) {
+					// move forward past edge
+					travel(WALL_TRAVEL_PAST_MARGIN);
+					// turn back the way we were going
+					turnTo(-90);
+					// on second side now
+					firstSide = false;
+					// start the loop again
+					continue;
+				} else {
+					// past second side, so we make sure we are clear of the
+					// wall
+					// then stop wall following
+					travel(WALL_TRAVEL_PAST_MARGIN);
+					return;
+				}
+			} else { // not past side of obstacle, follow wall
+				wallFollowController.processData(distToWall);
+			}
+		}
 	}
 
 	private void followWall(double x, double y, Odometer odometer) {
@@ -475,6 +523,82 @@ public class Navigation {
 			}
 
 		}
+	}
+
+	private void relocalize() {
+
+		// find nearest corner
+		double GRID_SPACING = PhysicalConstants.TILE_SPACING;
+		
+		double HALF_TILE = PhysicalConstants.TILE_SPACING/2;
+		// get current x and y according to odometer (of center of bot)
+		double x = odometer.getX();
+		double y = odometer.getY();
+		// subtract by gridline spacing distance. Stop when we find we are
+		// close to a line or we have dropped too far to find a line
+		int xCount = 0;
+		while (x > HALF_TILE) {
+			x -= GRID_SPACING;
+			xCount++;
+		}
+
+		// subtract by gridline spacing distance. Stop when we find we are
+		// close to a line or we have dropped too far to find a line
+		int yCount = 0;
+		while (y > HALF_TILE) {
+			y -= GRID_SPACING;
+			yCount++;
+		}
+
+		// set xCount and yCount to the true coordinates
+		xCount *= PhysicalConstants.TILE_SPACING;
+		yCount *= PhysicalConstants.TILE_SPACING;
+
+		// find angle to this corner
+		double angleToCorner = angleDifference(xCount, yCount);
+		
+		// go to easiest corner
+		if (angleToCorner<90){ //facing towards the nearest corner, go to it
+			travelTo(xCount, yCount, false);
+		}
+		else {
+			double theta = odometer.getTheta();
+			if (theta>315 || theta<135){//moving up/right, make target point up and right
+				travelTo(xCount+PhysicalConstants.TILE_SPACING, yCount+PhysicalConstants.TILE_SPACING, false);				
+			}else{
+				//facing down/left, so move target point down/left
+				travelTo(xCount-PhysicalConstants.TILE_SPACING, yCount-PhysicalConstants.TILE_SPACING, false);
+			}
+		}
+		// near corner, run light localizer
+		new LightLocalizer(odometer, sensors, this).doLocalization();
+		return;
+	}
+
+	/**
+	 * 
+	 * @param x
+	 * @param y
+	 * @return double the angle between the current orientation and the
+	 *         orientation needed to face x, y
+	 */
+	private double angleDifference(double x, double y) {
+		// makes the robot face a point x,y
+		double xNow = odometer.getX();
+		double yNow = odometer.getY();
+
+		// this function moves the angle to regular cartesian orientation
+		double thetaNow = 360 - odometer.getTheta() + 90;
+		double theta = Math.toDegrees(Math.atan2(y - yNow, x - xNow));
+
+		// process the angles
+		if (theta < 0)
+			theta += 360;
+
+		if (thetaNow >= 360)
+			thetaNow -= 360;
+
+		return Math.abs(theta - thetaNow);
 	}
 
 	// from the square driver class from lab 2

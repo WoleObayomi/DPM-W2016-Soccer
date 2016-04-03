@@ -11,10 +11,12 @@
  *  March 30 - Peter: added code to determine how to adjust odometer based on starting
  *  corner 
  * 
+ * 	April 3 - Peter: added code to implement the wifi class we were provided
  */
 
 package soccer;
 
+import java.io.IOException;
 import java.util.concurrent.Callable;
 
 import lejos.hardware.Brick;
@@ -30,6 +32,7 @@ import lejos.remote.ev3.RemoteEV3;
 import lejos.remote.ev3.RemoteRequestEV3;
 import lejos.robotics.SampleProvider;
 import sun.launcher.resources.launcher_zh_CN;
+import wifi.WifiConnection;
 
 /**
  * 
@@ -37,6 +40,12 @@ import sun.launcher.resources.launcher_zh_CN;
  *
  */
 public class PlaySoccer {
+
+	// Data for/from wifi class
+	private int teamNumber = 9;
+	private String serverAddress = "";
+
+	private int SC, role, w1, d1, d2, llX, llY, urX, urY, BC;
 
 	/**
 	 * @param sensors
@@ -145,82 +154,23 @@ public class PlaySoccer {
 
 	}
 
-	// not used
-	private void moveTowardTileIntersection(Sensors sensors, Navigation nav) {
-		double distFromSideUS = sensors.getSideDist();
-		double distFromFrontUS = sensors.getFrontDist();
-
-		/*
-		 * assuming robot starts in orientation such that the front US sensor
-		 * sees nothing and the side US sensor is close to the wall on the right
-		 */
-		if (distFromSideUS < 15) {
-			nav.turnTo(-90); // turn to face the left (assuming counterclockwise
-								// measurement for angles)
-			nav.travel(4); // keep moving to the left until desired distance
-							// from wall
-			nav.turnTo(0); // return to original orientation
+	private void connectToWifi() {
+		WifiConnection wifi = null;
+		try {
+			wifi = new WifiConnection(serverAddress, teamNumber);
+		} catch (IOException e) {
 		}
+		SC = wifi.StartData.get("SC");
+		role = wifi.StartData.get("Role");
+		w1 = wifi.StartData.get("w1");
+		d1 = wifi.StartData.get("d1");
+		d2 = wifi.StartData.get("d2");
+		llX = wifi.StartData.get("ll-x");
+		llY = wifi.StartData.get("ll-y");
+		urX=wifi.StartData.get("ur-x");
+		urY=wifi.StartData.get("yr-y");
+		BC = wifi.StartData.get("BC");
 
-		/*
-		 * if front facing ultrasonic sensor is too close to a wall then rotate
-		 * the robot by 180 degrees so it no longer faces a wall
-		 */
-		if (distFromFrontUS < 15) {
-			nav.turnTo(180);
-		}
-	}
-
-	// not used
-
-	private static void moveAwayFromCorner(Sensors sensors, Navigation nav, Motors motors) {
-		int largeDist = 100;
-		int travelDist = 13;
-		int safeDist = 3;
-		EV3LargeRegulatedMotor left = motors.getLeftMotor();
-		EV3LargeRegulatedMotor right = motors.getRightMotor();
-		left.setAcceleration(2000);
-		right.setAcceleration(2000);
-		left.setSpeed(200);
-		right.setSpeed(200);
-		// check if forward or right
-		if (sensors.getFrontDist() > largeDist) {
-
-			// forward
-			if (sensors.getSideDist() < largeDist) {
-				nav.turnTo(45);
-				nav.travel(travelDist);
-			}
-			// right
-			else {
-				nav.turnTo(-45);
-				nav.travel(travelDist);
-			}
-		} else {
-
-			// close to a wall, move back
-			while (sensors.getFrontDist() < safeDist) {
-
-				left.backward();
-				right.backward();
-
-			}
-			left.stop(true);
-			left.stop(false);
-
-			// wall on left, facing left
-			if (sensors.getSideDist() < largeDist) {
-				nav.turnTo(125);
-				nav.travel(travelDist);
-			}
-
-			// no wall on left, facing down
-			else {
-				nav.turnTo(-90 - 30);
-				nav.travel(travelDist);
-			}
-
-		}
 	}
 
 	private void applyStartingCorner(int SC, Odometer odometer) {
@@ -246,73 +196,6 @@ public class PlaySoccer {
 			break;
 		}
 
-	}
-
-	// not going to use
-
-	private void getClear(Sensors sensors, Navigation nav, Motors motors, Odometer odometer) {
-
-		int minDist = 4;
-		int largeDist = 100;
-		int travelDist = 8;
-		EV3LargeRegulatedMotor leftMotor = motors.getLeftMotor();
-		EV3LargeRegulatedMotor rightMotor = motors.getRightMotor();
-		leftMotor.setAcceleration(2000);
-		rightMotor.setAcceleration(2000);
-		leftMotor.setSpeed(200);
-		rightMotor.setSpeed(200);
-		/*
-		 * Straight | | | | | |__________________Right
-		 * 
-		 */
-
-		// see if we are facing straight or right
-		if (sensors.getFrontDist() > largeDist) {
-			// check if straight
-			if (sensors.getSideDist() > largeDist) {
-				// rotate right to ~0 degrees
-				while (sensors.getFrontDist() < 240) {
-					leftMotor.forward();
-					rightMotor.backward();
-				}
-				leftMotor.stop(true);
-				rightMotor.stop(false);
-				odometer.setTheta(0);
-				nav.travelTo(travelDist, travelDist, false);
-
-			}
-			// facing right
-			else {
-
-				while (sensors.getSideDist() > minDist) {
-					leftMotor.forward();
-					rightMotor.backward();
-				}
-				leftMotor.stop(true);
-				rightMotor.stop(false);
-				odometer.setTheta(90);
-
-				nav.travelTo(travelDist, travelDist, false);
-
-			}
-		}
-		// we are facing down or left
-		else {
-
-			// facing down
-			if (sensors.getSideDist() < largeDist) {
-				odometer.setTheta(180);
-				nav.turnTo(-135);
-				nav.travel(travelDist);
-
-			}
-			// facing left
-			else {
-				odometer.setTheta(270);
-				nav.travel(-travelDist);
-			}
-
-		}
 	}
 
 }

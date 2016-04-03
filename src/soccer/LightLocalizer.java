@@ -5,7 +5,7 @@
  * Date: Feb 15,2016
  * 
  * Description: Uses the light sensor to correct the x and y values of the odometer.
- * Starts by moving the robot a sufficient distance away from both walls, then rotates the robot while
+ * Rotates the robot while
  * using ColourDataGetter to save the angles the lines are seen at. Then uses the angles to compute 
  * the correct x, y and theta of the robot and sets the values in the odometer to the correct values.
  * 
@@ -14,6 +14,8 @@
  * March 13 - Peter: modified for final robot
  * March 29 - Peter: used an array list instead of an array to be able to check for 
  * errors from ColourDataGetter and repeat if necessary
+ * April 3 - Peter: Removed the moving away from the walls part as we can place the
+ * robot properly when starting, made code able to correct to any given corner
  */
 
 package soccer;
@@ -64,17 +66,7 @@ public class LightLocalizer {
 
 		// align the robot properly relative to the corner
 
-		// be at least STARTING_DIST away from the left wall
-		navigation.turnToAbs(-90);
-		float distance = sensors.getFrontDist();
-		if (distance < STARTING_DIST_FROM_WALL)
-			navigation.travel(distance - STARTING_DIST_FROM_WALL);
 
-		// be at least STARTING_DIST away from the back wall
-		navigation.turnToAbs(180);
-		distance = sensors.getFrontDist();
-		if (distance < STARTING_DIST_FROM_WALL)
-			navigation.travel(distance - STARTING_DIST_FROM_WALL);
 
 		// set orientation of robot to -30 degrees to make sure it starts in a
 		// good position to detect lines
@@ -138,14 +130,8 @@ public class LightLocalizer {
 
 		double deltaTheta1 = 90 - (thetaYPos - 180) + deltaThetaY / 2;
 
-		// we tried to use this extra calculation to improve the angle
-		// adjustment, but it made things worse
-		// may try using it in the future
-		// double deltaTheta2 = 90 - (thetaXNeg - 180) + deltaThetaX / 2;
-		// double aveDeltaTheta = (deltaTheta1 + deltaTheta2) / 2;
-
 		// update position
-		odo.setPosition(new double[] { x, y, odo.getTheta() + deltaTheta1 + 45 }, new boolean[] { true, true, true });
+		odo.setPosition(new double[] { x+odo.getX(), y+odo.getY(), odo.getTheta() + deltaTheta1 + 45 }, new boolean[] { true, true, true });
 
 	}
 
