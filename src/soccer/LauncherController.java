@@ -38,7 +38,7 @@ public class LauncherController {
 	private final int INTAKE_SPEED = 90;
 	private final int REJECT_SPEED = 90;
 	private final int CONVEYER_SPEED = 100;
-	private final int CONVEYER_OFFSET = 10; // conveyer rotates this extra
+	private final int CONVEYER_OFFSET = 0; // conveyer rotates this extra
 											// amount (degrees)
 	private final int SPINUP_DELAY = 500; // time allowed for motors to speed up
 
@@ -145,6 +145,25 @@ public class LauncherController {
 		conveyerRight.setSpeed(CONVEYER_SPEED);
 		conveyerLeft.rotate((int) -theta, true);
 		conveyerRight.rotate((int) -theta, false);
+	}
+	
+	public void conveyerBack(){
+		conveyerLeft.setSpeed(CONVEYER_SPEED);
+		conveyerRight.setSpeed(CONVEYER_SPEED);
+		conveyerLeft.backward();
+		conveyerRight.backward();
+	}
+	
+	public void conveyerForward(){
+		conveyerLeft.setSpeed(CONVEYER_SPEED);
+		conveyerRight.setSpeed(CONVEYER_SPEED);
+		conveyerLeft.forward();
+		conveyerRight.forward();
+	}
+	
+	public void conveyerStop(){
+		conveyerLeft.stop(true);
+		conveyerRight.stop(false);
 	}
 
 	/**

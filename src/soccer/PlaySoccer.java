@@ -19,6 +19,8 @@ package soccer;
 import java.io.IOException;
 import java.util.concurrent.Callable;
 
+import javax.swing.plaf.basic.BasicTreeUI.TreeTraverseAction;
+
 import lejos.hardware.Brick;
 import lejos.hardware.BrickFinder;
 import lejos.hardware.Button;
@@ -116,39 +118,30 @@ public class PlaySoccer {
 
 		// create USLocalization obj and use the method in it
 
-		Sound.setVolume(85);
-		Sound.beepSequence();
+		// Sound.setVolume(85);
+		// Sound.beepSequence();
 
-		new USLocalization(sensors, odometer, motors.getLeftMotor(), motors.getRightMotor(), nav).doLocalization();
+		// new USLocalization(sensors, odometer, motors.getLeftMotor(),
+		// motors.getRightMotor(), nav).doLocalization();
 
 		// localize with light
-		new LightLocalizer(odometer, sensors, nav).doLocalization();
-		Sound.beepSequence();
-		Sound.setVolume(0);
+		// new LightLocalizer(odometer, sensors, nav).doLocalization();
+		// Sound.beepSequence();
+		// Sound.setVolume(0);
 
-		nav.travelTo(0, 0, false);
-		nav.turnToAbs(0);
+		// nav.travelTo(0, 0, false);
+		// nav.turnToAbs(0);
 
+		
+	
 		// start odometry correction
 		OdometryCorrection odoCorrection = new OdometryCorrection(odometer, sensors);
 		odoCorrection.start();
 
-		nav.travelTo(llX * PhysicalConstants.TILE_SPACING - 1, llY * PhysicalConstants.TILE_SPACING, true);
+		nav.travelTo((0 * PhysicalConstants.TILE_SPACING), (5 * PhysicalConstants.TILE_SPACING), true, true);
+		nav.travelTo((0 * PhysicalConstants.TILE_SPACING), (0 * PhysicalConstants.TILE_SPACING), true, true);
+		nav.turnTo(180);
 
-		nav.turnToAbs(80);
-		launcher.setToIntakeSpeed();
-		nav.travel(10);
-		launcher.conveyerBackOneBall();
-		launcher.stopLauncher();
-
-		nav.face(0, SC * PhysicalConstants.TILE_SPACING);
-
-		launcher.setToFiringSpeed();
-		launcher.conveyerForwardOneBall();
-		launcher.conveyerForwardOneBall();
-		launcher.raiseAngle();
-		launcher.lowerAngle();
-		launcher.stopLauncher();
 		// determine which planner to use from eventual wifi connection
 		// and create the appropriate one below
 

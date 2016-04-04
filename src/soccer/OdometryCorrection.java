@@ -29,7 +29,7 @@ import lejos.hardware.Sound;
  */
 public class OdometryCorrection extends Thread {
 
-	private static final int CORRECTION_PERIOD = 10;
+	private static final int CORRECTION_PERIOD = 15;
 	private Odometer odometer;
 	private Sensors sensors;
 	private LineListener lineListener;
@@ -37,7 +37,7 @@ public class OdometryCorrection extends Thread {
 	// constants we need
 
 	// only snap if we are at least this close to a line
-	private final int ERROR_THRESHOLD = 6;
+	private final int ERROR_THRESHOLD = 8;
 
 	// the spacing of the grid lines
 	private final double GRID_SPACING = PhysicalConstants.TILE_SPACING;

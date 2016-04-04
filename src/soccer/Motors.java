@@ -63,8 +63,10 @@ public class Motors {
 		angleAdjustMotor = slaveBrick.createRegulatedMotor("B", 'L');
 		angleAdjustMotor.stop();
 		
-		conveyerLeft = new EV3LargeRegulatedMotor(masterBrick.getPort("B"));
 		conveyerRight = new EV3LargeRegulatedMotor(masterBrick.getPort("C"));
+		
+		conveyerLeft = new EV3LargeRegulatedMotor(masterBrick.getPort("B"));
+		
 		
 		
 		

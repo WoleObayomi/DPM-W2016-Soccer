@@ -106,9 +106,10 @@ public class Sensors {
 		sideLSData = new float[sideLSValue.sampleSize()];
 
 		// slaveBrick
+		
 
-//		ballUSValue = slaveBrick.createSampleProvider(ballUSPort, "EV3UltrasonicSensor", "Distance");
-//		ballUSData = new float[ballUSValue.sampleSize()];
+		//ballUSValue = slaveBrick.createSampleProvider("S2", "lejos.hardware.EV3UltrasonicSensor", "Distance");
+		//ballUSData = new float[ballUSValue.sampleSize()];
 //
 //		ballColourIDValue = slaveBrick.createSampleProvider(ballColourIDPort, "EV3ColorSensor", "Red");
 //		ballColourIDData = new float [ballColourIDValue.sampleSize()];

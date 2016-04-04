@@ -19,6 +19,7 @@
 */
 package soccer;
 
+import lejos.hardware.Sound;
 import lejos.hardware.motor.EV3LargeRegulatedMotor;
 
 /**
@@ -42,15 +43,15 @@ public class Navigation {
 	private final double distError = 1.5;
 	private final double thetaTolerance = 2;
 	private final int NAV_SLEEP = 50;// ms
-	private final int RELOCALAIZE_DELAY = 15000;// ms, max time between
+	private final int RELOCALAIZE_DELAY = 10000;// ms, max time between
 												// relocalizations
 	private final int RELOCALIZE_COUNTER_MAX = RELOCALAIZE_DELAY / NAV_SLEEP;
 	private static final int FORWARD_SPEED = 250;
-	private static final int ROTATE_SPEED = 240;
-	private final int ACCELERATION = 2000;
-	private final int WALL_DETECTED_RANGE = 10; // cm
+	private static final int ROTATE_SPEED = 220;
+	private final int ACCELERATION = 1000;
+	private final int WALL_DETECTED_RANGE = 15; // cm
 	private final int WALL_FOLLOW_EXIT_ANGLE = 10;
-	private final int WALL_TRAVEL_PAST_MARGIN = 20;
+	private final int WALL_TRAVEL_PAST_MARGIN = 12;
 	// additional variables
 	private boolean isNavigating = false;
 	private boolean isTurning = false;
@@ -92,7 +93,7 @@ public class Navigation {
 	 * @param wallFollowOn
 	 *            boolean value to indicate whether wall following is to be used
 	 */
-	public void travelTo(double x, double y, boolean wallFollowOn) {
+	public void travelTo(double x, double y, boolean wallFollowOn, boolean relocalizeOn) {
 		int relocalizerCounter = 0;
 		isNavigating = true;
 
@@ -100,17 +101,20 @@ public class Navigation {
 		while (Math.sqrt(Math.pow(x - odometer.getX(), 2) + Math.pow(y - odometer.getY(), 2)) > distError) {
 
 			// check if we need to relocalize
-			if (relocalizerCounter == RELOCALIZE_COUNTER_MAX) {
+			if (relocalizerCounter == RELOCALIZE_COUNTER_MAX && relocalizeOn) {
+				leftMotor.stop(true);
+				rightMotor.stop(false);
 				relocalize();
 				relocalizerCounter = 0;
+			} else if (relocalizeOn) {
+				relocalizerCounter++;
 			}
-			relocalizerCounter++;
 			// check for a wall in front if wallfollowing is on
 			if (wallFollowOn) {
 				if (sensors.getFrontDist() < WALL_DETECTED_RANGE) {
 					simplfiedFollowWall();
-					relocalize();
-					relocalizerCounter = 0;
+					// relocalize();
+					// relocalizerCounter = 0;
 
 				}
 			}
@@ -454,6 +458,11 @@ public class Navigation {
 		}
 	}
 
+	public void stop() {
+		leftMotor.stop(true);
+		rightMotor.stop(false);
+	}
+
 	/**
 	 * 
 	 * @return boolean Indicates if robot is currently navigating
@@ -595,26 +604,60 @@ public class Navigation {
 			distToWall = sensors.getSideDist();
 
 			// past side of obstacle
-			if (distToWall > 100) {
+			if (distToWall > 20) {
 
 				if (firstSide) {
 					// move forward past edge
 					travel(WALL_TRAVEL_PAST_MARGIN);
 					// turn back the way we were going
-					turnTo(-90);
+					turnTo(-70);
 					// on second side now
 					firstSide = false;
+
+					// travel until we see other side of wall
+					int counter = 0;
+					while (distToWall > 30 && counter < 50) {
+
+						distToWall = sensors.getSideDist();
+						counter++;
+						leftMotor.forward();
+						rightMotor.forward();
+
+						try {
+							Thread.sleep(NAV_SLEEP);
+						} catch (InterruptedException e) {
+						}
+
+					}
 					// start the loop again
 					continue;
+
 				} else {
 					// past second side, so we make sure we are clear of the
 					// wall
 					// then stop wall following
+
 					travel(WALL_TRAVEL_PAST_MARGIN);
 					return;
 				}
 			} else { // not past side of obstacle, follow wall
-				wallFollowController.processData(distToWall);
+
+				if (distToWall < 5) {// too close to wall
+
+					turnTo(5);
+					travel(5);
+
+				} else {
+					leftMotor.forward();
+					rightMotor.forward();
+				}
+			}
+
+			try {
+				Thread.sleep(NAV_SLEEP);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 		}
 	}
@@ -679,8 +722,10 @@ public class Navigation {
 		}
 	}
 
-	private void relocalize() {
+	public void relocalize() {
 
+		Sound.setVolume(85);
+		Sound.beepSequenceUp();
 		// find nearest corner
 		double GRID_SPACING = PhysicalConstants.TILE_SPACING;
 
@@ -704,7 +749,8 @@ public class Navigation {
 			yCount++;
 		}
 
-		// set xCount and yCount to the true coordinates
+		// set xCount and yCount to the true coordinates by multiplying by the
+		// tile spacing
 		xCount *= PhysicalConstants.TILE_SPACING;
 		yCount *= PhysicalConstants.TILE_SPACING;
 
@@ -713,20 +759,25 @@ public class Navigation {
 
 		// go to easiest corner
 		if (angleToCorner < 90) { // facing towards the nearest corner, go to it
-			travelTo(xCount, yCount, false);
+			travelTo(xCount, yCount, false, false);
 		} else {
 			double theta = odometer.getTheta();
 			if (theta > 315 || theta < 135) {// moving up/right, make target
 												// point up and right
-				travelTo(xCount + PhysicalConstants.TILE_SPACING, yCount + PhysicalConstants.TILE_SPACING, false);
+				travelTo(xCount + PhysicalConstants.TILE_SPACING - 6, yCount - 6 + PhysicalConstants.TILE_SPACING,
+						false, false);
 			} else {
 				// facing down/left, so move target point down/left
-				travelTo(xCount - PhysicalConstants.TILE_SPACING, yCount - PhysicalConstants.TILE_SPACING, false);
+				travelTo(xCount - 6 - PhysicalConstants.TILE_SPACING, yCount - 6 - PhysicalConstants.TILE_SPACING,
+						false, false);
 			}
 		}
 		// near corner, run light localizer
 		new LightLocalizer(odometer, sensors, this).doLocalization();
+		Sound.beepSequence();
+		Sound.setVolume(0);
 		return;
+
 	}
 
 	/**

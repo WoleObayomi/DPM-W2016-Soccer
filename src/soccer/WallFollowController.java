@@ -16,8 +16,8 @@ public class WallFollowController {
 	private EV3LargeRegulatedMotor leftMotor;
 
 	// wallfollowing controller constants (P-Type controller)
-	private final int bandCenter = 7;
-	private final int bandWidth = 2;
+	private final int bandCenter = 15;
+	private final int bandWidth = 4;
 	// correct based on the magnitude of the error
 	// can be tuned by changing k (gain)
 	private final int k = 8;

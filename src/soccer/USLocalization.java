@@ -62,6 +62,8 @@ public class USLocalization {
 	 * 
 	 */
 	public void doLocalization() {
+		
+	
 
 		double angleA = 0, angleB = 0;
 

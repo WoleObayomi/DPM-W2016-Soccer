@@ -64,13 +64,13 @@ public class LightLocalizer {
 		// do trig to compute (0,0) and 0 degrees
 		// when done travel to (0,0) and turn to 0 degrees
 
-		// align the robot properly relative to the corner
+		navigation.stop();
 
 
 
 		// set orientation of robot to -30 degrees to make sure it starts in a
 		// good position to detect lines
-		navigation.turnToAbs(-30);
+		navigation.turnToAbs(-45);
 
 		// array to hold the angles of the lines
 		ArrayList<Double> angleData = new ArrayList<Double>();
