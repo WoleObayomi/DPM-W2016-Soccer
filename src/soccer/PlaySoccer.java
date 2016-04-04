@@ -167,8 +167,8 @@ public class PlaySoccer {
 		d2 = wifi.StartData.get("d2");
 		llX = wifi.StartData.get("ll-x");
 		llY = wifi.StartData.get("ll-y");
-		urX=wifi.StartData.get("ur-x");
-		urY=wifi.StartData.get("yr-y");
+		urX = wifi.StartData.get("ur-x");
+		urY = wifi.StartData.get("yr-y");
 		BC = wifi.StartData.get("BC");
 
 	}
@@ -187,7 +187,6 @@ public class PlaySoccer {
 			odometer.setY(odometer.getY() + 10 * PhysicalConstants.TILE_SPACING);
 			odometer.setTheta(odometer.getTheta() + 180);
 			break;
-
 		case 4:
 			odometer.setY(odometer.getY() + 10 * PhysicalConstants.TILE_SPACING);
 			odometer.setTheta(odometer.getTheta() + 90);
