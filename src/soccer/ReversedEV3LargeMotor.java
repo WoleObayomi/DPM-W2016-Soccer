@@ -1,9 +1,20 @@
+/*Title: ReversedEV3LargeMotor
+ * Author:Peter Quinn
+ * 
+ * Date:March 15,2016
+ * 
+ * Description: allows reversed motors to be used more intuitively.
+ * Translates commands for EV3LargeRegulated to their reverse (forward becomes backward)
+ * 
+ * Edit hist:
+ */
+
 package soccer;
 
 import lejos.hardware.motor.EV3LargeRegulatedMotor;
 import lejos.hardware.port.Port;
 
-//allows reversed motors to be used more intuitively 
+
 /**
  * 
  * @author Peter Quinn

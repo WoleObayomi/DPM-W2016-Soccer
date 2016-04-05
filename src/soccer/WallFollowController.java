@@ -1,3 +1,13 @@
+/*
+ * Title: WallFollowController
+ * Author: Peter Quinn
+ * Date: March 20, 2016
+ * 
+ * Description: Uses a value given in an argument from processData(float) and controls the
+ * robot p-type style based on this value and the parameters coded into this class
+ * 
+ */
+
 package soccer;
 
 import lejos.hardware.motor.EV3LargeRegulatedMotor;
