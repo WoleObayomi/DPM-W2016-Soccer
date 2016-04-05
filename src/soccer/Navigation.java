@@ -49,9 +49,14 @@ public class Navigation {
 	private static final int FORWARD_SPEED = 250;
 	private static final int ROTATE_SPEED = 220;
 	private final int ACCELERATION = 1000;
+	
+	//wall following
 	private final int WALL_DETECTED_RANGE = 15; // cm
 	private final int WALL_FOLLOW_EXIT_ANGLE = 10;
 	private final int WALL_TRAVEL_PAST_MARGIN = 12;
+	private final int WALL_DECTECTION_DELAY = 3000;//ms
+	private final int WALL_DECTECTION_COUNTER = WALL_DECTECTION_DELAY/NAV_SLEEP;
+	
 	// additional variables
 	private boolean isNavigating = false;
 	private boolean isTurning = false;
@@ -92,6 +97,9 @@ public class Navigation {
 	 *            point to travel to on the y axis
 	 * @param wallFollowOn
 	 *            boolean value to indicate whether wall following is to be used
+	 * @param relocalizeOn
+	 * 				boolean value to indicate whether the robot should relocalize 
+	 * 				periodically and after wall following to correct angle
 	 */
 	public void travelTo(double x, double y, boolean wallFollowOn, boolean relocalizeOn) {
 		int relocalizerCounter = 0;
@@ -112,7 +120,7 @@ public class Navigation {
 			// check for a wall in front if wallfollowing is on
 			if (wallFollowOn) {
 				if (sensors.getFrontDist() < WALL_DETECTED_RANGE) {
-					simplfiedFollowWall();
+					simplifiedFollowWall();
 					// relocalize();
 					// relocalizerCounter = 0;
 
@@ -281,7 +289,7 @@ public class Navigation {
 				// check for a wall in front if wallfollowing is on
 				if (wallFollowOn) {
 					if (sensors.getFrontDist() < WALL_DETECTED_RANGE) {
-						simplfiedFollowWall();
+						simplifiedFollowWall();
 						relocalize();
 						relocalizerCounter = 0;
 
@@ -316,7 +324,7 @@ public class Navigation {
 				// check for a wall in front if wallfollowing is on
 				if (wallFollowOn) {
 					if (sensors.getFrontDist() < WALL_DETECTED_RANGE) {
-						simplfiedFollowWall();
+						simplifiedFollowWall();
 						relocalize();
 						relocalizerCounter = 0;
 
@@ -359,7 +367,7 @@ public class Navigation {
 				// check for a wall in front if wallfollowing is on
 				if (wallFollowOn) {
 					if (sensors.getFrontDist() < WALL_DETECTED_RANGE) {
-						simplfiedFollowWall();
+						simplifiedFollowWall();
 						relocalize();
 						relocalizerCounter = 0;
 
@@ -393,7 +401,7 @@ public class Navigation {
 				// check for a wall in front if wallfollowing is on
 				if (wallFollowOn) {
 					if (sensors.getFrontDist() < WALL_DETECTED_RANGE) {
-						simplfiedFollowWall();
+						simplifiedFollowWall();
 						relocalize();
 						relocalizerCounter = 0;
 
@@ -592,7 +600,7 @@ public class Navigation {
 		travel(PhysicalConstants.TILE_SPACING);
 	}
 
-	private void simplfiedFollowWall() {
+	private void simplifiedFollowWall() {
 		leftMotor.stop(true);
 		rightMotor.stop(false);
 		turnTo(90);
@@ -616,7 +624,7 @@ public class Navigation {
 
 					// travel until we see other side of wall
 					int counter = 0;
-					while (distToWall > 30 && counter < 50) {
+					while (distToWall > 30 && counter < WALL_DECTECTION_COUNTER) {
 
 						distToWall = sensors.getSideDist();
 						counter++;

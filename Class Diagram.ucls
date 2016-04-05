@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<class-diagram version="1.1.9" icons="true" always-add-relationships="false" generalizations="true" realizations="true" 
-  associations="true" dependencies="false" nesting-relationships="true" router="FAN">  
+<class-diagram version="1.1.9" icons="true" automaticImage="PNG" always-add-relationships="false" generalizations="true" 
+  realizations="true" associations="true" dependencies="false" nesting-relationships="true" router="FAN">  
   <class id="1" language="java" name="soccer.Sensors" project="DPM-W2016-Soccer" 
     file="/DPM-W2016-Soccer/src/soccer/Sensors.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="2928" y="1329"/>    

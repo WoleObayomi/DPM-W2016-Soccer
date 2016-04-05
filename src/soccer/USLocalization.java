@@ -14,7 +14,6 @@
  * March 29 - Peter: Tweaked values to improve performance
  */
 
-
 package soccer;
 
 import lejos.hardware.motor.EV3LargeRegulatedMotor;
@@ -62,19 +61,17 @@ public class USLocalization {
 	 * 
 	 */
 	public void doLocalization() {
-		
-	
 
 		double angleA = 0, angleB = 0;
 
 		// rotate the robot until it sees no wall
-		float distance = sensors.getFrontDist();
+		float distance = sensors.getSideDist();
 
 		while (distance < DISTANCE_TO_WALL + NOISE_MARGIN) {
 
 			if (distance < MIN_DIST) {
 				nav.travel(-(CORRECTION_DIST - distance));
-				distance = sensors.getFrontDist();
+				distance = sensors.getSideDist();
 			}
 
 			// rotate clockwise
@@ -90,7 +87,7 @@ public class USLocalization {
 				e.printStackTrace();
 			}
 			// get US data to check for no wall
-			distance = sensors.getFrontDist();
+			distance = sensors.getSideDist();
 
 		}
 		// keep rotating until the robot sees a wall, then latch the first
@@ -112,7 +109,7 @@ public class USLocalization {
 			}
 
 			// get US data to check for a wall
-			distance = sensors.getFrontDist();
+			distance = sensors.getSideDist();
 
 			// check for noise margin, if we are in it we loop until we are
 			// below it
@@ -125,7 +122,7 @@ public class USLocalization {
 					} catch (Exception e) {
 
 					}
-					distance = sensors.getFrontDist();
+					distance = sensors.getSideDist();
 
 				} while (distance > DISTANCE_TO_WALL - NOISE_MARGIN);
 				// save angle we exit the noise margin at
@@ -156,7 +153,7 @@ public class USLocalization {
 			e1.printStackTrace();
 		}
 
-		distance = sensors.getFrontDist();
+		distance = sensors.getSideDist();
 		// switch direction and wait until it sees a wall
 		while (distance > DISTANCE_TO_WALL) {
 
@@ -174,7 +171,7 @@ public class USLocalization {
 			}
 
 			// get US data to check for a wall
-			distance = sensors.getFrontDist();
+			distance = sensors.getSideDist();
 
 			// check for noise margin, if we are in it we loop until we are
 			// below it
@@ -187,7 +184,7 @@ public class USLocalization {
 					} catch (Exception e) {
 
 					}
-					distance = sensors.getFrontDist();
+					distance = sensors.getSideDist();
 
 				} while (distance > DISTANCE_TO_WALL - NOISE_MARGIN);
 				// save angle we exit the noise margin at
@@ -218,7 +215,8 @@ public class USLocalization {
 		leftMotor.stop(true);
 		rightMotor.stop(false);
 		// update the odometer position (example to follow:)
-		odo.setPosition(new double[] { 0.0, 0.0, odo.getTheta() + deltaTheta }, new boolean[] { false, false, true });
+		odo.setPosition(new double[] { 0.0, 0.0, odo.getTheta() + deltaTheta - 90 },
+				new boolean[] { false, false, true });
 
 	}
 }
