@@ -56,7 +56,8 @@ public class LightLocalizer {
 	}
 
 	/**
-	 * 
+	 * <p>
+	 * Execute localization routine
 	 */
 	public void doLocalization() {
 		// drive to location listed in tutorial

@@ -18,6 +18,11 @@ import java.util.ArrayList;
 
 import lejos.hardware.Sound;
 
+/**
+ * 
+ * @author Peter Quinn
+ *
+ */
 public class ColourDataGetter extends Thread {
 
 	private ArrayList<Double> angleData;
@@ -27,6 +32,12 @@ public class ColourDataGetter extends Thread {
 	private Odometer odometer;
 	private Sensors sensors;
 
+	/**
+	 * 
+	 * @param angleData
+	 * @param odometer
+	 * @param sensors
+	 */
 	public ColourDataGetter(ArrayList<Double> angleData, Odometer odometer, Sensors sensors) {
 		this.angleData = angleData;
 		this.odometer = odometer;
@@ -85,6 +96,10 @@ public class ColourDataGetter extends Thread {
 
 	}
 
+	/**
+	 * <p>
+	 * ends the color obtaining process
+	 */
 	public void end() {
 		on = false;
 	}

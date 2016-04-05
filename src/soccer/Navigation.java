@@ -264,6 +264,11 @@ public class Navigation {
 		}
 	}
 
+	/**
+	 * 
+	 * @param x
+	 * @param wallFollowOn
+	 */
 	public void movePastX(double x, boolean wallFollowOn) {
 
 		boolean above = odometer.getX() > x;
@@ -342,6 +347,11 @@ public class Navigation {
 
 	}
 
+	/**
+	 * 
+	 * @param y
+	 * @param wallFollowOn
+	 */
 	public void movePastY(double y, boolean wallFollowOn) {
 
 		boolean above = odometer.getY() > y;
@@ -457,7 +467,11 @@ public class Navigation {
 
 		}
 	}
-
+	
+	/**
+	 * <p>
+	 * Stop motors
+	 */
 	public void stop() {
 		leftMotor.stop(true);
 		rightMotor.stop(false);
@@ -585,6 +599,10 @@ public class Navigation {
 		}
 	}
 
+	/**
+	 * <p>
+	 * Super easy wall follow routine
+	 */
 	private void superEasyWallFollow() {
 		turnTo(90);
 		travel(PhysicalConstants.TILE_SPACING);
@@ -592,6 +610,10 @@ public class Navigation {
 		travel(PhysicalConstants.TILE_SPACING);
 	}
 
+	/**
+	 * <p>
+	 * Simplified wall following
+	 */
 	private void simplfiedFollowWall() {
 		leftMotor.stop(true);
 		rightMotor.stop(false);
@@ -662,6 +684,12 @@ public class Navigation {
 		}
 	}
 
+	/**
+	 * 
+	 * @param x
+	 * @param y
+	 * @param odometer
+	 */
 	private void followWall(double x, double y, Odometer odometer) {
 
 		// turn to the left so our wall following sensor on the right is facing
@@ -722,6 +750,10 @@ public class Navigation {
 		}
 	}
 
+	/**
+	 * <p>
+	 * relocalization routine
+	 */
 	public void relocalize() {
 
 		Sound.setVolume(85);
