@@ -21,6 +21,7 @@ package soccer;
 
 import lejos.hardware.Sound;
 import lejos.hardware.motor.EV3LargeRegulatedMotor;
+import lejos.robotics.RegulatedMotor;
 
 /**
  * 
@@ -32,6 +33,7 @@ public class Navigation {
 	// to be passed in through/generated the constructor
 	private EV3LargeRegulatedMotor rightMotor;
 	private EV3LargeRegulatedMotor leftMotor;
+	private RegulatedMotor USMotor;
 	private WallFollowController wallFollowController;
 	private Odometer odometer;
 	private Sensors sensors;
@@ -42,20 +44,26 @@ public class Navigation {
 	// navigation constants
 	private final double distError = 1.5;
 	private final double thetaTolerance = 2;
-	private final int NAV_SLEEP = 50;// ms
+	private final int NAV_SLEEP = 25;// ms
 	private final int RELOCALAIZE_DELAY = 10000;// ms, max time between
 												// relocalizations
 	private final int RELOCALIZE_COUNTER_MAX = RELOCALAIZE_DELAY / NAV_SLEEP;
 	private static final int FORWARD_SPEED = 250;
 	private static final int ROTATE_SPEED = 220;
 	private final int ACCELERATION = 1000;
+	private final int DELAY = 100; // ms, delay to wait for other threads to
+									// notice a change, must be longer than
+									// sweepMotor delay
 
 	// wall following
-	private final int WALL_DETECTED_RANGE = 15; // cm
+	private final int WALL_DETECTED_RANGE = 17; // cm
 	private final int WALL_FOLLOW_EXIT_ANGLE = 10;
-	private final int WALL_TRAVEL_PAST_MARGIN = 12;
+	private final int WALL_TRAVEL_PAST_MARGIN_LEFT = 10;
+	private final int WALL_TRAVEL_PAST_MARGIN_RIGHT = 15;
 	private final int WALL_DECTECTION_DELAY = 3000;// ms
 	private final int WALL_DECTECTION_COUNTER = WALL_DECTECTION_DELAY / NAV_SLEEP;
+	private final int TOO_CLOSE = 5;
+	private final int FOLLOW_DIST = 25;
 
 	// additional variables
 	private boolean isNavigating = false;
@@ -76,6 +84,7 @@ public class Navigation {
 		this.odometer = odometer;
 		this.leftMotor = motors.getLeftMotor();
 		this.rightMotor = motors.getRightMotor();
+		this.USMotor = motors.getUSMotor();
 		this.leftRadius = leftWheelRadius;
 		this.rightRadius = rightWheelRadius;
 		this.trackWidth = trackWidth;
@@ -84,6 +93,7 @@ public class Navigation {
 
 		leftMotor.setAcceleration(ACCELERATION);
 		rightMotor.setAcceleration(ACCELERATION);
+		USMotor.setAcceleration(ACCELERATION);
 
 	}
 
@@ -105,6 +115,13 @@ public class Navigation {
 		int relocalizerCounter = 0;
 		isNavigating = true;
 
+		SweepMotor USMotorSweep = new SweepMotor(USMotor);
+		USMotorSweep.start();
+
+		// turn on motor sweeping
+
+		USMotorSweep.on();
+
 		// get within a circle of radius distError to point we want
 		while (Math.sqrt(Math.pow(x - odometer.getX(), 2) + Math.pow(y - odometer.getY(), 2)) > distError) {
 
@@ -119,8 +136,34 @@ public class Navigation {
 			}
 			// check for a wall in front if wallfollowing is on
 			if (wallFollowOn) {
-				if (sensors.getFrontDist() < WALL_DETECTED_RANGE) {
-					simplifiedFollowWall();
+				if (sensors.getFrontDist() < WALL_DETECTED_RANGE) {// see a wall
+
+					// stop
+					leftMotor.stop(true);
+					rightMotor.stop(false);
+					// stop sweeping, suspend thread to stop errors
+					USMotorSweep.off();
+					USMotorSweep.suspend();
+					try {
+						Thread.sleep(DELAY);
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					// analyze the wall and our position and avoid it on the
+					// side with the most room
+					analyzeWall();
+					try {
+						Thread.sleep(DELAY);
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					// resume sweeping, create new thread
+					
+					USMotorSweep.on();
+					USMotorSweep.resume();
+
 					if (relocalizeOn) {
 						relocalize();
 						relocalizerCounter = 0;
@@ -179,6 +222,10 @@ public class Navigation {
 		leftMotor.setSpeed(0);
 		rightMotor.setSpeed(0);
 
+		USMotorSweep.off();
+		USMotorSweep.kill();
+		USMotorSweep.stop();
+		USMotor.rotateTo(0);
 		leftMotor.stop(true);
 		rightMotor.stop(false);
 		isNavigating = false;
@@ -275,7 +322,7 @@ public class Navigation {
 		}
 	}
 
-	public void movePastX(double x, boolean wallFollowOn) {
+	public void movePastX(double x, boolean wallFollowOn, boolean relocalize) {
 
 		boolean above = odometer.getX() > x;
 		int relocalizerCounter = 0;
@@ -284,18 +331,22 @@ public class Navigation {
 			// go straight left until past line
 			while (odometer.getX() > x) {
 				// check if we need to relocalize
-				if (relocalizerCounter == RELOCALIZE_COUNTER_MAX) {
-					relocalize();
-					relocalizerCounter = 0;
+				if (relocalize) {
+					if (relocalizerCounter == RELOCALIZE_COUNTER_MAX) {
+						relocalize();
+						relocalizerCounter = 0;
+					}
+					relocalizerCounter++;
 				}
-				relocalizerCounter++;
 				// check for a wall in front if wallfollowing is on
 				if (wallFollowOn) {
 					if (sensors.getFrontDist() < WALL_DETECTED_RANGE) {
-						simplifiedFollowWall();
-						relocalize();
-						relocalizerCounter = 0;
+						analyzeWall();
 
+						if (relocalize) {
+							relocalize();
+							relocalizerCounter = 0;
+						}
 					}
 				}
 
@@ -327,7 +378,7 @@ public class Navigation {
 				// check for a wall in front if wallfollowing is on
 				if (wallFollowOn) {
 					if (sensors.getFrontDist() < WALL_DETECTED_RANGE) {
-						simplifiedFollowWall();
+						followWallOnLeft();
 						relocalize();
 						relocalizerCounter = 0;
 
@@ -353,7 +404,7 @@ public class Navigation {
 
 	}
 
-	public void movePastY(double y, boolean wallFollowOn) {
+	public void movePastY(double y, boolean wallFollowOn, boolean relocalizeOn) {
 
 		boolean above = odometer.getY() > y;
 		int relocalizerCounter = 0;
@@ -362,18 +413,21 @@ public class Navigation {
 			// go straight left until past line
 			while (odometer.getY() > y) {
 				// check if we need to relocalize
-				if (relocalizerCounter == RELOCALIZE_COUNTER_MAX) {
-					relocalize();
-					relocalizerCounter = 0;
+				if (relocalizeOn) {
+					if (relocalizerCounter == RELOCALIZE_COUNTER_MAX) {
+						relocalize();
+						relocalizerCounter = 0;
+					}
+					relocalizerCounter++;
 				}
-				relocalizerCounter++;
 				// check for a wall in front if wallfollowing is on
 				if (wallFollowOn) {
 					if (sensors.getFrontDist() < WALL_DETECTED_RANGE) {
-						simplifiedFollowWall();
-						relocalize();
-						relocalizerCounter = 0;
-
+						followWallOnLeft();
+						if (relocalizeOn) {
+							relocalize();
+							relocalizerCounter = 0;
+						}
 					}
 				}
 				if (Math.abs(odometer.getTheta() - 0) > thetaTolerance) {
@@ -404,7 +458,7 @@ public class Navigation {
 				// check for a wall in front if wallfollowing is on
 				if (wallFollowOn) {
 					if (sensors.getFrontDist() < WALL_DETECTED_RANGE) {
-						simplifiedFollowWall();
+						followWallOnLeft();
 						relocalize();
 						relocalizerCounter = 0;
 
@@ -495,7 +549,120 @@ public class Navigation {
 
 	// Private helper methods
 
-	private void simplifiedFollowWall() {
+	private void analyzeWall() {
+
+		// stop
+		leftMotor.stop();
+		rightMotor.stop();
+
+		// look right
+
+		USMotor.rotateTo(90);
+
+		try {
+			Thread.sleep(100);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		float leftDist = sensors.getSideDist();
+		float rightDist = sensors.getFrontDist();
+
+		if (leftDist > rightDist) {
+			// more to go left, so we will put the wall on our right and go left
+			followWallOnRight();
+		} else {
+			// more room on right, so we will put the wall on our left and go
+			// right
+			followWallOnLeft();
+		}
+		USMotor.rotateTo(0);
+
+	}
+
+	private void followWallOnRight() {
+
+		leftMotor.stop(true);
+		rightMotor.stop(false);
+		turnTo(-90);
+
+		USMotor.rotateTo(90);
+
+		float distToWall;
+		boolean firstSide = true;
+
+		while (true) {
+
+			distToWall = sensors.getFrontDist();
+
+			// past side of obstacle
+			if (distToWall > FOLLOW_DIST) {
+
+				if (firstSide) {
+					// move forward past edge
+					travel(WALL_TRAVEL_PAST_MARGIN_RIGHT);
+					// turn back the way we were going
+					turnTo(70);
+					// on second side now
+					firstSide = false;
+
+					// travel until we see other side of wall
+					int counter = 0;
+					distToWall = sensors.getFrontDist();
+					while (distToWall > 30 && counter < WALL_DECTECTION_COUNTER) {
+
+						distToWall = sensors.getFrontDist();
+						counter++;
+						leftMotor.forward();
+						rightMotor.forward();
+
+						try {
+							Thread.sleep(NAV_SLEEP);
+						} catch (InterruptedException e) {
+						}
+
+					}
+					// start the loop again for the other side
+					continue;
+
+				} else {
+					// past second side, so we make sure we are clear of the
+					// wall
+					// then stop wall following
+
+					travel(WALL_TRAVEL_PAST_MARGIN_RIGHT);
+					USMotor.rotateTo(0);
+					return;
+				}
+			} else { // not past side of obstacle, follow wall
+
+				if (distToWall < TOO_CLOSE) {// too close to wall
+
+					turnTo(5);
+					travel(5);
+
+				} else {
+					leftMotor.forward();
+					rightMotor.forward();
+					try {
+						Thread.sleep(NAV_SLEEP);
+					} catch (InterruptedException e) {
+					}
+				}
+			}
+
+			try {
+				Thread.sleep(NAV_SLEEP);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}
+
+	// follows wall on left
+	private void followWallOnLeft() {
 		leftMotor.stop(true);
 		rightMotor.stop(false);
 		turnTo(90);
@@ -507,11 +674,11 @@ public class Navigation {
 			distToWall = sensors.getSideDist();
 
 			// past side of obstacle
-			if (distToWall > 20) {
+			if (distToWall > FOLLOW_DIST) {
 
 				if (firstSide) {
 					// move forward past edge
-					travel(WALL_TRAVEL_PAST_MARGIN);
+					travel(WALL_TRAVEL_PAST_MARGIN_LEFT);
 					// turn back the way we were going
 					turnTo(-70);
 					// on second side now
@@ -541,12 +708,12 @@ public class Navigation {
 					// wall
 					// then stop wall following
 
-					travel(WALL_TRAVEL_PAST_MARGIN);
+					travel(WALL_TRAVEL_PAST_MARGIN_LEFT);
 					return;
 				}
 			} else { // not past side of obstacle, follow wall
 
-				if (distToWall < 5) {// too close to wall
+				if (distToWall < TOO_CLOSE) {// too close to wall
 
 					turnTo(5);
 					travel(5);
@@ -570,7 +737,7 @@ public class Navigation {
 		}
 	}
 
-	private void followWall(double x, double y, Odometer odometer) {
+	private void followWallPType(double x, double y, Odometer odometer) {
 
 		// turn to the left so our wall following sensor on the right is facing
 		// the

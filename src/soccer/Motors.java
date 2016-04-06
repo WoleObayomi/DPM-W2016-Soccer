@@ -39,6 +39,7 @@ public class Motors {
 	private static RegulatedMotor angleAdjustMotor;
 	private static EV3LargeRegulatedMotor conveyerRight;
 	private static EV3LargeRegulatedMotor conveyerLeft;
+	private static RegulatedMotor USMotor;
 	
 
 	/**
@@ -67,13 +68,25 @@ public class Motors {
 		
 		conveyerLeft = new EV3LargeRegulatedMotor(masterBrick.getPort("B"));
 		
+		//US Motor
 		
+		USMotor = slaveBrick.createRegulatedMotor("C", 'L');
 		
 		
 		
 	}
 
 	// getters for motors
+	
+	/**
+	 * 
+	 * 
+	 */
+	public RegulatedMotor getUSMotor(){
+		return USMotor;
+	}
+	
+	
 	/**
 	 * 
 	 * @return leftMotor instance of the left motor object

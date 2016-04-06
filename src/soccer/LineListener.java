@@ -25,8 +25,7 @@ import lejos.robotics.SampleProvider;
 public class LineListener extends Thread {
 
 	private static final double BLACK_LINE_DIFF = .07;
-	private final double THRESHOLD = .05; // tweak this to set the sensitivity
-											// of the filer
+	
 	private final int SLEEP_TIME = 10; // ms
 
 	private SampleProvider colourSensor;

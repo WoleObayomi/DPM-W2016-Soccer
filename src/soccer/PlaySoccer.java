@@ -32,6 +32,7 @@ import lejos.hardware.motor.EV3LargeRegulatedMotor;
 import lejos.hardware.sensor.EV3TouchSensor;
 import lejos.remote.ev3.RemoteEV3;
 import lejos.remote.ev3.RemoteRequestEV3;
+import lejos.robotics.RegulatedMotor;
 import lejos.robotics.SampleProvider;
 import sun.launcher.resources.launcher_zh_CN;
 import wifi.WifiConnection;
@@ -94,14 +95,15 @@ public class PlaySoccer {
 			}
 			System.exit(0);
 		}
+
+		// motors object
+		Motors motors = new Motors(masterBrick, slaveBrick);
+		primeExit.addMotors(motors);
+		
 		
 
 		// sensors object
 		final Sensors sensors = new Sensors(masterBrick, slaveBrick);
-	
-
-		// motors object
-		Motors motors = new Motors(masterBrick, slaveBrick);
 
 		// odometer thread
 		Odometer odometer = new Odometer(motors, PhysicalConstants.LEFT_WHEEL_RADIUS,
@@ -121,47 +123,31 @@ public class PlaySoccer {
 
 		// create USLocalization obj and use the method in it
 
-//		Sound.setVolume(85);
-//		Sound.beepSequence();
-//
-//		new USLocalization(sensors, odometer, motors.getLeftMotor(), motors.getRightMotor(), nav).doLocalization();
-//
-//		// localize with light
-//		new LightLocalizer(odometer, sensors, nav).doLocalization();
-//		Sound.beepSequence();
-//		Sound.setVolume(0);
-//
-//		nav.travelTo(0, 0, false, false);
-//		nav.turnToAbs(0);
+		// Sound.setVolume(85);
+		// Sound.beepSequence();
+		//
+		// new USLocalization(sensors, odometer, motors.getLeftMotor(),
+		// motors.getRightMotor(), nav).doLocalization();
+		//
+		// // localize with light
+		// new LightLocalizer(odometer, sensors, nav).doLocalization();
+		// Sound.beepSequence();
+		// Sound.setVolume(0);
+		//
+		// nav.travelTo(0, 0, false, false);
+		// nav.turnToAbs(0);
 
+		nav.travelTo(0, 5*PhysicalConstants.TILE_SPACING, true, false);
 		
-		odometer.setX(20);
-		odometer.setY(25);
-		odometer.setTheta(45);
-		
-		nav.relocalize();
-		
-		nav.travelTo(2*PhysicalConstants.TILE_SPACING, 2*PhysicalConstants.TILE_SPACING, false, false);
-		nav.turnToAbs(0);
-		System.exit(0);
+		nav.travelTo(5*PhysicalConstants.TILE_SPACING, 0, true, false);
 		// start odometry correction
 		OdometryCorrection odoCorrection = new OdometryCorrection(odometer, sensors);
 		odoCorrection.start();
-		
-		
-		
 
 		// determine which planner to use from eventual wifi connection
 		// and create the appropriate one below
-		nav.travelTo(0, 2*PhysicalConstants.TILE_SPACING, false, false);
-		nav.travelTo(2*PhysicalConstants.TILE_SPACING, 2*PhysicalConstants.TILE_SPACING, false, false);
-		nav.travelTo(2*PhysicalConstants.TILE_SPACING, 0, false, false);
-		nav.travelTo(0, 0, false, false);
-		nav.turnToAbs(0);
-		
-		
-		
-		nav.travelTo(PhysicalConstants.TILE_SPACING, 5*PhysicalConstants.TILE_SPACING, true, true);
+
+		nav.travelTo(PhysicalConstants.TILE_SPACING, 5 * PhysicalConstants.TILE_SPACING, true, true);
 
 	}
 
@@ -189,8 +175,8 @@ public class PlaySoccer {
 	 * @param SC
 	 * @param odometer
 	 * 
-	 * <p>
-	 * Moves robot to starting corner
+	 *            <p>
+	 *            Moves robot to starting corner
 	 */
 	private void applyStartingCorner(int SC, Odometer odometer) {
 		switch (SC) {

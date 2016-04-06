@@ -11,6 +11,7 @@ package soccer;
 
 import lejos.hardware.Button;
 import lejos.remote.ev3.RemoteRequestEV3;
+import lejos.robotics.RegulatedMotor;
 
 /**
  * 
@@ -20,7 +21,10 @@ import lejos.remote.ev3.RemoteRequestEV3;
 public class Exit extends Thread {
 
 	private RemoteRequestEV3 slaveBrick = null;
-	private final int SLEEP_TIME = 250;
+	private Motors motors = null;
+	private RegulatedMotor launcherLeft, launcherRight, angleMotor, sweepMotor;
+	private final int SLEEP_TIME = 200;
+	private static boolean alive = true;
 
 	public void run() {
 
@@ -34,24 +38,51 @@ public class Exit extends Thread {
 			}
 		}
 
+		//wait for threads looking at this to stop nicely
+		alive=false;
+		try {
+			sleep(SLEEP_TIME);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+
+		// disconnect slave brick
 		if (slaveBrick != null)
 			slaveBrick.disConnect();
 
 		System.exit(0);
 	}
 
+	// constructor
 	public Exit(RemoteRequestEV3 slaveBrick) {
 
 		this.slaveBrick = slaveBrick;
 
 	}
-	
-	public void addSlaveBrick(RemoteRequestEV3 slaveBrick){
-		this.slaveBrick=slaveBrick;
+
+	public void addSlaveBrick(RemoteRequestEV3 slaveBrick) {
+		this.slaveBrick = slaveBrick;
 	}
+
+	public void addMotors(Motors motors) {
+		this.motors = motors;
+		this.launcherLeft = motors.getLauncherLeft();
+		this.launcherRight = motors.getLauncherRight();
+		this.angleMotor = motors.getAngleAdjustMotor();
+		this.sweepMotor = motors.getUSMotor();
+	}
+
+	// alternate constructor
 
 	public Exit() {
 
+	}
+	
+	//can notify threads to end certain tasks peacfully
+	public static boolean alive(){
+		return alive;
 	}
 
 }
