@@ -28,8 +28,10 @@ public class BallPickupController {
 	private static final double DIST_TO_NEXT_BALL = PhysicalConstants.BALL_DIAMTER + BALL_GAP;
 
 	private final float BALL_HEIGHT = 3; // cm,
-	private double llXBallZone;
-	private double llYBallZone;
+	private int llX;
+	private int llY;
+	private int urX;
+	private int urY;
 
 	/**
 	 * 
@@ -42,7 +44,7 @@ public class BallPickupController {
 	 */
 	public BallPickupController(int ballColorID, Odometer odometer, Navigation navigation, LauncherController launcher,
 
-			Sensors sensors, Motors motors) {
+			Sensors sensors, Motors motors, int llX, int llY, int urX, int urY) {
 
 		this.ballColorID = ballColorID;
 		this.odometer = odometer;
@@ -50,15 +52,86 @@ public class BallPickupController {
 		this.launcher = launcher;
 		this.sensors = sensors;
 		this.motors = motors;
+		this.llX = llX;
+		this.llY = llY;
+		this.urX = urX;
+		this.urY = urY;
 
 	}
 
+	/**
+	 * <p>
+	 * navigates to the intersection before the ball platform and begins to slowly approach platform
+	 */
+	public void navigateToPlatform() {
+		/*
+		 * robot should navigate to column/row with the narrower side present
+		 * and then travel along that axis to retrieve the balls
+		 */
+		
+		//figure out orientation of platform | o o o o | or that diagram rotated 90deg
+		String platformOrientation = getPlatformOrientation();
+		
+		switch(platformOrientation) {
+			
+		case "horizontal":
+			//TODO check if obstacle is at this coordinate and react accordingly
+			//try to detect platform edge
+			//use front facing sensor to determine where ball is and adjust position to match
+			navigation.travelTo(0, llY, true, false);
+			navigation.travelTo(llX - 1, llY, true, false); //intersection before where the platform is
+			
+			while(!closeEnoughToBall()) {
+				slowlyApproachPlatform();
+			}
+			pickBall();
+		break;
+		
+		case "vertical":
+			//TODO check if obstacle is at this coordinate and react accordingly
+			//try to detect platform edge
+			//use front facing sensor to determine where ball is and adjust position to match
+			navigation.travelTo(llX, 0, true, false);
+			navigation.travelTo(llX, llY - 1, true, false); //intersection before where the platform is
+			
+			while(!closeEnoughToBall()) {
+				slowlyApproachPlatform();
+			}
+			pickBall();
+		break;
+		
+		default:
+			//do something
+		break;
+		}
+	}
+	
+	/**
+	 * 
+	 * @return String
+	 * 
+	 *<p>
+	 *Returns the orientation of the ball platform relative to the grid
+	 */
+	private String getPlatformOrientation() {
+		
+		if(Math.abs(this.llX - this.urX) == 1) {
+			return "horizontal";
+		}
+		else if(Math.abs(this.llY - this.urY) == 1) {
+			return "vertical";
+		}
+		else {
+			return "undetermined";
+		}
+		
+	} 
 	/**
 	 * 
 	 * @return true when measured distance to ball is less than or equal to
 	 *         optimal distance for initiating pickup
 	 */
-
+	
 	private boolean closeEnoughToBall() {
 		/*
 		 * might need a range since we don't want to climb over the platform
@@ -99,11 +172,6 @@ public class BallPickupController {
 		leftMotor.stop();
 	}
 
-	public BallPickupController(double llXBallZone, double llYBallZone) {
-		this.llXBallZone = llXBallZone;
-		this.llYBallZone = llYBallZone;
-	}
-
 	/**
 	 * <p>
 	 * initiates ball pickup routine
@@ -111,9 +179,6 @@ public class BallPickupController {
 	public void pickBall() {
 
 		// navigate to the ball pickup place
-
-		navigation.travelTo(llXBallZone - 1, llYBallZone, false, false);
-		navigation.face(llXBallZone, llXBallZone);
 
 		launcher.setToIntakeSpeed();
 		slowlyApproachPlatform();
