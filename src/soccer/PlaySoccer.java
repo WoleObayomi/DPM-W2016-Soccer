@@ -184,6 +184,14 @@ public class PlaySoccer {
 
 	}
 
+	/**
+	 * 
+	 * @param SC
+	 * @param odometer
+	 * 
+	 * <p>
+	 * Moves robot to starting corner
+	 */
 	private void applyStartingCorner(int SC, Odometer odometer) {
 		switch (SC) {
 		case 1:

@@ -17,6 +17,11 @@ import lejos.hardware.Sound;
 import lejos.hardware.lcd.LCD;
 import lejos.robotics.SampleProvider;
 
+/**
+ * 
+ * @author Peter Quinn
+ *
+ */
 public class LineListener extends Thread {
 
 	private static final double BLACK_LINE_DIFF = .07;
@@ -31,6 +36,10 @@ public class LineListener extends Thread {
 	private boolean on = true;
 
 	// pass a colour sensor sampleProvider to the constructor
+	/**
+	 * 
+	 * @param colourSensor
+	 */
 	public LineListener(SampleProvider colourSensor) {
 
 		this.colourSensor = colourSensor;
@@ -78,10 +87,20 @@ public class LineListener extends Thread {
 	}
 
 	// reports if a line has been detected
+	/**
+	 * 
+	 * @return
+	 * <p>
+	 * returns true if a line is detected
+	 */
 	public boolean lineDetected() {
 		return lineDetected;
 	}
 
+	/**
+	 * <p>
+	 * end line detection
+	 */
 	public void end() {
 		on = false;
 
@@ -89,11 +108,19 @@ public class LineListener extends Thread {
 
 	// reset the line detected boolean, must always be done after a line is
 	// detected
+	/**
+	 * <p>
+	 * reset lineDetected to false
+	 */
 	public void reset() {
 		lineDetected = false;
 	}
 
 	// moving window/buffer of three points
+	/**
+	 * <p>
+	 * update moving window of three points
+	 */
 	private void updatePoints() {
 		pointData[0] = pointData[1];
 		pointData[1] = pointData[2];
@@ -103,6 +130,11 @@ public class LineListener extends Thread {
 
 	// use a simple derivative filter to check if our values are dropping
 	// rapidly ie detecting a line
+	/**
+	 * 
+	 * @return
+	 * <p>check for dropping values during line detection
+	 */
 	private boolean detectLine() {
 
 		updatePoints();
