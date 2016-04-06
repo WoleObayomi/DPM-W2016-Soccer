@@ -68,7 +68,7 @@ public class LightLocalizer {
 
 
 
-		// set orientation of robot to -30 degrees to make sure it starts in a
+		// set orientation of robot to -45 degrees to make sure it starts in a
 		// good position to detect lines
 		navigation.turnToAbs(-45);
 
@@ -76,7 +76,8 @@ public class LightLocalizer {
 		ArrayList<Double> angleData = new ArrayList<Double>();
 
 		// make sure the array gets filled with angles
-		while (angleData.size() != 4) {
+		int counter =0;
+		while (angleData.size() != 4 && counter<3) {
 			// have a thread that watches for the gridlines and saves the angle
 			// of
 			// the robot when they are detected to an array
@@ -87,6 +88,7 @@ public class LightLocalizer {
 			// turn 360 degrees to see all the lines
 			navigation.turnTo(360);
 			colourDataGetter.end();
+			counter++;
 		}
 		// get angle data that was collected
 		// account for the sensor being to the left of the robot by subtracting

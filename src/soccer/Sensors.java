@@ -97,6 +97,7 @@ public class Sensors {
 
 		// setting up center light sensor
 		centerLS = new EV3ColorSensor(masterBrick.getPort(centerLSPort));
+		
 		centerLSValue = centerLS.getMode("Red");
 		centerLSData = new float[centerLSValue.sampleSize()];
 
@@ -108,11 +109,11 @@ public class Sensors {
 		// slaveBrick
 		
 
-		//ballUSValue = slaveBrick.createSampleProvider("S2", "lejos.hardware.EV3UltrasonicSensor", "Distance");
-		//ballUSData = new float[ballUSValue.sampleSize()];
-//
-//		ballColourIDValue = slaveBrick.createSampleProvider(ballColourIDPort, "EV3ColorSensor", "Red");
-//		ballColourIDData = new float [ballColourIDValue.sampleSize()];
+		ballUSValue = slaveBrick.createSampleProvider(ballUSPort, "lejos.hardware.sensor.EV3UltrasonicSensor", "Distance");
+		ballUSData = new float[ballUSValue.sampleSize()];
+
+		ballColourIDValue = slaveBrick.createSampleProvider(ballColourIDPort, "lejos.hardware.sensor.EV3ColorSensor", "Red");
+		ballColourIDData = new float [ballColourIDValue.sampleSize()];
 	}
 
 	// add getters for sensor data
@@ -250,6 +251,13 @@ public class Sensors {
 	public float getBallColourID(){
 		return 0;
 	}
+	
+	public float getBallColourValue(){
+		ballColourIDValue.fetchSample(ballColourIDData, 0);
+		return ballColourIDData[0];
+	}
+	
+	
 	
 	
 }

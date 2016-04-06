@@ -133,7 +133,7 @@ public class USLocalization {
 
 				// take the average of the angle we entered and exited the
 				// noise margin at to save angle we saw the wall
-				angleA = (marginEnterAngle + marginExitAngle) / 2;
+				angleA = (marginEnterAngle + marginExitAngle) / 2 - 90 ;
 
 				// break out of the parent loop
 				break;
@@ -195,7 +195,7 @@ public class USLocalization {
 
 				// take the average of the angle we entered and exited the
 				// noise margin at to save angle we saw the wall
-				angleB = (marginEnterAngle + marginExitAngle) / 2;
+				angleB = (marginEnterAngle + marginExitAngle) / 2-90;
 
 				// break out of the parent loop
 				break;
@@ -215,8 +215,7 @@ public class USLocalization {
 		leftMotor.stop(true);
 		rightMotor.stop(false);
 		// update the odometer position (example to follow:)
-		odo.setPosition(new double[] { 0.0, 0.0, odo.getTheta() + deltaTheta - 90 },
-				new boolean[] { false, false, true });
+		odo.setPosition(new double[] { 0.0, 0.0, odo.getTheta() + deltaTheta }, new boolean[] { false, false, true });
 
 	}
 }

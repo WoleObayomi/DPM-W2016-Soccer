@@ -49,14 +49,14 @@ public class Navigation {
 	private static final int FORWARD_SPEED = 250;
 	private static final int ROTATE_SPEED = 220;
 	private final int ACCELERATION = 1000;
-	
-	//wall following
+
+	// wall following
 	private final int WALL_DETECTED_RANGE = 15; // cm
 	private final int WALL_FOLLOW_EXIT_ANGLE = 10;
 	private final int WALL_TRAVEL_PAST_MARGIN = 12;
-	private final int WALL_DECTECTION_DELAY = 3000;//ms
-	private final int WALL_DECTECTION_COUNTER = WALL_DECTECTION_DELAY/NAV_SLEEP;
-	
+	private final int WALL_DECTECTION_DELAY = 3000;// ms
+	private final int WALL_DECTECTION_COUNTER = WALL_DECTECTION_DELAY / NAV_SLEEP;
+
 	// additional variables
 	private boolean isNavigating = false;
 	private boolean isTurning = false;
@@ -98,8 +98,8 @@ public class Navigation {
 	 * @param wallFollowOn
 	 *            boolean value to indicate whether wall following is to be used
 	 * @param relocalizeOn
-	 * 				boolean value to indicate whether the robot should relocalize 
-	 * 				periodically and after wall following to correct angle
+	 *            boolean value to indicate whether the robot should relocalize
+	 *            periodically and after wall following to correct angle
 	 */
 	public void travelTo(double x, double y, boolean wallFollowOn, boolean relocalizeOn) {
 		int relocalizerCounter = 0;
@@ -121,9 +121,10 @@ public class Navigation {
 			if (wallFollowOn) {
 				if (sensors.getFrontDist() < WALL_DETECTED_RANGE) {
 					simplifiedFollowWall();
-					// relocalize();
-					// relocalizerCounter = 0;
-
+					if (relocalizeOn) {
+						relocalize();
+						relocalizerCounter = 0;
+					}
 				}
 			}
 
@@ -192,6 +193,8 @@ public class Navigation {
 	public void turnTo(double theta) {
 
 		isTurning = true;
+		leftMotor.stop(true);
+		rightMotor.stop(false);
 
 		leftMotor.setAcceleration(1000);
 		rightMotor.setAcceleration(1000);
@@ -492,114 +495,6 @@ public class Navigation {
 
 	// Private helper methods
 
-	/**
-	 * 
-	 * @param x
-	 * @param y
-	 */
-
-	private void easyFollowWall() {
-
-		// left side
-		if (odometer.getX() < 3 * PhysicalConstants.TILE_SPACING) {
-			// top
-			if (odometer.getY() < 3 * PhysicalConstants.TILE_SPACING) {
-
-				if (odometer.getTheta() < 180) {
-
-					// turn right
-					this.turnTo(90);
-					travel(PhysicalConstants.TILE_SPACING);
-					this.turnTo(-90);
-					travel(PhysicalConstants.TILE_SPACING);
-
-				} else {
-					// turn left
-					this.turnTo(-90);
-					travel(PhysicalConstants.TILE_SPACING);
-					this.turnTo(90);
-					travel(PhysicalConstants.TILE_SPACING);
-
-				}
-			}
-			// bottom
-			else {
-
-				if (odometer.getTheta() < 180) {
-
-					// turn left
-					this.turnTo(-90);
-					travel(PhysicalConstants.TILE_SPACING);
-					this.turnTo(90);
-					travel(PhysicalConstants.TILE_SPACING);
-
-				} else {
-					// turn right
-					this.turnTo(90);
-					travel(PhysicalConstants.TILE_SPACING);
-					this.turnTo(-90);
-					travel(PhysicalConstants.TILE_SPACING);
-
-				}
-			}
-		}
-
-		// right side
-		else {
-
-			// top
-			if (odometer.getY() < 3 * PhysicalConstants.TILE_SPACING) {
-
-				if (odometer.getTheta() < 180) {
-
-					// turn right
-					this.turnTo(90);
-					travel(PhysicalConstants.TILE_SPACING);
-					this.turnTo(-90);
-					travel(PhysicalConstants.TILE_SPACING);
-
-				} else {
-					// turn left
-					this.turnTo(-90);
-					travel(PhysicalConstants.TILE_SPACING);
-					this.turnTo(90);
-					travel(PhysicalConstants.TILE_SPACING);
-
-				}
-
-			}
-			// bottom
-			else {
-
-				if (odometer.getTheta() < 180) {
-
-					// turn right
-					this.turnTo(90);
-					travel(PhysicalConstants.TILE_SPACING);
-					this.turnTo(-90);
-					travel(PhysicalConstants.TILE_SPACING);
-
-				} else {
-					// turn left
-					this.turnTo(-90);
-					travel(PhysicalConstants.TILE_SPACING);
-					this.turnTo(90);
-					travel(PhysicalConstants.TILE_SPACING);
-
-				}
-
-			}
-
-		}
-	}
-
-	private void superEasyWallFollow() {
-		turnTo(90);
-		travel(PhysicalConstants.TILE_SPACING);
-		turnTo(-90);
-		travel(PhysicalConstants.TILE_SPACING);
-	}
-
 	private void simplifiedFollowWall() {
 		leftMotor.stop(true);
 		rightMotor.stop(false);
@@ -624,6 +519,7 @@ public class Navigation {
 
 					// travel until we see other side of wall
 					int counter = 0;
+					distToWall = sensors.getSideDist();
 					while (distToWall > 30 && counter < WALL_DECTECTION_COUNTER) {
 
 						distToWall = sensors.getSideDist();
@@ -637,7 +533,7 @@ public class Navigation {
 						}
 
 					}
-					// start the loop again
+					// start the loop again for the other side
 					continue;
 
 				} else {
@@ -658,6 +554,10 @@ public class Navigation {
 				} else {
 					leftMotor.forward();
 					rightMotor.forward();
+					try {
+						Thread.sleep(NAV_SLEEP);
+					} catch (InterruptedException e) {
+					}
 				}
 			}
 
@@ -772,12 +672,12 @@ public class Navigation {
 			double theta = odometer.getTheta();
 			if (theta > 315 || theta < 135) {// moving up/right, make target
 												// point up and right
-				travelTo(xCount + PhysicalConstants.TILE_SPACING - 6, yCount - 6 + PhysicalConstants.TILE_SPACING,
-						false, false);
+				travelTo(xCount + PhysicalConstants.TILE_SPACING, yCount + PhysicalConstants.TILE_SPACING, false,
+						false);
 			} else {
 				// facing down/left, so move target point down/left
-				travelTo(xCount - 6 - PhysicalConstants.TILE_SPACING, yCount - 6 - PhysicalConstants.TILE_SPACING,
-						false, false);
+				travelTo(xCount - PhysicalConstants.TILE_SPACING, yCount - PhysicalConstants.TILE_SPACING, false,
+						false);
 			}
 		}
 		// near corner, run light localizer
@@ -796,11 +696,12 @@ public class Navigation {
 	 *         orientation needed to face x, y
 	 */
 	private double angleDifference(double x, double y) {
-		// makes the robot face a point x,y
+		// gets the difference between the current angle and the angle neeeded
+		// to face a point
 		double xNow = odometer.getX();
 		double yNow = odometer.getY();
 
-		// this function moves the angle to regular cartesian orientation
+		// this function moves the angle to regular Cartesian orientation
 		double thetaNow = 360 - odometer.getTheta() + 90;
 		double theta = Math.toDegrees(Math.atan2(y - yNow, x - xNow));
 

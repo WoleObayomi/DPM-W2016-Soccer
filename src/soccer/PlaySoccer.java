@@ -66,14 +66,20 @@ public class PlaySoccer {
 		int urY = 6;
 		int SC = 2;
 
+		// exit thread to abort at anytime
+
+		Exit primeExit = new Exit();
+		primeExit.start();
+
 		// get the second brick
 		Brick masterBrick = LocalEV3.get();
 		RemoteRequestEV3 slaveBrick = null;
 		TextLCD masterLCD = masterBrick.getTextLCD();
 		masterLCD.drawString("Connecting...", 0, 0);
 		try {
-			slaveBrick = new RemoteRequestEV3(BrickFinder.discover()[0].getIPAddress());
+			slaveBrick = new RemoteRequestEV3("10.0.1.2");
 			masterLCD.drawString("Slave connected", 0, 0);
+			primeExit.addSlaveBrick(slaveBrick);
 
 		} catch (Exception e) {
 			// error message if it can't find the second brick
@@ -88,17 +94,14 @@ public class PlaySoccer {
 			}
 			System.exit(0);
 		}
-
-		// set up objects we need
-		// exit thread
-		Exit exit = new Exit(slaveBrick);
-		exit.start();
-
-		// motors object
-		Motors motors = new Motors(masterBrick, slaveBrick);
+		
 
 		// sensors object
 		final Sensors sensors = new Sensors(masterBrick, slaveBrick);
+	
+
+		// motors object
+		Motors motors = new Motors(masterBrick, slaveBrick);
 
 		// odometer thread
 		Odometer odometer = new Odometer(motors, PhysicalConstants.LEFT_WHEEL_RADIUS,
@@ -118,32 +121,47 @@ public class PlaySoccer {
 
 		// create USLocalization obj and use the method in it
 
-		// Sound.setVolume(85);
-		// Sound.beepSequence();
-
-		// new USLocalization(sensors, odometer, motors.getLeftMotor(),
-		// motors.getRightMotor(), nav).doLocalization();
-
-		// localize with light
-		// new LightLocalizer(odometer, sensors, nav).doLocalization();
-		// Sound.beepSequence();
-		// Sound.setVolume(0);
-
-		// nav.travelTo(0, 0, false);
-		// nav.turnToAbs(0);
+//		Sound.setVolume(85);
+//		Sound.beepSequence();
+//
+//		new USLocalization(sensors, odometer, motors.getLeftMotor(), motors.getRightMotor(), nav).doLocalization();
+//
+//		// localize with light
+//		new LightLocalizer(odometer, sensors, nav).doLocalization();
+//		Sound.beepSequence();
+//		Sound.setVolume(0);
+//
+//		nav.travelTo(0, 0, false, false);
+//		nav.turnToAbs(0);
 
 		
-	
+		odometer.setX(20);
+		odometer.setY(25);
+		odometer.setTheta(45);
+		
+		nav.relocalize();
+		
+		nav.travelTo(2*PhysicalConstants.TILE_SPACING, 2*PhysicalConstants.TILE_SPACING, false, false);
+		nav.turnToAbs(0);
+		System.exit(0);
 		// start odometry correction
 		OdometryCorrection odoCorrection = new OdometryCorrection(odometer, sensors);
 		odoCorrection.start();
-
-		nav.travelTo((0 * PhysicalConstants.TILE_SPACING), (5 * PhysicalConstants.TILE_SPACING), true, true);
-		nav.travelTo((0 * PhysicalConstants.TILE_SPACING), (0 * PhysicalConstants.TILE_SPACING), true, true);
-		nav.turnTo(180);
+		
+		
+		
 
 		// determine which planner to use from eventual wifi connection
 		// and create the appropriate one below
+		nav.travelTo(0, 2*PhysicalConstants.TILE_SPACING, false, false);
+		nav.travelTo(2*PhysicalConstants.TILE_SPACING, 2*PhysicalConstants.TILE_SPACING, false, false);
+		nav.travelTo(2*PhysicalConstants.TILE_SPACING, 0, false, false);
+		nav.travelTo(0, 0, false, false);
+		nav.turnToAbs(0);
+		
+		
+		
+		nav.travelTo(PhysicalConstants.TILE_SPACING, 5*PhysicalConstants.TILE_SPACING, true, true);
 
 	}
 
