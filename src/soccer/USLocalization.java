@@ -28,6 +28,7 @@ public class USLocalization {
 	// constants
 	private final int ROTATE_SPEED = 240;
 	private final int DISTANCE_TO_WALL = 30;
+	private final int INITIAL_DIST = 50;
 	private final int NOISE_MARGIN = 2;
 	private final int REFRESH_RATE = 30;
 	private final int MIN_DIST = 3;
@@ -67,12 +68,12 @@ public class USLocalization {
 		// rotate the robot until it sees no wall
 		float distance = sensors.getSideDist();
 
-		while (distance < DISTANCE_TO_WALL + NOISE_MARGIN) {
+		while (distance < INITIAL_DIST) { //large inital dist to account for sharp corner
 
-			if (distance < MIN_DIST) {
+			/*if (distance < MIN_DIST) {
 				nav.travel(-(CORRECTION_DIST - distance));
 				distance = sensors.getSideDist();
-			}
+			}*/
 
 			// rotate clockwise
 			leftMotor.setSpeed(ROTATE_SPEED);

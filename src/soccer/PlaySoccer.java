@@ -99,8 +99,6 @@ public class PlaySoccer {
 		// motors object
 		Motors motors = new Motors(masterBrick, slaveBrick);
 		primeExit.addMotors(motors);
-		
-		
 
 		// sensors object
 		final Sensors sensors = new Sensors(masterBrick, slaveBrick);
@@ -120,34 +118,42 @@ public class PlaySoccer {
 
 		// launcher
 		LauncherController launcher = new LauncherController(motors);
+		
+		//move the front motor out of the way, clear of the wall
+	//	motors.getUSMotor().rotate(-35);
 
 		// create USLocalization obj and use the method in it
 
-		// Sound.setVolume(85);
-		// Sound.beepSequence();
-		//
-		// new USLocalization(sensors, odometer, motors.getLeftMotor(),
-		// motors.getRightMotor(), nav).doLocalization();
-		//
-		// // localize with light
-		// new LightLocalizer(odometer, sensors, nav).doLocalization();
-		// Sound.beepSequence();
-		// Sound.setVolume(0);
-		//
-		// nav.travelTo(0, 0, false, false);
-		// nav.turnToAbs(0);
+//		Sound.setVolume(85);
+//		Sound.beepSequence();
+//
+//		new USLocalization(sensors, odometer, motors.getLeftMotor(), motors.getRightMotor(), nav).doLocalization();
+//
+//		// localize with light
+//		new LightLocalizer(odometer, sensors, nav).doLocalization();
+//		Sound.beepSequence();
+//		Sound.setVolume(0);
+//
+//		nav.travelTo(0, 0, false, false);
+//		nav.turnToAbs(0);
 
-		nav.travelTo(0, 5*PhysicalConstants.TILE_SPACING, true, false);
-		
-		nav.travelTo(5*PhysicalConstants.TILE_SPACING, 0, true, false);
 		// start odometry correction
 		OdometryCorrection odoCorrection = new OdometryCorrection(odometer, sensors);
 		odoCorrection.start();
 
+		
+		//TESTING CODE HERE
+		nav.travelTo(2*PhysicalConstants.TILE_SPACING, 0, true, false);
+		nav.travelTo(2*PhysicalConstants.TILE_SPACING, 2*PhysicalConstants.TILE_SPACING, true, false);
+		nav.travelTo(0, 2*PhysicalConstants.TILE_SPACING, true, false);
+		nav.travelTo(0, 0, true, false);
+		nav.turnToAbs(0);
+		
+		
 		// determine which planner to use from eventual wifi connection
 		// and create the appropriate one below
 
-		nav.travelTo(PhysicalConstants.TILE_SPACING, 5 * PhysicalConstants.TILE_SPACING, true, true);
+
 
 	}
 

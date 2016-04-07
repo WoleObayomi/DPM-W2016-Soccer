@@ -42,6 +42,7 @@ public class Sensors {
 	private static String ballUSPort = "S2";
 
 	private static final int FILTER_MAX = 3;
+	private static final int FLITER_SLEEP = 10;//ms
 	// static so all instances of Sensors class share the
 	// same variables for each connected sensor
 
@@ -137,6 +138,14 @@ public class Sensors {
 			// could be noise, so increment the counter and try getting a new
 			// value
 			frontUSFilterCount++;
+			
+			//wait to be sure we have a new signal
+			try {
+				Thread.sleep(FLITER_SLEEP);
+			} catch (InterruptedException e) {
+				
+				e.printStackTrace();
+			}
 			return getFrontDist();
 
 		} else {
@@ -166,6 +175,13 @@ public class Sensors {
 			// could be noise, so increment the counter and try getting a new
 			// value
 			sideUSFilterCount++;
+			//wait to be sure we have a new value
+			try {
+				Thread.sleep(FLITER_SLEEP);
+			} catch (InterruptedException e) {
+				
+				e.printStackTrace();
+			}
 			return getSideDist();
 
 		} else {

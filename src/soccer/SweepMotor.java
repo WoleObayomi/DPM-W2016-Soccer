@@ -26,10 +26,10 @@ public class SweepMotor extends Thread {
 
 	// constants
 
-	private final int CORRECTION_PERIOD = 25; // ms
+	private final int CORRECTION_PERIOD = 20; // ms
 	private final int RIGHT_MAX_ANGLE = 14;
-	private final int LEFT_MAX_ANGLE = 30;
-	private final int SPEED = 50;
+	private final int LEFT_MAX_ANGLE = 35;
+	private final int SPEED = 40;
 	private final int ACCELERATION = 2000;
 
 	public SweepMotor(RegulatedMotor usMotor) {
@@ -94,7 +94,7 @@ public class SweepMotor extends Thread {
 				}
 			}
 		}
-		
+
 		usMotor.flt();
 	}
 
@@ -112,6 +112,8 @@ public class SweepMotor extends Thread {
 			sweep = false;
 		}
 	}
+
+
 
 	public void kill() {
 		alive = false;

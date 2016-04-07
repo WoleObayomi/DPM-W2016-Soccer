@@ -35,6 +35,7 @@ public class LightLocalizer {
 	// constants
 	final double STARTING_DIST_FROM_WALL = 4;
 	final int MOTOR_SPEED = 220;
+	private final int MAX_ATTEMPTS = 3;
 	final double DIST_TO_LIGHT = PhysicalConstants.DIST_TO_SIDE_LIGHTSENSOR; // distance
 																				// between
 																				// color
@@ -42,6 +43,9 @@ public class LightLocalizer {
 																				// and
 	// center of
 	// robot
+
+	// first try, ie initial light localization
+	private static boolean first = true;
 
 	/**
 	 * 
@@ -67,8 +71,6 @@ public class LightLocalizer {
 
 		navigation.stop();
 
-
-
 		// set orientation of robot to -45 degrees to make sure it starts in a
 		// good position to detect lines
 		navigation.turnToAbs(-45);
@@ -77,8 +79,8 @@ public class LightLocalizer {
 		ArrayList<Double> angleData = new ArrayList<Double>();
 
 		// make sure the array gets filled with angles
-		int counter =0;
-		while (angleData.size() != 4 && counter<3) {
+		int counter = 0;
+		while ((angleData.size() != 4 && counter < MAX_ATTEMPTS) || (first == true && angleData.size() != 4)) {
 			// have a thread that watches for the gridlines and saves the angle
 			// of
 			// the robot when they are detected to an array
@@ -90,7 +92,13 @@ public class LightLocalizer {
 			navigation.turnTo(360);
 			colourDataGetter.end();
 			counter++;
+
+			if (!(counter < MAX_ATTEMPTS)) {//hit the max number of attempts, have to do something
+				navigation.travel(2); //move a little bit
+				counter = 0;// reset counter
+			}
 		}
+
 		// get angle data that was collected
 		// account for the sensor being to the left of the robot by subtracting
 		// 90 and then
@@ -134,7 +142,8 @@ public class LightLocalizer {
 		double deltaTheta1 = 90 - (thetaYPos - 180) + deltaThetaY / 2;
 
 		// update position
-		odo.setPosition(new double[] { x+odo.getX(), y+odo.getY(), odo.getTheta() + deltaTheta1 + 45 }, new boolean[] { true, true, true });
+		odo.setPosition(new double[] { x + odo.getX(), y + odo.getY(), odo.getTheta() + deltaTheta1 + 45 },
+				new boolean[] { true, true, true });
 
 	}
 

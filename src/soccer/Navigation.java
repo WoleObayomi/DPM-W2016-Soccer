@@ -51,9 +51,10 @@ public class Navigation {
 	private static final int FORWARD_SPEED = 250;
 	private static final int ROTATE_SPEED = 220;
 	private final int ACCELERATION = 1000;
-	private final int DELAY = 100; // ms, delay to wait for other threads to
+	private final int DELAY = 0; // ms, delay to wait for other threads to
 									// notice a change, must be longer than
-									// sweepMotor delay
+									// sweepMotor delay, suspending thread means
+									// this can be zero
 
 	// wall following
 	private final int WALL_DETECTED_RANGE = 17; // cm
@@ -68,6 +69,7 @@ public class Navigation {
 	// additional variables
 	private boolean isNavigating = false;
 	private boolean isTurning = false;
+	SweepMotor USMotorSweep = null;
 
 	// constructor, needs an odometer to read from, needs motors to access
 	/**
@@ -114,13 +116,11 @@ public class Navigation {
 	public void travelTo(double x, double y, boolean wallFollowOn, boolean relocalizeOn) {
 		int relocalizerCounter = 0;
 		isNavigating = true;
-		SweepMotor USMotorSweep = null;
+		USMotorSweep = null;
 		if (wallFollowOn) {
 			USMotorSweep = new SweepMotor(USMotor);
 			USMotorSweep.start();
-
 			// turn on motor sweeping
-
 			USMotorSweep.on();
 		}
 		// get within a circle of radius distError to point we want
@@ -228,9 +228,13 @@ public class Navigation {
 		if (USMotorSweep != null) {
 			USMotorSweep.off();
 			USMotorSweep.kill();
-			USMotorSweep.stop();
 		}
-		USMotor.rotateTo(0);
+
+		try {
+			Thread.sleep(DELAY);
+		} catch (InterruptedException e) {
+
+		}
 		leftMotor.stop(true);
 		rightMotor.stop(false);
 		isNavigating = false;
