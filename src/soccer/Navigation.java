@@ -114,14 +114,15 @@ public class Navigation {
 	public void travelTo(double x, double y, boolean wallFollowOn, boolean relocalizeOn) {
 		int relocalizerCounter = 0;
 		isNavigating = true;
+		SweepMotor USMotorSweep = null;
+		if (wallFollowOn) {
+			USMotorSweep = new SweepMotor(USMotor);
+			USMotorSweep.start();
 
-		SweepMotor USMotorSweep = new SweepMotor(USMotor);
-		USMotorSweep.start();
+			// turn on motor sweeping
 
-		// turn on motor sweeping
-
-		USMotorSweep.on();
-
+			USMotorSweep.on();
+		}
 		// get within a circle of radius distError to point we want
 		while (Math.sqrt(Math.pow(x - odometer.getX(), 2) + Math.pow(y - odometer.getY(), 2)) > distError) {
 
@@ -142,8 +143,10 @@ public class Navigation {
 					leftMotor.stop(true);
 					rightMotor.stop(false);
 					// stop sweeping, suspend thread to stop errors
-					USMotorSweep.off();
-					USMotorSweep.suspend();
+					if (USMotorSweep != null) {
+						USMotorSweep.off();
+						USMotorSweep.suspend();
+					}
 					try {
 						Thread.sleep(DELAY);
 					} catch (InterruptedException e) {
@@ -159,11 +162,11 @@ public class Navigation {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-					// resume sweeping, create new thread
-					
-					USMotorSweep.on();
-					USMotorSweep.resume();
 
+					if (USMotorSweep != null) {// resume sweeping
+						USMotorSweep.on();
+						USMotorSweep.resume();
+					}
 					if (relocalizeOn) {
 						relocalize();
 						relocalizerCounter = 0;
@@ -222,9 +225,11 @@ public class Navigation {
 		leftMotor.setSpeed(0);
 		rightMotor.setSpeed(0);
 
-		USMotorSweep.off();
-		USMotorSweep.kill();
-		USMotorSweep.stop();
+		if (USMotorSweep != null) {
+			USMotorSweep.off();
+			USMotorSweep.kill();
+			USMotorSweep.stop();
+		}
 		USMotor.rotateTo(0);
 		leftMotor.stop(true);
 		rightMotor.stop(false);
