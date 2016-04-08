@@ -80,7 +80,7 @@ public class LightLocalizer {
 
 		// make sure the array gets filled with angles
 		int counter = 0;
-		while ((angleData.size() != 4 && counter < MAX_ATTEMPTS) || (first == true && angleData.size() != 4)) {
+		while (angleData.size() != 4 || (first == true&&angleData.size() != 4)) {
 			// have a thread that watches for the gridlines and saves the angle
 			// of
 			// the robot when they are detected to an array
@@ -93,11 +93,16 @@ public class LightLocalizer {
 			colourDataGetter.end();
 			counter++;
 
-			if (!(counter < MAX_ATTEMPTS)) {//hit the max number of attempts, have to do something
-				navigation.travel(2); //move a little bit
+			if (!(counter < MAX_ATTEMPTS) && !first) {// hit the max number of
+														// attempts, have to do
+														// something, don't do
+														// the first time in the
+														// corner
+				navigation.travel(2); // move a little bit
 				counter = 0;// reset counter
 			}
 		}
+		first = false;
 
 		// get angle data that was collected
 		// account for the sensor being to the left of the robot by subtracting
