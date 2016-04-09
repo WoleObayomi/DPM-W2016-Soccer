@@ -64,68 +64,13 @@ public class BallPickupController {
 	 * navigates to the intersection before the ball platform and begins to slowly approach platform
 	 */
 	public void navigateToPlatform() {
-		/*
-		 * robot should navigate to column/row with the narrower side present
-		 * and then travel along that axis to retrieve the balls
-		 */
-		
-		//figure out orientation of platform | o o o o | or that diagram rotated 90deg
-		String platformOrientation = getPlatformOrientation();
-		
-		switch(platformOrientation) {
-			
-		case "horizontal":
-			//TODO check if obstacle is at this coordinate and react accordingly
-			//try to detect platform edge
-			//use front facing sensor to determine where ball is and adjust position to match
-			navigation.travelTo(0, llY, true, false);
-			navigation.travelTo(llX - 1, llY, true, false); //intersection before where the platform is
-			
-			while(!closeEnoughToBall()) {
-				slowlyApproachPlatform();
-			}
-			pickBall();
-		break;
-		
-		case "vertical":
-			//TODO check if obstacle is at this coordinate and react accordingly
-			//try to detect platform edge
-			//use front facing sensor to determine where ball is and adjust position to match
-			navigation.travelTo(llX, 0, true, false);
-			navigation.travelTo(llX, llY - 1, true, false); //intersection before where the platform is
-			
-			while(!closeEnoughToBall()) {
-				slowlyApproachPlatform();
-			}
-			pickBall();
-		break;
-		
-		default:
-			//do something
-		break;
-		}
+		//navigate to lower left corner of tile where the ball platform is placed
+		navigation.travelTo(llX, llY, true, false);
+		//orient robot so that ball platform is in its field of view
+		navigation.turnTo(90);
 	}
 	
-	/**
-	 * 
-	 * @return String
-	 * 
-	 *<p>
-	 *Returns the orientation of the ball platform relative to the grid
-	 */
-	private String getPlatformOrientation() {
-		
-		if(Math.abs(this.llX - this.urX) == 1) {
-			return "horizontal";
-		}
-		else if(Math.abs(this.llY - this.urY) == 1) {
-			return "vertical";
-		}
-		else {
-			return "undetermined";
-		}
-		
-	} 
+	
 	/**
 	 * 
 	 * @return true when measured distance to ball is less than or equal to
