@@ -121,19 +121,19 @@ public class PlaySoccer {
 		// Sound.setVolume(85);
 		// Sound.beepSequence();
 
-		// new USLocalization(sensors, odometer, motors.getLeftMotor(),
-		// motors.getRightMotor(), nav).doLocalization();
+		new USLocalization(sensors, odometer, motors.getLeftMotor(),
+		motors.getRightMotor(), nav).doLocalization();
 
 		// localize with light
-		// new LightLocalizer(odometer, sensors, nav).doLocalization();
+		 new LightLocalizer(odometer, sensors, nav).doLocalization();
 		// Sound.beepSequence();
 		// Sound.setVolume(0);
 
-		// nav.travelTo(0, 0, false);
-		// nav.turnToAbs(0);
+		 nav.travelTo(0, 0, false, false);
+		 nav.turnToAbs(0);
 
 		
-	
+	/* Real code to uncomment after testing front us
 		// start odometry correction
 		OdometryCorrection odoCorrection = new OdometryCorrection(odometer, sensors);
 		odoCorrection.start();
@@ -144,7 +144,12 @@ public class PlaySoccer {
 
 		// determine which planner to use from eventual wifi connection
 		// and create the appropriate one below
-
+	*/
+		DataLogger dl = new DataLogger("no_platform.csv", FrontUSTest.getData);
+		FrontUSTest test = new FrontUSTest(dl, sensors, nav);
+		dl.start();
+		test.travelToTile(2, 2);
+		dl.setLoggerState(false);
 	}
 
 	private void connectToWifi() {
