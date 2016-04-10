@@ -6,7 +6,7 @@
  * 
  * Description: This thread takes a motor in its constructor and sweeps it back and forth 
  * at a constant speed within a certain range of angles. Sweeping can be temporarily
- * turned off or on using the off and on methods
+ * turned off or on using the off and on methods. Thread can be ended by the kill method
  * 
  * Edit History:
  * 

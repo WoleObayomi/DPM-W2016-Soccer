@@ -26,7 +26,7 @@ import lejos.hardware.Sound;
 public class ColourDataGetter extends Thread {
 
 	private ArrayList<Double> angleData;
-	private final int CORRECTION_PERIOD = 50;
+	private final int CORRECTION_PERIOD = 20;
 	private final int LONG_SLEEP = 200;
 	private boolean on = true;
 	private Odometer odometer;

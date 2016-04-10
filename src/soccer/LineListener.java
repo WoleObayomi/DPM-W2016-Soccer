@@ -34,6 +34,7 @@ public class LineListener extends Thread {
 	private boolean lineDetected;
 	private float[] pointData;
 	private boolean on = true;
+	private Object lock;
 
 	// pass a colour sensor sampleProvider to the constructor
 	/**
@@ -46,7 +47,7 @@ public class LineListener extends Thread {
 		colourData = new float[colourSensor.sampleSize()];
 		lineDetected = false;
 		pointData = new float[3];
-
+		lock = new Object();
 	}
 
 	@Override
@@ -64,8 +65,9 @@ public class LineListener extends Thread {
 			correctionStart = System.currentTimeMillis();
 
 			if (detectLine()) {
-
-				lineDetected = true;
+				synchronized (lock) {
+					lineDetected = true;
+				}
 				try {
 					Thread.sleep(50);
 				} catch (InterruptedException e) {
@@ -90,11 +92,13 @@ public class LineListener extends Thread {
 	/**
 	 * 
 	 * @return
-	 * 		<p>
+	 *         <p>
 	 *         returns true if a line is detected
 	 */
 	public boolean lineDetected() {
-		return lineDetected;
+		synchronized (lock) {
+			return lineDetected;
+		}
 	}
 
 	/**
@@ -133,7 +137,7 @@ public class LineListener extends Thread {
 	/**
 	 * 
 	 * @return
-	 * 		<p>
+	 *         <p>
 	 *         check for dropping values during line detection
 	 */
 	private boolean detectLine() {
@@ -160,24 +164,24 @@ public class LineListener extends Thread {
 
 		// take the slope (linear derivative)
 
-//		float d1 = pointData[1] - pointData[0];
-//		float d2 = pointData[2] - pointData[1];
-//
-//		// debug
-//		LCD.drawString("d1 " + d1, 0, 4);
-//		LCD.drawString("d2 " + d2, 0, 5);
-//
-//		// compare magnitudes of slope, if d2 is significantly bigger than
-//		// d1, we are dropping rapidly, so hopefully seeing a line
-//
-//		if (d2 - d1 < -THRESHOLD) {
-//			Sound.setVolume(85);
-//			Sound.beep();
-//			Sound.setVolume(0);
-//			return true;
-//		} else {
-//			return false;
-//		}
+		// float d1 = pointData[1] - pointData[0];
+		// float d2 = pointData[2] - pointData[1];
+		//
+		// // debug
+		// LCD.drawString("d1 " + d1, 0, 4);
+		// LCD.drawString("d2 " + d2, 0, 5);
+		//
+		// // compare magnitudes of slope, if d2 is significantly bigger than
+		// // d1, we are dropping rapidly, so hopefully seeing a line
+		//
+		// if (d2 - d1 < -THRESHOLD) {
+		// Sound.setVolume(85);
+		// Sound.beep();
+		// Sound.setVolume(0);
+		// return true;
+		// } else {
+		// return false;
+		// }
 
 	}
 
