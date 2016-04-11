@@ -63,12 +63,6 @@ public class PlaySoccer {
 
 	public static void main(String[] args) {
 
-		int llX = 6;
-		int llY = 5;
-		int urX = 7;
-		int urY = 6;
-		int SC = 2;
-
 		// exit thread to abort at anytime
 
 		Exit primeExit = new Exit();
@@ -100,8 +94,8 @@ public class PlaySoccer {
 
 		// connect to wifi
 
-//		connectToWifi();
-//		printParameters();
+		// connectToWifi();
+		// printParameters();
 
 		// motors object
 		Motors motors = new Motors(masterBrick, slaveBrick);
@@ -125,14 +119,24 @@ public class PlaySoccer {
 
 		// launcher
 		LauncherController launcher = new LauncherController(motors);
-		
-		//calibration spins
-		//nav.turnTo(360);
-		//nav.turnToAbs(360);
 
+		// calibration spins
+		// nav.turnTo(90);
+		// nav.turnTo(90);
+		// nav.turnTo(90);
+		// nav.turnTo(90);
+		// Button.waitForAnyPress();
+		//
+		// nav.turnTo(-90);
+		// nav.turnTo(-90);
+		// nav.turnTo(-90);
+		// nav.turnTo(-90);
+		//
+		// Button.waitForAnyPress();
 
-		// move the front motor out of the way, clear of the wall
-		motors.getUSMotor().rotate(-35);
+		// move the front motor out of the way, clear of the wall, and set up
+		// for US localization
+		motors.getUSMotor().rotate(90);
 
 		// create USLocalization obj and use the method in it
 
@@ -143,35 +147,21 @@ public class PlaySoccer {
 
 		// localize with light
 		new LightLocalizer(odometer, sensors, nav).doLocalization();
-		Sound.beepSequence();
+		Sound.beepSequenceUp();
 		Sound.setVolume(0);
 		nav.travelTo(0, 0, false, false);
 		nav.turnToAbs(0);
+		Sound.beepSequence();
+		Sound.beepSequence();
 		
 		Button.waitForAnyPress();
-
-
-	/* Real code to uncomment after testing front us
->>>>>>> ballpickup
-		// start odometry correction
-		OdometryCorrection odoCorrection = new OdometryCorrection(odometer, sensors);
-		odoCorrection.start();
-
-		// TESTING CODE HERE
-		nav.travelTo(2 * PhysicalConstants.TILE_SPACING, 0, true, false);
-		nav.travelTo(2 * PhysicalConstants.TILE_SPACING, 2 * PhysicalConstants.TILE_SPACING, true, false);
-		nav.travelTo(0, 2 * PhysicalConstants.TILE_SPACING, true, false);
-		nav.travelTo(0, 0, true, false);
+		
+		nav.travelTo(5*PhysicalConstants.TILE_SPACING, 0, true, false);
+		nav.travelTo(5*PhysicalConstants.TILE_SPACING+.75*PhysicalConstants.TILE_SPACING, .75*PhysicalConstants.TILE_SPACING, false, false);
+		nav.relocalize();
+		nav.travelTo(6*PhysicalConstants.TILE_SPACING, 1*PhysicalConstants.TILE_SPACING, true, false);
 		nav.turnToAbs(0);
 
-		// determine which planner to use from eventual wifi connection
-		// and create the appropriate one below
-	*/
-		DataLogger dl = new DataLogger("no_platform.csv", FrontUSTest.getData);
-		FrontUSTest test = new FrontUSTest(dl, sensors, nav);
-		dl.start();
-		test.travelToTile(2, 2);
-		dl.setLoggerState(false);
 	}
 
 	private static void connectToWifi() {

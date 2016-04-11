@@ -12,6 +12,8 @@
  * March 13 - Peter: Modified for use with final robot
  * 
  * March 29 - Peter: Tweaked values to improve performance
+ * 
+ * Apr 10 - Peter: Tweaked to improve performance with other modified parts of robot/code
  */
 
 package soccer;
@@ -27,8 +29,9 @@ public class USLocalization {
 
 	// constants
 	private final int ROTATE_SPEED = 240;
-	private final int DISTANCE_TO_WALL = 30;
+	private final int DISTANCE_TO_WALL = 20;
 	private final int INITIAL_DIST = 50;
+	private final int DELAY_BETWEEN_WALLS = 2000; //ms
 	private final int NOISE_MARGIN = 2;
 	private final int REFRESH_RATE = 30;
 	private final int MIN_DIST = 3;
@@ -66,14 +69,15 @@ public class USLocalization {
 		double angleA = 0, angleB = 0;
 
 		// rotate the robot until it sees no wall
-		float distance = sensors.getSideDist();
+		float distance = sensors.getFrontDist();
 
-		while (distance < INITIAL_DIST) { //large inital dist to account for sharp corner
+		while (distance < INITIAL_DIST) { // large inital dist to account for
+											// sharp corner
 
-			/*if (distance < MIN_DIST) {
-				nav.travel(-(CORRECTION_DIST - distance));
-				distance = sensors.getSideDist();
-			}*/
+			/*
+			 * if (distance < MIN_DIST) { nav.travel(-(CORRECTION_DIST -
+			 * distance)); distance = sensors.getSideDist(); }
+			 */
 
 			// rotate clockwise
 			leftMotor.setSpeed(ROTATE_SPEED);
@@ -88,7 +92,7 @@ public class USLocalization {
 				e.printStackTrace();
 			}
 			// get US data to check for no wall
-			distance = sensors.getSideDist();
+			distance = sensors.getFrontDist();
 
 		}
 		// keep rotating until the robot sees a wall, then latch the first
@@ -110,7 +114,7 @@ public class USLocalization {
 			}
 
 			// get US data to check for a wall
-			distance = sensors.getSideDist();
+			distance = sensors.getFrontDist();
 
 			// check for noise margin, if we are in it we loop until we are
 			// below it
@@ -123,7 +127,7 @@ public class USLocalization {
 					} catch (Exception e) {
 
 					}
-					distance = sensors.getSideDist();
+					distance = sensors.getFrontDist();
 
 				} while (distance > DISTANCE_TO_WALL - NOISE_MARGIN);
 				// save angle we exit the noise margin at
@@ -134,7 +138,7 @@ public class USLocalization {
 
 				// take the average of the angle we entered and exited the
 				// noise margin at to save angle we saw the wall
-				angleA = (marginEnterAngle + marginExitAngle) / 2 - 90 ;
+				angleA = (marginEnterAngle + marginExitAngle) / 2 + 90;
 
 				// break out of the parent loop
 				break;
@@ -149,12 +153,12 @@ public class USLocalization {
 
 		// give some delay before looking for checking for the wall again
 		try {
-			Thread.sleep(1000);
+			Thread.sleep(DELAY_BETWEEN_WALLS);
 		} catch (InterruptedException e1) {
 			e1.printStackTrace();
 		}
 
-		distance = sensors.getSideDist();
+		distance = sensors.getFrontDist();
 		// switch direction and wait until it sees a wall
 		while (distance > DISTANCE_TO_WALL) {
 
@@ -172,7 +176,7 @@ public class USLocalization {
 			}
 
 			// get US data to check for a wall
-			distance = sensors.getSideDist();
+			distance = sensors.getFrontDist();
 
 			// check for noise margin, if we are in it we loop until we are
 			// below it
@@ -185,7 +189,7 @@ public class USLocalization {
 					} catch (Exception e) {
 
 					}
-					distance = sensors.getSideDist();
+					distance = sensors.getFrontDist();
 
 				} while (distance > DISTANCE_TO_WALL - NOISE_MARGIN);
 				// save angle we exit the noise margin at
@@ -196,7 +200,7 @@ public class USLocalization {
 
 				// take the average of the angle we entered and exited the
 				// noise margin at to save angle we saw the wall
-				angleB = (marginEnterAngle + marginExitAngle) / 2-90;
+				angleB = (marginEnterAngle + marginExitAngle) / 2 + 90;
 
 				// break out of the parent loop
 				break;
