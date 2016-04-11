@@ -19,6 +19,8 @@
 */
 package soccer;
 
+import com.sun.accessibility.internal.resources.accessibility;
+
 import lejos.hardware.Sound;
 import lejos.hardware.motor.EV3LargeRegulatedMotor;
 import lejos.robotics.RegulatedMotor;
@@ -50,7 +52,8 @@ public class Navigation {
 	private final int RELOCALIZE_COUNTER_MAX = RELOCALAIZE_DELAY / NAV_SLEEP;
 	private static final int FORWARD_SPEED = 250;
 	private static final int ROTATE_SPEED = 220;
-	private final int ACCELERATION = 1000;
+	private final int ROTATE_LEFT_OFFSET = 5;
+	private final int ACCELERATION = 250;
 	private final int DELAY = 0; // ms, delay to wait for other threads to
 									// notice a change, must be longer than
 									// sweepMotor delay, suspending thread means
@@ -100,7 +103,7 @@ public class Navigation {
 	}
 
 	// takes x and y of its destination and turns and drives to it, allows
-	// wallfollowing to be on or off
+	// wallfollowing to be on or off, relocalization can be turned on or off
 	/**
 	 * 
 	 * @param x
@@ -252,8 +255,8 @@ public class Navigation {
 		leftMotor.stop(true);
 		rightMotor.stop(false);
 
-		leftMotor.setAcceleration(1000);
-		rightMotor.setAcceleration(1000);
+		leftMotor.setAcceleration(ACCELERATION);
+		rightMotor.setAcceleration(ACCELERATION);
 		leftMotor.setSpeed(ROTATE_SPEED);
 		rightMotor.setSpeed(ROTATE_SPEED);
 

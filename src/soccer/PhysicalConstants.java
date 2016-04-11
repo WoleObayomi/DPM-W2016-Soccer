@@ -15,7 +15,7 @@ public class PhysicalConstants {
 	// wheel and track dimensions
 	public static final double LEFT_WHEEL_RADIUS = 2.145; // cm
 	public static final double RIGHT_WHEEL_RADIUS = 2.155; // cm
-	public static final double TRACK_WIDTH = 20; // cm, overturning -->
+	public static final double TRACK_WIDTH = 19.75; // cm, overturning -->
 													// decrease, underturning
 													// --> increase
 
