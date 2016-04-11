@@ -121,21 +121,29 @@ public class PlaySoccer {
 		LauncherController launcher = new LauncherController(motors);
 
 		// calibration spins
-		// nav.turnTo(90);
-		// nav.turnTo(90);
-		// nav.turnTo(90);
-		// nav.turnTo(90);
-		// Button.waitForAnyPress();
-		//
-		// nav.turnTo(-90);
-		// nav.turnTo(-90);
-		// nav.turnTo(-90);
-		// nav.turnTo(-90);
-		//
-		// Button.waitForAnyPress();
+//		 nav.turnTo(90);
+//		 nav.turnTo(90);
+//		 nav.turnTo(90);
+//		 nav.turnTo(90);
+//		 Button.waitForAnyPress();
+//		
+//		 nav.turnTo(-90);
+//		 nav.turnTo(-90);
+//		 nav.turnTo(-90);
+//		 nav.turnTo(-90);
+//		
+//		 Button.waitForAnyPress();
 
 		// move the front motor out of the way, clear of the wall, and set up
 		// for US localization
+		
+		//new OdometryCorrection(odometer, sensors).start();
+		nav.movePastX(5*PhysicalConstants.TILE_SPACING, true, false);
+		nav.movePastY(5*PhysicalConstants.TILE_SPACING, true, false);
+
+	}
+	
+	private static void localize(Motors motors, Navigation nav, Odometer odometer, Sensors sensors){
 		motors.getUSMotor().rotate(90);
 
 		// create USLocalization obj and use the method in it
@@ -151,17 +159,6 @@ public class PlaySoccer {
 		Sound.setVolume(0);
 		nav.travelTo(0, 0, false, false);
 		nav.turnToAbs(0);
-		Sound.beepSequence();
-		Sound.beepSequence();
-		
-		Button.waitForAnyPress();
-		
-		nav.travelTo(5*PhysicalConstants.TILE_SPACING, 0, true, false);
-		nav.travelTo(5*PhysicalConstants.TILE_SPACING+.75*PhysicalConstants.TILE_SPACING, .75*PhysicalConstants.TILE_SPACING, false, false);
-		nav.relocalize();
-		nav.travelTo(6*PhysicalConstants.TILE_SPACING, 1*PhysicalConstants.TILE_SPACING, true, false);
-		nav.turnToAbs(0);
-
 	}
 
 	private static void connectToWifi() {

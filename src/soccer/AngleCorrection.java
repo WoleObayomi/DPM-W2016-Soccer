@@ -22,7 +22,7 @@ public class AngleCorrection extends Thread {
 
 	private final int CORRECTION_PERIOD = 10; // ms
 	private final double SENSOR_SEP = PhysicalConstants.DIST_TO_SIDE_LIGHTSENSOR;
-	private final int WAIT_LIMIT = 100;
+	private final int WAIT_LIMIT = 1000;
 
 	private LineListener centerLine;
 	private LineListener sideLine;

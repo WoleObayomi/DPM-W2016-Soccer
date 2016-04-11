@@ -29,7 +29,7 @@ public class SweepMotor extends Thread {
 	private final int CORRECTION_PERIOD = 20; // ms
 	private final int RIGHT_MAX_ANGLE = 14;
 	private final int LEFT_MAX_ANGLE = 35;
-	private final int SPEED = 40;
+	private final int SPEED = 50;
 	private final int ACCELERATION = 2000;
 
 	public SweepMotor(RegulatedMotor usMotor) {
@@ -42,6 +42,7 @@ public class SweepMotor extends Thread {
 	@Override
 	public void run() {
 		long correctionEnd, correctionStart;
+
 		while (Exit.alive() && alive) {
 
 			correctionStart = System.currentTimeMillis();
@@ -113,9 +114,10 @@ public class SweepMotor extends Thread {
 		}
 	}
 
-
-
 	public void kill() {
+
 		alive = false;
+
 	}
+
 }

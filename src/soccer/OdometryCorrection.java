@@ -21,7 +21,6 @@ import lejos.hardware.Sound;
 //NOTE: this class can use quite a bit of cleaning up if we have time. 
 //	1. Implement code so it this works even if the DIST_TO_SENSOR is not 0
 
-
 /**
  * 
  * @author Peter Quinn
@@ -44,7 +43,7 @@ public class OdometryCorrection extends Thread {
 
 	// distance the sensor is in front of the center of the axle
 	// we moved this to zero after doing the code
-	private final double DIST_TO_SENSOR = 0;
+	private final double DIST_TO_SENSOR = 0;// cm
 
 	// constructor
 	/**
@@ -66,11 +65,14 @@ public class OdometryCorrection extends Thread {
 		// get current x and y according to odometer (of center of bot)
 		double x = odometer.getX();
 		double y = odometer.getY();
+		double thetaNow = 360 - odometer.getTheta() + 90;
+		if (thetaNow >= 360)
+			thetaNow -= 360;
 
 		// add the distance from the odometer to the sensor to find the location
 		// of the sensor
-		x = x + DIST_TO_SENSOR;
-		y = y + DIST_TO_SENSOR;
+		x = x - DIST_TO_SENSOR * Math.cos(Math.toRadians(thetaNow));
+		y = y - DIST_TO_SENSOR * Math.sin(Math.toRadians(thetaNow));
 
 		// subtract by gridline spacing distance of 30. Stop when we find we are
 		// close to a line or we have dropped too far to find a line
@@ -101,14 +103,14 @@ public class OdometryCorrection extends Thread {
 			// close to x line, set x in the odometer to the
 			// correct value of the grid line (minus the distance the sensor is
 			// ahead)
-			odometer.setX(GRID_SPACING * xCount - DIST_TO_SENSOR);
+			odometer.setX(GRID_SPACING * xCount + DIST_TO_SENSOR * Math.cos(Math.toRadians(thetaNow)));
 
 		} else if (Math.abs(y) < ERROR_THRESHOLD) {
 
 			// close to y line, set y in the odometer to the
 			// correct value of the grid line (minus the distance the sensor is
 			// ahead)
-			odometer.setY(GRID_SPACING * yCount - DIST_TO_SENSOR);
+			odometer.setY(GRID_SPACING * yCount + DIST_TO_SENSOR * Math.sin(Math.toRadians(thetaNow)));
 
 		} else {
 			// fix nothing if we are not close to anything
@@ -121,25 +123,23 @@ public class OdometryCorrection extends Thread {
 	 * 
 	 */
 	public void run() {
-		
-		lineListener = new LineListener(sensors.getCenterLSSampleProvider());	
+
+		lineListener = new LineListener(sensors.getCenterLSSampleProvider());
 		lineListener.start();
-		
-		while (true){
-			
-		long correctionEnd,correctionStart;
-		correctionStart = System.currentTimeMillis();
-		
+
+		while (true) {
+
+			long correctionEnd, correctionStart;
+			correctionStart = System.currentTimeMillis();
+
 			if (lineListener.lineDetected()) {
 				// execute correction method
 				snapToNearestGridLine();
-				
-				//reset the lineListener
-				lineListener.reset();
-				
-				
-			}
 
+				// reset the lineListener
+				lineListener.reset();
+
+			}
 
 			// this ensure the odometry correction occurs only once every period
 			correctionEnd = System.currentTimeMillis();
