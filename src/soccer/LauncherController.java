@@ -33,7 +33,7 @@ public class LauncherController {
 	private double ballDiameter;
 
 	// launcher speeds and accelerations
-	private final int FIRING_SPEED = 250;
+	private final int FIRING_SPEED = 600;
 	private final int LAUNCHER_ACCELERATION = 2000;
 	private final int INTAKE_SPEED = 90;
 	private final int REJECT_SPEED = 90;
@@ -42,7 +42,7 @@ public class LauncherController {
 											// amount (degrees)
 	private final int SPINUP_DELAY = 500; // time allowed for motors to speed up
 
-	private final int FIRE_ANGLE = 10; // angle to aim the ball basket at
+	private final int FIRE_ANGLE = 15; // angle to aim the ball basket at
 	private final int ANGLE_SPEED = 50;
 
 	private final int NUDGE_SPEED = 250;

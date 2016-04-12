@@ -14,6 +14,7 @@ public class PlannerOffense {
 	private int BC;
 	private int[] ballZone;
 	private int attackLine;
+	private LauncherController launcher;
 
 	private int xTileMax = 11;
 	private int yTileMax = 11;
@@ -34,6 +35,7 @@ public class PlannerOffense {
 		this.BC = BC;
 		this.ballZone = ballZone; // {llX,llY,urX,urY}
 		this.attackLine = attackLine;
+		this.launcher = launcher;
 	}
 
 	// have the robot execute its offense procedure
@@ -43,19 +45,24 @@ public class PlannerOffense {
 		double attackLineY = attackLine * PhysicalConstants.TILE_SPACING;
 		if (odometer.getY() > attackLineY) {// above attacker line, move down
 											// and past
-			nav.movePastY(attackLineY, true, true);
+			nav.movePastY(attackLineY, true, false);
 
 		} else {// start below zone, move up to just before the line
-			nav.movePastY(attackLineY - PhysicalConstants.TILE_SPACING, true, true);
+			nav.movePastY(attackLineY - PhysicalConstants.TILE_SPACING, true, false);
 		}
 
-		// move to middle of atttack zone
+		// move to middle of attack zone
 		double centerX = xTileMax / 2 * PhysicalConstants.TILE_SPACING;
-		nav.travelTo(centerX, attackLineY - PhysicalConstants.TILE_SPACING / 2, true, true);
+		double centerY = attackLineY - PhysicalConstants.TILE_SPACING / 2;
+		nav.travelTo(centerX, centerY, true, false);
 
 		//go get balls
 		
+		
+		
 		//shoot on net
+		
+		new AttackNet(launcher, nav, centerX, centerY, sensors, motors, odometer);
 	}
 
 }

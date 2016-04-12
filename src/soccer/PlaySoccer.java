@@ -46,7 +46,7 @@ public class PlaySoccer {
 
 	// Data for/from wifi class
 	private static int teamNumber = 9;
-	private static String serverAddress = "192.168.10.122";
+	private static String serverAddress = "192.168.10.200";
 
 	private static int topCornerX = 10;// tiles
 	private static int topCornerY = 10;// tiles
@@ -94,9 +94,8 @@ public class PlaySoccer {
 
 		// connect to wifi
 
-		// connectToWifi();
-		// printParameters();
-
+		connectToWifi();
+		
 		// motors object
 		Motors motors = new Motors(masterBrick, slaveBrick);
 		primeExit.addMotors(motors);
@@ -121,18 +120,18 @@ public class PlaySoccer {
 		LauncherController launcher = new LauncherController(motors);
 
 		// calibration spins
-		// nav.turnTo(90);
-		// nav.turnTo(90);
-		// nav.turnTo(90);
-		// nav.turnTo(90);
-		// Button.waitForAnyPress();
-		//
-		// nav.turnTo(-90);
-		// nav.turnTo(-90);
-		// nav.turnTo(-90);
-		// nav.turnTo(-90);
-		//
-		// Button.waitForAnyPress();
+//		 nav.turnTo(90);
+//		 nav.turnTo(90);
+//		 nav.turnTo(90);
+//		 nav.turnTo(90);
+//		 Button.waitForAnyPress();
+//		
+//		 nav.turnTo(-90);
+//		 nav.turnTo(-90);
+//		 nav.turnTo(-90);
+//		 nav.turnTo(-90);
+//		
+//		 Button.waitForAnyPress();
 
 		// move the front motor out of the way, clear of the wall, and set up
 		// for US localization
@@ -152,15 +151,19 @@ public class PlaySoccer {
 		nav.travelTo(0, 0, false, false);
 		nav.turnToAbs(0);
 		Sound.beepSequence();
-		Sound.beepSequence();
+
+	
 		
-		Button.waitForAnyPress();
 		
-		nav.travelTo(5*PhysicalConstants.TILE_SPACING, 0, true, false);
-		nav.travelTo(5*PhysicalConstants.TILE_SPACING+.75*PhysicalConstants.TILE_SPACING, .75*PhysicalConstants.TILE_SPACING, false, false);
-		nav.relocalize();
-		nav.travelTo(6*PhysicalConstants.TILE_SPACING, 1*PhysicalConstants.TILE_SPACING, true, false);
-		nav.turnToAbs(0);
+		if (OTN == teamNumber) {
+			applyStartingCorner(OSC, odometer);
+			new PlannerOffense(odometer, nav, sensors, motors, d2, BC, new int[] { llX, llY, urX, urY }).run();
+
+		} else {
+			applyStartingCorner(DSC, odometer);
+			new PlannerDefense(nav, d1, w1, odometer, motors).run();
+
+		}
 
 	}
 
@@ -201,7 +204,7 @@ public class PlaySoccer {
 		LCD.drawString("d1: " + d1 + "   d2: " + d2, 0, 2);
 		LCD.drawString("ll-x: " + llX + "  ll-y: " + llY, 0, 3);
 		LCD.drawString("ur-x: " + urX + "  ur-y: " + urY, 0, 4);
-		LCD.drawString("Role: " + role, 0, 5);
+	
 	}
 
 	/**

@@ -52,18 +52,16 @@ public class Navigation {
 	private final int RELOCALIZE_COUNTER_MAX = RELOCALAIZE_DELAY / NAV_SLEEP;
 	private static final int FORWARD_SPEED = 250;
 	private static final int ROTATE_SPEED = 220;
-	private final int ROTATE_LEFT_OFFSET = 5;
 	private final int ACCELERATION = 250;
-	private final int DELAY = 0; // ms, delay to wait for other threads to
+	private final int DELAY = 75; // ms, delay to wait for other threads to
 									// notice a change, must be longer than
-									// sweepMotor delay, suspending thread means
-									// this can be zero
+									// sweepMotor delay
 
 	// wall following
 	private final int WALL_DETECTED_RANGE = 17; // cm
 	private final int WALL_FOLLOW_EXIT_ANGLE = 10;
-	private final int WALL_TRAVEL_PAST_MARGIN_LEFT = 10;
-	private final int WALL_TRAVEL_PAST_MARGIN_RIGHT = 15;
+	private final int WALL_TRAVEL_PAST_MARGIN_LEFT = 15;
+	private final int WALL_TRAVEL_PAST_MARGIN_RIGHT = 20;
 	private final int WALL_DECTECTION_DELAY = 3000;// ms
 	private final int WALL_DECTECTION_COUNTER = WALL_DECTECTION_DELAY / NAV_SLEEP;
 	private final int TOO_CLOSE = 5;

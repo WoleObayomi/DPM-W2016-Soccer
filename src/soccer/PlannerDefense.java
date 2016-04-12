@@ -54,9 +54,9 @@ public class PlannerDefense {
 		double defenseLineY = (yTileMax - defenseLine) * PhysicalConstants.TILE_SPACING;
 
 		if (odometer.getY() < defenseLineY) {
-			nav.movePastY(defenseLineY, true, true);
+			nav.movePastY(defenseLineY, true, false);
 		} else {// start above zone, move down just above line
-			nav.movePastY(defenseLineY + PhysicalConstants.TILE_SPACING, true, true);
+			nav.movePastY(defenseLineY + PhysicalConstants.TILE_SPACING, true, false);
 		}
 
 		// travel to the middle in front of the net
@@ -66,10 +66,9 @@ public class PlannerDefense {
 
 		double goalWidth = goalSize * PhysicalConstants.TILE_SPACING;
 		
-		//kill US sensors?
 		
 
-		// move back in forth in front of goal
+		// move back and forth in front of goal
 		boolean left = true;
 		leftMotor.setSpeed(SPEED);
 		rightMotor.setSpeed(SPEED);
