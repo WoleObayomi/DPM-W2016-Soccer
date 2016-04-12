@@ -42,6 +42,7 @@ public class SweepMotor extends Thread {
 	@Override
 	public void run() {
 		long correctionEnd, correctionStart;
+
 		while (Exit.alive() && alive) {
 
 			correctionStart = System.currentTimeMillis();
@@ -113,9 +114,10 @@ public class SweepMotor extends Thread {
 		}
 	}
 
-
-
 	public void kill() {
+
 		alive = false;
+
 	}
+
 }

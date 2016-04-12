@@ -52,8 +52,14 @@ public class Navigation {
 	private final int RELOCALIZE_COUNTER_MAX = RELOCALAIZE_DELAY / NAV_SLEEP;
 	private static final int FORWARD_SPEED = 250;
 	private static final int ROTATE_SPEED = 220;
+
 	private final int ACCELERATION = 250;
 	private final int DELAY = 75; // ms, delay to wait for other threads to
+
+	private final int ROTATE_LEFT_OFFSET = 5;
+	private final int ACCELERATION = 350;
+	private final int DELAY = 0; // ms, delay to wait for other threads to
+
 									// notice a change, must be longer than
 									// sweepMotor delay
 
@@ -146,14 +152,15 @@ public class Navigation {
 					// stop sweeping, suspend thread to stop errors
 					if (USMotorSweep != null) {
 						USMotorSweep.off();
+						try {
+							Thread.sleep(DELAY);
+						} catch (InterruptedException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
 						USMotorSweep.suspend();
 					}
-					try {
-						Thread.sleep(DELAY);
-					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
+
 					// analyze the wall and our position and avoid it on the
 					// side with the most room
 					analyzeWall();
@@ -192,7 +199,7 @@ public class Navigation {
 
 			// find min turn
 
-			if (Math.abs(thetaNow - theta) > thetaTolerance && Math.abs(y - yNow) > .1) {
+			if (Math.abs(thetaNow - theta) > thetaTolerance && Math.abs(y - yNow) > .5) {
 				// find and turn the min angle
 				if (thetaNow - theta < -180) {
 					turnTo(thetaNow - theta + 360);
@@ -334,10 +341,19 @@ public class Navigation {
 
 	public void movePastX(double x, boolean wallFollowOn, boolean relocalize) {
 
-		boolean above = odometer.getX() > x;
 		int relocalizerCounter = 0;
 
-		if (above) {
+		// to the right of the line
+		if (odometer.getX() > x) {
+
+			USMotorSweep = null;
+			if (wallFollowOn) {
+				USMotorSweep = new SweepMotor(USMotor);
+				USMotorSweep.start();
+				// turn on motor sweeping
+				USMotorSweep.on();
+			}
+
 			// go straight left until past line
 			while (odometer.getX() > x) {
 				// check if we need to relocalize
@@ -351,7 +367,28 @@ public class Navigation {
 				// check for a wall in front if wallfollowing is on
 				if (wallFollowOn) {
 					if (sensors.getFrontDist() < WALL_DETECTED_RANGE) {
-						analyzeWall();
+						if (USMotorSweep != null) {
+							USMotorSweep.off();
+							try {
+								Thread.sleep(DELAY);
+							} catch (InterruptedException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+							USMotorSweep.suspend();
+						}
+						analyzeWall();// analyze and avoid wall
+
+						if (USMotorSweep != null) {// resume sweeping
+							USMotorSweep.on();
+							try {
+								Thread.sleep(DELAY);
+							} catch (InterruptedException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+							USMotorSweep.resume();
+						}
 
 						if (relocalize) {
 							relocalize();
@@ -380,18 +417,43 @@ public class Navigation {
 			// go right
 			while (odometer.getX() < x) {
 				// check if we need to relocalize
-				if (relocalizerCounter == RELOCALIZE_COUNTER_MAX) {
-					relocalize();
-					relocalizerCounter = 0;
+				if (relocalize) {
+					if (relocalizerCounter == RELOCALIZE_COUNTER_MAX) {
+						relocalize();
+						relocalizerCounter = 0;
+					}
+					relocalizerCounter++;
 				}
-				relocalizerCounter++;
+
 				// check for a wall in front if wallfollowing is on
 				if (wallFollowOn) {
 					if (sensors.getFrontDist() < WALL_DETECTED_RANGE) {
-						followWallOnLeft();
-						relocalize();
-						relocalizerCounter = 0;
+						if (USMotorSweep != null) {
+							USMotorSweep.off();
+							try {
+								Thread.sleep(DELAY);
+							} catch (InterruptedException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+							USMotorSweep.suspend();
+						}
+						analyzeWall();// analyze and avoid wall
 
+						if (USMotorSweep != null) {// resume sweeping
+							USMotorSweep.on();
+							try {
+								Thread.sleep(DELAY);
+							} catch (InterruptedException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+							USMotorSweep.resume();
+						}
+						if (relocalize) {
+							relocalize();
+							relocalizerCounter = 0;
+						}
 					}
 				}
 				if (Math.abs(odometer.getTheta() - 90) > thetaTolerance) {
@@ -411,16 +473,14 @@ public class Navigation {
 			rightMotor.stop(false);
 			return;
 		}
-
 	}
 
 	public void movePastY(double y, boolean wallFollowOn, boolean relocalizeOn) {
 
-		boolean above = odometer.getY() > y;
 		int relocalizerCounter = 0;
 
-		if (above) {
-			// go straight left until past line
+		if (odometer.getY() > y) { // above y linee
+			// go straight down until past line
 			while (odometer.getY() > y) {
 				// check if we need to relocalize
 				if (relocalizeOn) {
@@ -433,15 +493,36 @@ public class Navigation {
 				// check for a wall in front if wallfollowing is on
 				if (wallFollowOn) {
 					if (sensors.getFrontDist() < WALL_DETECTED_RANGE) {
-						followWallOnLeft();
+						if (USMotorSweep != null) {
+							USMotorSweep.off();
+							try {
+								Thread.sleep(DELAY);
+							} catch (InterruptedException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+							USMotorSweep.suspend();
+						}
+						analyzeWall();// analyze and avoid wall
+
+						if (USMotorSweep != null) {// resume sweeping
+							USMotorSweep.on();
+							try {
+								Thread.sleep(DELAY);
+							} catch (InterruptedException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+							USMotorSweep.resume();
+						}
 						if (relocalizeOn) {
 							relocalize();
 							relocalizerCounter = 0;
 						}
 					}
 				}
-				if (Math.abs(odometer.getTheta() - 0) > thetaTolerance) {
-					turnToAbs(0);
+				if (Math.abs(odometer.getTheta() - 180) > thetaTolerance) {
+					turnToAbs(180);
 				}
 				rightMotor.setSpeed(FORWARD_SPEED);
 				leftMotor.setSpeed(FORWARD_SPEED);
@@ -457,25 +538,50 @@ public class Navigation {
 			rightMotor.stop(false);
 			return;
 		} else {
-			// go right
+			// go up
 			while (odometer.getY() < y) {
 				// check if we need to relocalize
-				if (relocalizerCounter == RELOCALIZE_COUNTER_MAX) {
-					relocalize();
-					relocalizerCounter = 0;
+				if (relocalizeOn) {
+					if (relocalizerCounter == RELOCALIZE_COUNTER_MAX) {
+						relocalize();
+						relocalizerCounter = 0;
+					}
+					relocalizerCounter++;
 				}
-				relocalizerCounter++;
+
 				// check for a wall in front if wallfollowing is on
 				if (wallFollowOn) {
 					if (sensors.getFrontDist() < WALL_DETECTED_RANGE) {
-						followWallOnLeft();
-						relocalize();
-						relocalizerCounter = 0;
+						if (USMotorSweep != null) {
+							USMotorSweep.off();
+							try {
+								Thread.sleep(DELAY);
+							} catch (InterruptedException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+							USMotorSweep.suspend();
+						}
+						analyzeWall();// analyze and avoid wall
 
+						if (USMotorSweep != null) {// resume sweeping
+							USMotorSweep.on();
+							try {
+								Thread.sleep(DELAY);
+							} catch (InterruptedException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+							USMotorSweep.resume();
+						}
+						if (relocalizeOn) {
+							relocalize();
+							relocalizerCounter = 0;
+						}
 					}
 				}
-				if (Math.abs(odometer.getTheta() - 180) > thetaTolerance) {
-					turnToAbs(180);
+				if (!(odometer.getTheta()<thetaTolerance || odometer.getTheta()>thetaTolerance)) {
+					turnToAbs(0);
 				}
 				rightMotor.setSpeed(FORWARD_SPEED);
 				leftMotor.setSpeed(FORWARD_SPEED);
