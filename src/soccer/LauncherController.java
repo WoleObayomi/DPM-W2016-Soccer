@@ -35,9 +35,9 @@ public class LauncherController {
 	// launcher speeds and accelerations
 	private final int FIRING_SPEED = 600;
 	private final int LAUNCHER_ACCELERATION = 2000;
-	private final int INTAKE_SPEED = 90;
+	private final int INTAKE_SPEED = 150;
 	private final int REJECT_SPEED = 90;
-	private final int CONVEYER_SPEED = 100;
+	private final int CONVEYER_SPEED = 150;
 	private final int CONVEYER_OFFSET = 0; // conveyer rotates this extra
 											// amount (degrees)
 	private final int SPINUP_DELAY = 500; // time allowed for motors to speed up

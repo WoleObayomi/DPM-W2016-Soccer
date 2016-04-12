@@ -43,7 +43,7 @@ import wifi.WifiConnection;
  *
  */
 public class PlaySoccer {
-
+	private static DataLogger dl;
 	// Data for/from wifi class
 	private static int teamNumber = 9;
 	private static String serverAddress = "192.168.10.200";
@@ -150,8 +150,11 @@ public class PlaySoccer {
 		Sound.setVolume(85);
 		Sound.beepSequence();
 
+		/*
+		 * 
+		LocalEV3.get().getLED().setPattern(3);
 		new USLocalization(sensors, odometer, motors.getLeftMotor(), motors.getRightMotor(), nav).doLocalization();
-
+		LocalEV3.get().getLED().setPattern(2);
 		// localize with light
 		new LightLocalizer(odometer, sensors, nav).doLocalization();
 		Sound.beepSequenceUp();
@@ -160,6 +163,7 @@ public class PlaySoccer {
 		nav.turnToAbs(0);
 
 		Sound.beepSequence();
+<<<<<<< HEAD
 
 	
 		
@@ -175,6 +179,19 @@ public class PlaySoccer {
 		}
 
 
+=======
+		Sound.beepSequence();
+		*/
+		
+//		nav.travelTo(5*PhysicalConstants.TILE_SPACING, 0, true, false);
+//		nav.travelTo(5*PhysicalConstants.TILE_SPACING+.75*PhysicalConstants.TILE_SPACING, .75*PhysicalConstants.TILE_SPACING, false, false);
+//		nav.relocalize();
+//		nav.travelTo(6*PhysicalConstants.TILE_SPACING, 1*PhysicalConstants.TILE_SPACING, true, false);
+//		nav.turnToAbs(0);
+		BallPickupController bp = new BallPickupController(BC, odometer, nav, launcher, sensors, motors, 0, 0, 0, 0);
+		bp.navigateToPlatform();
+		Button.waitForAnyPress();
+>>>>>>> ballpickup
 	}
 
 	private static void connectToWifi() {
