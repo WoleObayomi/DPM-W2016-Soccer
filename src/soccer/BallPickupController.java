@@ -67,7 +67,7 @@ public class BallPickupController {
 	public void navigateToPlatform() {
 		
 		//navigate to lower left corner of tile where the ball platform is placed
-		/*
+		
 		navigation.travelTo(
 				
 						( llX * PhysicalConstants.TILE_SPACING ) + 7.68,
@@ -77,14 +77,16 @@ public class BallPickupController {
 		navigation.turnTo(0);
 		LocalEV3.get().getLED().setPattern(5);
 		stop();
-		*/
+		
 		//if the platform is to either side of the tile, 
 		//then the robot will keep moving forward indefinitely (not sure actually)
 		//to avoid this, stop the robot when the y coordinate is still within the tile
 		
 		while(!closeEnoughToBall() && 
-				(odometer.getX() < ( (llX * PhysicalConstants.TILE_SPACING) + 15) ||
-				odometer.getY() < ( (llY * PhysicalConstants.TILE_SPACING) + 15))) {
+				(
+						odometer.getX() < ( (llX * PhysicalConstants.TILE_SPACING) + 15) ||
+						odometer.getY() < ( (llY * PhysicalConstants.TILE_SPACING) + 15)
+				)) {
 				slowlyApproachPlatform();
 		}
 		
@@ -143,7 +145,7 @@ public class BallPickupController {
 	 * <p>
 	 * initiates ball pickup routine
 	 */
-	public void pickBalls() {
+	private void pickBalls() {
 
 		// navigate to the ball pickup place
 
