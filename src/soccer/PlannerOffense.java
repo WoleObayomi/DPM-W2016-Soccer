@@ -18,6 +18,12 @@ public class PlannerOffense {
 
 	private int xTileMax = 11;
 	private int yTileMax = 11;
+	int llX;
+	int llY;
+	int urX;
+	
+	int urY;
+	int ballColorID;
 
 	/**
 	 * 
@@ -27,7 +33,7 @@ public class PlannerOffense {
 	 * @param motors
 	 */
 	public PlannerOffense(Odometer odometer, Navigation nav, Sensors sensors, Motors motors, int attackLine, int BC,
-			int[] ballZone) {
+			int[] ballZone, int ballColorID) {
 		this.odometer = odometer;
 		this.nav = nav;
 		this.sensors = sensors;
@@ -36,6 +42,11 @@ public class PlannerOffense {
 		this.ballZone = ballZone; // {llX,llY,urX,urY}
 		this.attackLine = attackLine;
 		this.launcher = launcher;
+		this.llX =ballZone[0];
+		this.llY=ballZone[1];
+		this.urX=ballZone[2];
+		this.urY=ballZone[3];
+		this.ballColorID = ballColorID;
 	}
 
 	// have the robot execute its offense procedure
@@ -58,11 +69,11 @@ public class PlannerOffense {
 
 		//go get balls
 		
-		
+		new BallPickupController(ballColorID, odometer, nav, launcher, sensors, motors, llX, llY, urX, urY).navigateToPlatform();
 		
 		//shoot on net
 		
-		new AttackNet(launcher, nav, centerX, centerY, sensors, motors, odometer);
+		new AttackNet(launcher, nav, centerX, centerY, sensors, motors, odometer).run();
 	}
 
 }

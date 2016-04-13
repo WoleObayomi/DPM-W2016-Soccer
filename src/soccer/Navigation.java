@@ -57,11 +57,7 @@ public class Navigation {
 	private final int DELAY = 75; // ms, delay to wait for other threads to
 
 	private final int ROTATE_LEFT_OFFSET = 5;
-	private final int ACCELERATION = 350;
-	private final int DELAY = 0; // ms, delay to wait for other threads to
-
-									// notice a change, must be longer than
-									// sweepMotor delay
+	
 
 	// wall following
 	private final int WALL_DETECTED_RANGE = 17; // cm

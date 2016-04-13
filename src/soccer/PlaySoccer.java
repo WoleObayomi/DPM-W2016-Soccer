@@ -95,7 +95,7 @@ public class PlaySoccer {
 		// connect to wifi
 
 		connectToWifi();
-		
+
 		// motors object
 		Motors motors = new Motors(masterBrick, slaveBrick);
 		primeExit.addMotors(motors);
@@ -120,39 +120,25 @@ public class PlaySoccer {
 		LauncherController launcher = new LauncherController(motors);
 
 		// calibration spins
-//		 nav.turnTo(90);
-//		 nav.turnTo(90);
-//		 nav.turnTo(90);
-//		 nav.turnTo(90);
-//		 Button.waitForAnyPress();
-//		
-//		 nav.turnTo(-90);
-//		 nav.turnTo(-90);
-//		 nav.turnTo(-90);
-//		 nav.turnTo(-90);
-//		
-//		 Button.waitForAnyPress();
+		// nav.turnTo(90);
+		// nav.turnTo(90);
+		// nav.turnTo(90);
+		// nav.turnTo(90);
+		// Button.waitForAnyPress();
+		//
+		// nav.turnTo(-90);
+		// nav.turnTo(-90);
+		// nav.turnTo(-90);
+		// nav.turnTo(-90);
+		//
+		// Button.waitForAnyPress();
 
 		// move the front motor out of the way, clear of the wall, and set up
 		// for US localization
-		
-		//new OdometryCorrection(odometer, sensors).start();
-		nav.movePastX(5*PhysicalConstants.TILE_SPACING, true, false);
-		nav.movePastY(5*PhysicalConstants.TILE_SPACING, true, false);
-
-	}
-	
-	private static void localize(Motors motors, Navigation nav, Odometer odometer, Sensors sensors){
-		motors.getUSMotor().rotate(90);
-
-		// create USLocalization obj and use the method in it
 
 		Sound.setVolume(85);
 		Sound.beepSequence();
 
-		/*
-		 * 
-		LocalEV3.get().getLED().setPattern(3);
 		new USLocalization(sensors, odometer, motors.getLeftMotor(), motors.getRightMotor(), nav).doLocalization();
 		LocalEV3.get().getLED().setPattern(2);
 		// localize with light
@@ -162,15 +148,11 @@ public class PlaySoccer {
 		nav.travelTo(0, 0, false, false);
 		nav.turnToAbs(0);
 
-		Sound.beepSequence();
-<<<<<<< HEAD
+		new OdometryCorrection(odometer, sensors).start();
 
-	
-		
-		
 		if (OTN == teamNumber) {
 			applyStartingCorner(OSC, odometer);
-			new PlannerOffense(odometer, nav, sensors, motors, d2, BC, new int[] { llX, llY, urX, urY }).run();
+			new PlannerOffense(odometer, nav, sensors, motors, d2, BC, new int[] { llX, llY, urX, urY }, BC).run();
 
 		} else {
 			applyStartingCorner(DSC, odometer);
@@ -178,20 +160,6 @@ public class PlaySoccer {
 
 		}
 
-
-=======
-		Sound.beepSequence();
-		*/
-		
-//		nav.travelTo(5*PhysicalConstants.TILE_SPACING, 0, true, false);
-//		nav.travelTo(5*PhysicalConstants.TILE_SPACING+.75*PhysicalConstants.TILE_SPACING, .75*PhysicalConstants.TILE_SPACING, false, false);
-//		nav.relocalize();
-//		nav.travelTo(6*PhysicalConstants.TILE_SPACING, 1*PhysicalConstants.TILE_SPACING, true, false);
-//		nav.turnToAbs(0);
-		BallPickupController bp = new BallPickupController(BC, odometer, nav, launcher, sensors, motors, 0, 0, 0, 0);
-		bp.navigateToPlatform();
-		Button.waitForAnyPress();
->>>>>>> ballpickup
 	}
 
 	private static void connectToWifi() {
@@ -231,7 +199,7 @@ public class PlaySoccer {
 		LCD.drawString("d1: " + d1 + "   d2: " + d2, 0, 2);
 		LCD.drawString("ll-x: " + llX + "  ll-y: " + llY, 0, 3);
 		LCD.drawString("ur-x: " + urX + "  ur-y: " + urY, 0, 4);
-	
+
 	}
 
 	/**
