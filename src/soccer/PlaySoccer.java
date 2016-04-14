@@ -120,27 +120,30 @@ public class PlaySoccer {
 		LauncherController launcher = new LauncherController(motors);
 
 		// calibration spins
-		// nav.turnTo(90);
-		// nav.turnTo(90);
-		// nav.turnTo(90);
-		// nav.turnTo(90);
-		// Button.waitForAnyPress();
-		//
-		// nav.turnTo(-90);
-		// nav.turnTo(-90);
-		// nav.turnTo(-90);
-		// nav.turnTo(-90);
-		//
-		// Button.waitForAnyPress();
+//		 nav.turnTo(90);
+//		 nav.turnTo(90);
+//		 nav.turnTo(90);
+//		 nav.turnTo(90);
+//		 Button.waitForAnyPress();
+//		
+//		 nav.turnTo(-90);
+//		 nav.turnTo(-90);
+//		 nav.turnTo(-90);
+//		 nav.turnTo(-90);
+//		
+//		 Button.waitForAnyPress();
 
 		// move the front motor out of the way, clear of the wall, and set up
 		// for US localization
+		
+		motors.getUSMotor().rotateTo(90);
 
+		
 		Sound.setVolume(85);
 		Sound.beepSequence();
 
 		new USLocalization(sensors, odometer, motors.getLeftMotor(), motors.getRightMotor(), nav).doLocalization();
-		LocalEV3.get().getLED().setPattern(2);
+		
 		// localize with light
 		new LightLocalizer(odometer, sensors, nav).doLocalization();
 		Sound.beepSequenceUp();

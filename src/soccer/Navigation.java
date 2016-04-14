@@ -338,6 +338,7 @@ public class Navigation {
 	public void movePastX(double x, boolean wallFollowOn, boolean relocalize) {
 
 		int relocalizerCounter = 0;
+		USMotorSweep = null;
 
 		// to the right of the line
 		if (odometer.getX() > x) {
@@ -474,6 +475,12 @@ public class Navigation {
 	public void movePastY(double y, boolean wallFollowOn, boolean relocalizeOn) {
 
 		int relocalizerCounter = 0;
+		USMotorSweep = null;
+		if(wallFollowOn){
+			USMotorSweep = new SweepMotor(USMotor);
+			USMotorSweep.start();
+			USMotorSweep.on();
+		}
 
 		if (odometer.getY() > y) { // above y linee
 			// go straight down until past line
