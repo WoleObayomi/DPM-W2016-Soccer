@@ -56,16 +56,32 @@ public class Exit extends Thread {
 	}
 
 	// constructor
+	/**
+	 * 
+	 * @param slaveBrick
+	 */
 	public Exit(RemoteRequestEV3 slaveBrick) {
 
 		this.slaveBrick = slaveBrick;
 
 	}
 
+	/**
+	 * 
+	 * @param slaveBrick
+	 * <p>
+	 * initialize slave brick
+	 */
 	public void addSlaveBrick(RemoteRequestEV3 slaveBrick) {
 		this.slaveBrick = slaveBrick;
 	}
 
+	/**
+	 * 
+	 * @param motors
+	 * <p>
+	 * initialize motors
+	 */
 	public void addMotors(Motors motors) {
 		this.motors = motors;
 		this.launcherLeft = motors.getLauncherLeft();
@@ -81,6 +97,12 @@ public class Exit extends Thread {
 	}
 	
 	//can notify threads to end certain tasks peacfully
+	/**
+	 * 
+	 * @return boolean
+	 * <p>
+	 * returns whether the exit thread is alive or not
+	 */
 	public static boolean alive(){
 		return alive;
 	}

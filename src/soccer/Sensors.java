@@ -268,6 +268,12 @@ public class Sensors {
 		return 0;
 	}
 	
+	/**
+	 * 
+	 * @return float
+	 * <p>
+	 * returns the color value of the object detected
+	 */
 	public float getBallColourValue(){
 		ballColourIDValue.fetchSample(ballColourIDData, 0);
 		return ballColourIDData[0];

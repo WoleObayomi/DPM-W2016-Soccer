@@ -137,7 +137,7 @@ public class LauncherController {
 
 	/**
 	 * <p>
-	 * Moves the conveyor backwards by the size of a single ball
+	 * Moves the conveyer backwards by the size of a single ball
 	 */
 	public void conveyerBackOneBall() {
 		double theta = 360 * ballDiameter / (2 * Math.PI * conveyerWheelRadius) + CONVEYER_OFFSET;
@@ -147,6 +147,10 @@ public class LauncherController {
 		conveyerRight.rotate((int) -theta, false);
 	}
 	
+	/**
+	 * <p>
+	 * rotates the conveyer inward
+	 */
 	public void conveyerBack(){
 		conveyerLeft.setSpeed(CONVEYER_SPEED);
 		conveyerRight.setSpeed(CONVEYER_SPEED);
@@ -154,6 +158,10 @@ public class LauncherController {
 		conveyerRight.backward();
 	}
 	
+	/**
+	 * <p>
+	 * rotates the conveyer outward
+	 */
 	public void conveyerForward(){
 		conveyerLeft.setSpeed(CONVEYER_SPEED);
 		conveyerRight.setSpeed(CONVEYER_SPEED);
@@ -168,7 +176,7 @@ public class LauncherController {
 
 	/**
 	 * <p>
-	 * Moves the conveyor forwards by the size of a single ball
+	 * Moves the conveyer forwards by the size of a single ball
 	 */
 	public void conveyerForwardOneBall() {
 		double theta = 360 * ballDiameter / (2 * Math.PI * conveyerWheelRadius) + CONVEYER_OFFSET;
@@ -178,12 +186,20 @@ public class LauncherController {
 		conveyerRight.rotate((int) theta, false);
 	}
 
+	/**
+	 * <p>
+	 * raises the firing angle of the ramp
+	 */
 	public void raiseAngle() {
 		angleAdjustMotor.setSpeed(ANGLE_SPEED);
 		angleAdjustMotor.rotate(FIRE_ANGLE);
 		
 	}
 
+	/**
+	 * <p>
+	 * lowers the firing angle of the ramp
+	 */
 	public void lowerAngle() {
 		angleAdjustMotor.setSpeed(ANGLE_SPEED);
 		angleAdjustMotor.rotate(-FIRE_ANGLE);

@@ -133,6 +133,10 @@ public class BallPickupController {
 
 	}
 	
+	/**
+	 * <p>
+	 * stops the robot
+	 */
 	private void stop() {
 		EV3LargeRegulatedMotor leftMotor = motors.getLeftMotor();
 		EV3LargeRegulatedMotor rightMotor = motors.getRightMotor();
@@ -164,34 +168,6 @@ public class BallPickupController {
 		while(odometer.getY() > llY * PhysicalConstants.TILE_SPACING && odometer.getX() > llX * PhysicalConstants.TILE_SPACING) {
 			reverseOffPlatform();
 		}
-		// wait until we see the ball properly
-		/*
-		while (sensors.getBallDist() > BALL_HEIGHT) {
-			try {
-				Thread.sleep(50);
-			} catch (InterruptedException e) {
-
-			}
-		}
-		stop();
-		
-		// move forward 2 cm to grab ball
-		navigation.travel(2);
-
-		launcher.conveyerBackOneBall();
-		launcher.stopLauncher();
-
-		// move back 8 cm to clear platform
-		navigation.travel(-10);
-		//
-		// if (sensors.getCenterColourValue() != ballColorID) {
-		// rejectBall();
-		// moveToNextBall();
-		// } else {
-		// // do nothing for now
-		// }
-		 * 
-		 */
 	}
 
 	/**
@@ -207,6 +183,11 @@ public class BallPickupController {
 		motors.getRightMotor().backward();
 		
 	}
+	
+	/**
+	 * <p>
+	 * rejects a ball by setting the rotational direction of the conveyor outward
+	 */
 	private void rejectBall() {
 
 		launcher.setToRejectSpeed();

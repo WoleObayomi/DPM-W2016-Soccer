@@ -14,6 +14,11 @@ package soccer;
 
 import javax.swing.plaf.basic.BasicTreeUI.TreeTraverseAction;
 
+/**
+ * 
+ * @author Peter Quinn
+ *
+ */
 public class AttackNet {
 
 	private LauncherController launcher;
@@ -64,6 +69,16 @@ public class AttackNet {
 
 	}
 
+	/**
+	 * 
+	 * @param launcher
+	 * @param nav
+	 * @param attackZoneX
+	 * @param attackZoneY
+	 * @param sensors
+	 * @param motors
+	 * @param odometer
+	 */
 	public AttackNet(LauncherController launcher, Navigation nav, double attackZoneX, double attackZoneY,
 			Sensors sensors, Motors motors, Odometer odometer) {
 		super();

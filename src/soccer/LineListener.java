@@ -159,30 +159,6 @@ public class LineListener extends Thread {
 		} else {
 			return false;
 		}
-
-		// this isn't working
-
-		// take the slope (linear derivative)
-
-		// float d1 = pointData[1] - pointData[0];
-		// float d2 = pointData[2] - pointData[1];
-		//
-		// // debug
-		// LCD.drawString("d1 " + d1, 0, 4);
-		// LCD.drawString("d2 " + d2, 0, 5);
-		//
-		// // compare magnitudes of slope, if d2 is significantly bigger than
-		// // d1, we are dropping rapidly, so hopefully seeing a line
-		//
-		// if (d2 - d1 < -THRESHOLD) {
-		// Sound.setVolume(85);
-		// Sound.beep();
-		// Sound.setVolume(0);
-		// return true;
-		// } else {
-		// return false;
-		// }
-
 	}
 
 }

@@ -52,15 +52,13 @@ public class PlaySoccer {
 	private static int topCornerY = 10;// tiles
 	private static int DTN, OTN, DSC, OSC, role, w1, d1, d2, llX, llY, urX, urY, BC;
 
+	
 	/**
-	 * @param sensors
-	 * @param nav
 	 * 
-	 *            <p>
-	 *            prevents the robot from colliding with the wall when initially
-	 *            placed in the field and prior to localization
+	 * @param args
+	 * <p>
+	 * main application
 	 */
-
 	public static void main(String[] args) {
 
 		// exit thread to abort at anytime
@@ -118,21 +116,6 @@ public class PlaySoccer {
 
 		// launcher
 		LauncherController launcher = new LauncherController(motors);
-
-		// calibration spins
-//		 nav.turnTo(90);
-//		 nav.turnTo(90);
-//		 nav.turnTo(90);
-//		 nav.turnTo(90);
-//		 Button.waitForAnyPress();
-//		
-//		 nav.turnTo(-90);
-//		 nav.turnTo(-90);
-//		 nav.turnTo(-90);
-//		 nav.turnTo(-90);
-//		
-//		 Button.waitForAnyPress();
-
 		// move the front motor out of the way, clear of the wall, and set up
 		// for US localization
 		
@@ -165,6 +148,10 @@ public class PlaySoccer {
 
 	}
 
+	/**
+	 * <p>
+	 * connects to the wifi
+	 */
 	private static void connectToWifi() {
 
 		TextLCD LCD = LocalEV3.get().getTextLCD();
@@ -192,6 +179,10 @@ public class PlaySoccer {
 
 	}
 
+	/**
+	 * <p>
+	 * displays parameters received over wifi
+	 */
 	private static void printParameters() {
 
 		// prints parameters received from wifi

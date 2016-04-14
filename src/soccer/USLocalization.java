@@ -62,7 +62,8 @@ public class USLocalization {
 
 	// uses falling edge technique
 	/**
-	 * 
+	 * <p>
+	 * initiate localization procedure using falling edge technique
 	 */
 	public void doLocalization() {
 

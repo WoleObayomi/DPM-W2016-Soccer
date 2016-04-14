@@ -21,6 +21,12 @@ import javax.swing.text.WrappedPlainView;
 
 import lejos.robotics.SampleProvider;
 
+/**
+ * 
+ * @author Peter Quinn
+ * @author Rony Azrak
+ *
+ */
 public class DataLogger extends Thread {
 
 	private final int SLEEP_TIME = 100;
@@ -28,10 +34,21 @@ public class DataLogger extends Thread {
 	Callable<Float> funcToLogDataFrom;
 	String filename;
 
+	/**
+	 * 
+	 * @param state
+	 * <p>
+	 * returns boolean indicating whether logging is currently active
+	 */
 	public void setLoggerState(boolean state) {
 		logging = state;
 	}
 
+	/**
+	 * 
+	 * @param filename
+	 * @param funcToCall
+	 */
 	public DataLogger(String filename, Callable<Float> funcToCall) {
 
 		// call this function by passing a String and

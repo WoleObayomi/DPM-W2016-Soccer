@@ -103,6 +103,12 @@ public class WallFollowController {
 
 	}
 
+	/**
+	 * 
+	 * @param time
+	 * <p>
+	 * moves the robot forward after a specified time interval
+	 */
 	public void forward(int time) {
 		leftMotor.setSpeed(motorStraight);
 		rightMotor.setSpeed(motorStraight);

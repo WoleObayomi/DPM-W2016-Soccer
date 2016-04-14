@@ -335,6 +335,14 @@ public class Navigation {
 		}
 	}
 
+	/**
+	 * 
+	 * @param x
+	 * @param wallFollowOn
+	 * @param relocalize
+	 * <p>
+	 * avoid a certain x coordinate while navigating
+	 */
 	public void movePastX(double x, boolean wallFollowOn, boolean relocalize) {
 
 		int relocalizerCounter = 0;
@@ -472,6 +480,14 @@ public class Navigation {
 		}
 	}
 
+	/**
+	 * 
+	 * @param y
+	 * @param wallFollowOn
+	 * @param relocalizeOn
+	 * <p>
+	 * avoid a certain y coordinate
+	 */
 	public void movePastY(double y, boolean wallFollowOn, boolean relocalizeOn) {
 
 		int relocalizerCounter = 0;
@@ -642,6 +658,10 @@ public class Navigation {
 		}
 	}
 
+	/**
+	 * <p>
+	 * stop the robot
+	 */
 	public void stop() {
 		leftMotor.stop(true);
 		rightMotor.stop(false);
@@ -667,7 +687,10 @@ public class Navigation {
 	}
 
 	// Private helper methods
-
+	/**
+	 * <p>
+	 * decides whether to follow wall on the left or right
+	 */
 	private void analyzeWall() {
 
 		// stop
@@ -699,7 +722,11 @@ public class Navigation {
 		USMotor.rotateTo(0);
 
 	}
-
+	
+	/**
+	 * <p>
+	 * will cause robot to follow wall on right
+	 */
 	private void followWallOnRight() {
 
 		leftMotor.stop(true);
@@ -781,6 +808,10 @@ public class Navigation {
 	}
 
 	// follows wall on left
+	/**
+	 * <p>
+	 * will cause robot to follow wall on the left
+	 */
 	private void followWallOnLeft() {
 		leftMotor.stop(true);
 		rightMotor.stop(false);
@@ -856,6 +887,15 @@ public class Navigation {
 		}
 	}
 
+	/**
+	 * 
+	 * @param x
+	 * @param y
+	 * @param odometer
+	 * 
+	 * <p>
+	 * causes the robot to follow the wall using the P-Type method
+	 */
 	private void followWallPType(double x, double y, Odometer odometer) {
 
 		// turn to the left so our wall following sensor on the right is facing

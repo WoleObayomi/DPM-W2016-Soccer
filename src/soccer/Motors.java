@@ -79,7 +79,7 @@ public class Motors {
 	// getters for motors
 	
 	/**
-	 * 
+	 * @return instance of the motor controlling the ultrasonic sensor
 	 * 
 	 */
 	public RegulatedMotor getUSMotor(){
@@ -89,7 +89,7 @@ public class Motors {
 	
 	/**
 	 * 
-	 * @return leftMotor instance of the left motor object
+	 * @return instance of the left motor object
 	 */
 	public EV3LargeRegulatedMotor getLeftMotor() {
 
@@ -99,7 +99,7 @@ public class Motors {
 
 	/**
 	 * 
-	 * @return rightMotor instance of the right motor object
+	 * @return instance of the right motor object
 	 */
 	public EV3LargeRegulatedMotor getRightMotor() {
 		return rightMotor;
@@ -107,7 +107,7 @@ public class Motors {
 
 	/**
 	 * 
-	 * @return launcherRight instance of the right launcher motor
+	 * @return instance of the right launcher motor
 	 */
 	public RegulatedMotor getLauncherRight() {
 		return launcherRight;
@@ -115,7 +115,7 @@ public class Motors {
 
 	/**
 	 * 
-	 * @return launcherLeft instance of the left launcher motor
+	 * @return instance of the left launcher motor
 	 */
 	public RegulatedMotor getLauncherLeft() {
 		return launcherLeft;

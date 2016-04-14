@@ -35,6 +35,14 @@ public class PlannerDefense {
 	private final int SLEEP = 30;// ms
 	private final int SPEED = 180;
 
+	/**
+	 * 
+	 * @param nav
+	 * @param defenseLine
+	 * @param goalSize
+	 * @param odometer
+	 * @param motors
+	 */
 	public PlannerDefense(Navigation nav, int defenseLine, double goalSize, Odometer odometer, Motors motors) {
 		this.nav = nav;
 		this.defenseLine = defenseLine;

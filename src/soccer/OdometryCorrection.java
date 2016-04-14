@@ -58,7 +58,8 @@ public class OdometryCorrection extends Thread {
 
 	// helper method
 	/**
-	 * 
+	 * <p>
+	 * correct odometer based on nearest gridline position
 	 */
 	private void snapToNearestGridLine() {
 

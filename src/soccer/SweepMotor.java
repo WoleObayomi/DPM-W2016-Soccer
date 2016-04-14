@@ -32,6 +32,10 @@ public class SweepMotor extends Thread {
 	private final int SPEED = 50;
 	private final int ACCELERATION = 2000;
 
+	/**
+	 * 
+	 * @param usMotor
+	 */
 	public SweepMotor(RegulatedMotor usMotor) {
 		this.usMotor = usMotor;
 		usMotor.setSpeed(SPEED);
@@ -100,6 +104,10 @@ public class SweepMotor extends Thread {
 	}
 
 	// turn on sweeping
+	/**
+	 * <p>
+	 * turns on the sweeping motor
+	 */
 	public void on() {
 		synchronized (lock) {
 			sweep = true;
@@ -108,12 +116,19 @@ public class SweepMotor extends Thread {
 	}
 
 	// turn off sweeping
+	/**
+	 * turns off the sweeping motor
+	 */
 	public void off() {
 		synchronized (lock) {
 			sweep = false;
 		}
 	}
 
+	/**
+	 * <p>
+	 * kills the thread controlling the sweeping motor
+	 */
 	public void kill() {
 
 		alive = false;

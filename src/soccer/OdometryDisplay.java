@@ -7,13 +7,22 @@ package soccer;
 import java.util.Arrays;
 
 import lejos.hardware.lcd.TextLCD;
-
+/**
+ * 
+ * @author unknown
+ *
+ */
 public class OdometryDisplay extends Thread {
 	private static final long DISPLAY_PERIOD = 250;
 	private Odometer odometer;
 	static TextLCD t;
 
 	// constructor
+	/**
+	 * 
+	 * @param odometer
+	 * @param t
+	 */
 	public OdometryDisplay(Odometer odometer, TextLCD t) {
 		this.odometer = odometer;
 		this.t = t;
@@ -57,6 +66,15 @@ public class OdometryDisplay extends Thread {
 		}
 	}
 	
+	/**
+	 * 
+	 * @param x
+	 * @param places
+	 * @return formatted number as string
+	 * 
+	 * <p>
+	 * converts a double to a string
+	 */
 	private static String formattedDoubleToString(double x, int places) {
 		String result = "";
 		String stack = "";
